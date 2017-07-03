@@ -235,8 +235,8 @@ do
 
         init)
             install_eslicense
-            init_userdb
-            init_aqldb
+            init_userdb $PASSWORD
+            init_aqldb $PASSWORD
             import_es_templates
             import_es_indices
             ;;
