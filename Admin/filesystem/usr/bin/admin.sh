@@ -129,6 +129,14 @@ stop_kyn()
 }
 
 
+# patch mysql databases
+patch_mysql_database()
+{
+    echo
+    /mysql_data/patch.sh -h $MYSQLHOST -b ${1-""} -d "aql_db" -f "/mysql_data/aql/"
+}
+
+
 # print command line option onto console
 print_help()
 {
@@ -162,6 +170,8 @@ print_help()
     echo "        perform all init actions at once"
     echo "    status"
     echo "        overview about running containers and networks"
+    echo "    patchmysqldatabase"
+    echo "        patch all mysql databases"
     echo
 }
 
@@ -245,6 +255,10 @@ do
             dump_docker_status
             ;;
 
+        patchmysqldatabase)
+            patch_mysql_database $PASSWORD
+            ;;
+            
         *)
             echo "ERROR: command $1 is unknown"
             exit 1

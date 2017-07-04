@@ -1,0 +1,27 @@
+#!/bin/bash
+#
+# Name: functions
+#
+# Author: Hrvoje Zeljko
+#
+# Date: 04-07-2017
+#
+# Purpose: Some convenience functions
+#
+####################################################################################################
+#
+# Check version numbers
+#
+check_version_numbers()
+{
+    # Check irregular version condition
+    if [ $1 -gt $2 ]; then
+        echo "Irregular condition - database version number should never be greater than repository version number"
+        exit 1
+    fi
+    # Check if no patch necessary
+    if [ $1 -eq $2 ]; then
+        echo "No patch necessary"
+        exit 1
+    fi
+}
