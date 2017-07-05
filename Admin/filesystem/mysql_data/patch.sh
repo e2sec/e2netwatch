@@ -8,11 +8,28 @@
 #
 # Purpose: Patch aql_db database
 #
+# Usage: patche.sh [-h host] [-p port] [-b password] [-d database] [-f pathtoversion]
+#
 ####################################################################################################
 #
-# Include convenience functions.
+# Check version numbers
 #
-. mysql_data/ci_scripts/functions
+# Params:   $1 - version number in database
+#           $2 - version number in repository file
+#
+check_version_numbers()
+{
+    # Check irregular version condition
+    if [ $1 -gt $2 ]; then
+        echo -e "\e[31mIrregular condition - database version number should never be greater than repository version number\e[0m"
+        exit 1
+    fi
+    # Check if no patch necessary
+    if [ $1 -eq $2 ]; then
+        echo -e "\e[33mNo patch necessary\e[0m"
+        exit 1
+    fi
+}
 #
 # Getting input parameters
 #
@@ -64,7 +81,7 @@ do
 done
 # Check if all patches successfully executed
 if $ALL_PATCHES_OK ; then
-    echo "All patches executed correctly"
+    echo -e "\e[32mAll patches executed correctly\e[0m"
     #
     # Update database version number
     #
@@ -72,5 +89,5 @@ if $ALL_PATCHES_OK ; then
     mysql -h $HOST -P $PORT -w --password=$PASSWORD --database=$DATABASE -e "update version set version_number=$VERSION_NUMBER_REPOSITORY"
     echo "done"
 else
-    echo "Not all patches executed correctly"
+    echo -e "\e[31mNot all patches executed correctly\e[0m"
 fi

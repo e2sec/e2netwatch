@@ -134,6 +134,8 @@ patch_mysql_database()
 {
     echo
     /mysql_data/patch.sh -h $MYSQLHOST -b ${1-""} -d "aql_db" -f "/mysql_data/aql/"
+    echo
+    /mysql_data/patch.sh -h $MYSQLHOST -b ${1-""} -d "user_management_db" -f "/mysql_data/user_management/"
 }
 
 
