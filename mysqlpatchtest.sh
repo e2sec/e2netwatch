@@ -10,58 +10,41 @@
 #
 # Notes: -
 #
-# Usage: mysqlpatchtest.sh
+# Usage: mysqlpatchtest.sh [-p mysqlrootpassword]
 #
 ####################################################################################################
 #
 # Include convenience functions.
 #
-. ./ci_scripts/functions
+. ./ci_scripts/common
 #
 # Try
 #
 add_database() {
     docker exec -t $CONTAINER_NAME sh -c "mysql < ./tmp/scripts/aql.sql" > /dev/null
 }
-# print command line option onto console
-print_help()
-{
-    echo
-    echo "Syntax:   smoketest.sh <test-configuration> [options]" 
-    echo
-    echo "Test configurations:"
-    echo "    all.yaml"
-    echo "        run all tests below"
-    echo "    reports-test.yaml"
-    echo "        testing the reports module"
-    echo "    aql-test.yaml"
-    echo "        testing the AQL rules module"
-    echo "    lara-test.yaml"
-    echo "        testing the Lara rules module"
-    echo "    newsticker-test.yaml"
-    echo "        testing the Newsticker module"
-    echo "    ntv-test.yaml"
-    echo "        testing the Network traffic vizualization module"
-    echo "    syslog-test.yaml"
-    echo "        testing the Syslog module"
-    echo "    kite-test.yaml"
-    echo "        testing the Kite module - Host reports, Host details reports, CMDB reports"
-    echo 
-    echo "For [options] see: https://github.com/svanoort/pyresttest"
-    echo "    --log info"
-    echo
+#
+# Stop and remove running container
+#
+remove_container() {
+    echo -n "Stopping and removing container..."
+    LOG=$( docker stop $CONTAINER_NAME;docker rm -v $CONTAINER_NAME > /dev/null)
+    log_success $? "$LOG"
 }
 #
-if [ $# -lt 1 ]; then
-    print_help
-    exit 1
-fi
+# Getting the Mysql root password
+#
+PASSWORD="kyn_RO0T_password" #TODO
+while getopts p: OPT; do
+	[ $OPT == "p" ] && PASSWORD=$OPTARG
+done
+shift $((OPTIND-1))
+#
+# Setting variables
 #
 IMAGE="kyn/mysqlpatchtest"
 #
 CONTAINER_NAME="kyn_mysqlpatchtest_1"
-#
-# kyn docker network autodetection
 #
 KYN_NETWORK=$(docker network list --filter name=kyn* --format {{.Name}})
 #
@@ -79,8 +62,16 @@ log_success $? "$LOG"
 #
 echo "Executing import database scripts..."
 RETRY=10
+TIMEOUT=50
+CURRENT_TIMEOUT=$TIMEOUT
 LOG= $( add_database )
 while [ $? -ne 0 ]; do
+    if [ $CURRENT_TIMEOUT -le 0 ]; then
+        echo "Timeout ($TIMEOUT) period expired"
+        remove_container
+        exit 1
+    fi
+    CURRENT_TIMEOUT=$((CURRENT_TIMEOUT-RETRY))
     echo "  Mysql server not up yet, will retry in $RETRY seconds"
     sleep $RETRY
     LOG= $( add_database )
@@ -90,11 +81,19 @@ log_success $? "$LOG"
 # Check differences between two databases - patched database and standalone installed here
 #
 echo "Checking differences between databases..."
-MYOUTPUT=$(docker exec -t $CONTAINER_NAME sh -c "mysqldiff --skip-table-options --force --server1=root:kyn_RO0T_password@mysql --server2=root@localhost aql_db:aql_db")
-echo $MYOUTPUT
-#
-#
-#
-echo -n "Stopping and removing container..."
-LOG=$( docker stop $CONTAINER_NAME;docker rm $CONTAINER_NAME > /dev/null)
-log_success $? "$LOG"
+MYOUTPUT=$(docker exec -t $CONTAINER_NAME sh -c "mysqldiff --skip-table-options --force --server1=root:$PASSWORD@mysql --server2=root@localhost aql_db:aql_db")
+EXIT_CODE=$?
+if [ $EXIT_CODE -ne 0 ]; then
+    echo "$MYOUTPUT"
+    remove_container
+    exit $EXIT_CODE
+fi
+DIFFERENCES=$(echo "$MYOUTPUT" | grep -E "^# WARNING: Objects in server|^# Comparing .*\[FAIL\]" -c)
+if [ $DIFFERENCES -eq 0 ]; then
+    echo "SUCCESS No differences"
+else
+    echo "FAIL There are $DIFFERENCES differences"
+    echo "$MYOUTPUT"
+fi
+# Stop and remove container
+remove_container
