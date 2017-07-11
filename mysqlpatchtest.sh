@@ -27,18 +27,18 @@ mysql_check() {
 # Wait for Mysql to start
 #
 wait_mysql_start() {
-    RETRY=2
+    RETRY=3
     SAFETY_CHECK_MAX=5
     SAFETY_CHECK_CURRENT=$SAFETY_CHECK_MAX
     LOG=$( mysql_check > /dev/null )
     EXIT_CODE=$?
-    while [ $EXIT_CODE -ne 0 ] && [ $SAFETY_CHECK_CURRENT -gt 0 ]; do
-        if [ $EXIT_CODE -ne 0 ]; then
+    while [ $EXIT_CODE -ne 0 ] || [ $SAFETY_CHECK_CURRENT -gt 0 ]; do
+        if [ $EXIT_CODE -eq 0 ]; then
             SAFETY_CHECK_CURRENT=$((SAFETY_CHECK_CURRENT-1))
         else
             SAFETY_CHECK_CURRENT=$SAFETY_CHECK_MAX
         fi
-        echo -n "$EXIT_CODE"
+        echo -n "."
         sleep $RETRY
         LOG=$( mysql_check > /dev/null )
         EXIT_CODE=$?
@@ -46,10 +46,11 @@ wait_mysql_start() {
     log_success $EXIT_CODE "$LOG"
 }
 #
-# Try
+# Import test databases inside container
 #
-add_database() {
-    docker exec -t $CONTAINER_NAME sh -c "mysql < ./tmp/scripts/aql.sql" > /dev/null
+add_databases() {
+    LOG=$( docker exec -t $CONTAINER_NAME sh -c "mysql < ./tmp/scripts/aql.sql" > /dev/null )
+    log_success $? "$LOG"
 }
 #
 # Stop and remove running container
@@ -88,8 +89,13 @@ log_success $? "$LOG"
 #
 # Wait Mysql to start
 #
-echo -n "Waiting for mysql to start."
+echo -n "Waiting for mysql to start"
 wait_mysql_start
+#
+# Import test databases
+#
+echo -n "Importing test databases..."
+add_databases
 #
 # Check differences between two databases - patched database and standalone installed here
 #
