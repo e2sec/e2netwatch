@@ -18,6 +18,34 @@
 #
 . ./ci_scripts/common
 #
+# Check if Mysql is up and running
+#
+mysql_check() {
+    docker exec -t kyn_mysqlpatchtest_1 mysql -e "select 1"
+}
+#
+# Wait for Mysql to start
+#
+wait_mysql_start() {
+    RETRY=2
+    SAFETY_CHECK_MAX=5
+    SAFETY_CHECK_CURRENT=$SAFETY_CHECK_MAX
+    LOG=$( mysql_check > /dev/null )
+    EXIT_CODE=$?
+    while [ $EXIT_CODE -ne 0 ] && [ $SAFETY_CHECK_CURRENT -gt 0 ]; do
+        if [ $EXIT_CODE -ne 0 ]; then
+            SAFETY_CHECK_CURRENT=$((SAFETY_CHECK_CURRENT-1))
+        else
+            SAFETY_CHECK_CURRENT=$SAFETY_CHECK_MAX
+        fi
+        echo -n "$EXIT_CODE"
+        sleep $RETRY
+        LOG=$( mysql_check > /dev/null )
+        EXIT_CODE=$?
+    done
+    log_success $EXIT_CODE "$LOG"
+}
+#
 # Try
 #
 add_database() {
@@ -58,33 +86,19 @@ echo -n "Starting mysql patch test container..."
 LOG=$( docker run -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -d --name=$CONTAINER_NAME $NETWORK kyn/mysqltest > /dev/null )
 log_success $? "$LOG"
 #
-# Execute import_database.sql scripts for all mysql databases
+# Wait Mysql to start
 #
-echo "Executing import database scripts..."
-RETRY=10
-TIMEOUT=50
-CURRENT_TIMEOUT=$TIMEOUT
-LOG= $( add_database )
-while [ $? -ne 0 ]; do
-    if [ $CURRENT_TIMEOUT -le 0 ]; then
-        echo "Timeout ($TIMEOUT) period expired"
-        remove_container
-        exit 1
-    fi
-    CURRENT_TIMEOUT=$((CURRENT_TIMEOUT-RETRY))
-    echo "  Mysql server not up yet, will retry in $RETRY seconds"
-    sleep $RETRY
-    LOG= $( add_database )
-done
-log_success $? "$LOG"
+echo -n "Waiting for mysql to start."
+wait_mysql_start
 #
 # Check differences between two databases - patched database and standalone installed here
 #
 echo "Checking differences between databases..."
-MYOUTPUT=$(docker exec -t $CONTAINER_NAME sh -c "mysqldiff --skip-table-options --force --server1=root:$PASSWORD@mysql --server2=root@localhost aql_db:aql_db")
+MYOUTPUT=$(docker exec -t $CONTAINER_NAME sh -c "mysqldiff --skip-table-options --force --server1=root:'$PASSWORD'@mysql --server2=root@localhost aql_db:aql_db")
 EXIT_CODE=$?
+echo "exit code: $EXIT_CODE"
 if [ $EXIT_CODE -ne 0 ]; then
-    echo "$MYOUTPUT"
+    echo "ide output: $MYOUTPUT"
     remove_container
     exit $EXIT_CODE
 fi
