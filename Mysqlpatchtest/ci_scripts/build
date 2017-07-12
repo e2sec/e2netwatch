@@ -13,9 +13,13 @@
 ####################################################################################################
 # Files to ship.
 #
-SHIP_FILES=( Dockerfile \
-                ../Admin/filesystem/mysql_data/aql/sql_scripts/import_database.sql
+SHIP_FILES=( Dockerfile 
 		   )
+#
+####################################################################################################
+# Database modules to test.
+#
+DATABASE_MODULES="user_management aql"
 #
 ####################################################################################################
 # Include convenience functions.
@@ -30,8 +34,14 @@ BUILD_DIR=${1:-../build/kyn/Mysqltest}
 # Ship into the staging area.
 #
 ship SHIP_FILES[@] $BUILD_DIR
-
+####################################################################################################
+# Prepare scripts directory and get import_database script from Admin for each Mysql database.
+#
 mkdir $BUILD_DIR/scripts
-cp ../Admin/filesystem/mysql_data/aql/sql_scripts/import_database.sql $BUILD_DIR/scripts/aql.sql
+for database_module in $DATABASE_MODULES
+do
+    cp ../Admin/filesystem/mysql_data/${database_module}/sql_scripts/import_database.sql $BUILD_DIR/scripts/${database_module}_db.sql
+done
+#
 ####################################################################################################
 exit 0

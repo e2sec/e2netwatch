@@ -10,7 +10,7 @@
 #
 # Notes: -
 #
-# Usage: mysqlpatchtest.sh [-p mysqlrootpassword]
+# Usage: mysqlpatchtest.sh -d "database1 [database2 ...]" [-p mysqlrootpassword] [-q]
 #
 ####################################################################################################
 #
@@ -27,47 +27,115 @@ mysql_check() {
 # Wait for Mysql to start
 #
 wait_mysql_start() {
-    RETRY=3
-    SAFETY_CHECK_MAX=5
-    SAFETY_CHECK_CURRENT=$SAFETY_CHECK_MAX
-    LOG=$( mysql_check > /dev/null )
-    EXIT_CODE=$?
-    while [ $EXIT_CODE -ne 0 ] || [ $SAFETY_CHECK_CURRENT -gt 0 ]; do
-        if [ $EXIT_CODE -eq 0 ]; then
-            SAFETY_CHECK_CURRENT=$((SAFETY_CHECK_CURRENT-1))
+    [ $LOGGING -eq 1 ] && echo -n "Waiting for mysql to start"
+    local RETRY=3
+    local SAFETY_CHECK_MAX=5
+    local safety_check_current=$SAFETY_CHECK_MAX
+    local log=$( mysql_check > /dev/null )
+    local exit_code=$?
+    while [ $exit_code -ne 0 ] || [ $safety_check_current -gt 0 ]; do
+        if [ $exit_code -eq 0 ]; then
+            safety_check_current=$((safety_check_current-1))
         else
-            SAFETY_CHECK_CURRENT=$SAFETY_CHECK_MAX
+            safety_check_current=$SAFETY_CHECK_MAX
         fi
-        echo -n "."
+        [ $LOGGING -eq 1 ] && echo -n "."
         sleep $RETRY
-        LOG=$( mysql_check > /dev/null )
-        EXIT_CODE=$?
+        log=$( mysql_check > /dev/null )
+        exit_code=$?
     done
-    log_success $EXIT_CODE "$LOG"
+    [ $LOGGING -eq 1 ] && log_success $exit_code "$log"
 }
 #
 # Import test databases inside container
 #
 add_databases() {
-    LOG=$( docker exec -t $CONTAINER_NAME sh -c "mysql < ./tmp/scripts/aql.sql" > /dev/null )
-    log_success $? "$LOG"
+    local database
+    local log
+    for database in $DATABASES
+    do
+        [ $LOGGING -eq 1 ] && echo -n "Importing test database $database..."
+        local log=$( docker exec -t $CONTAINER_NAME sh -c "mysql < ./tmp/scripts/'$database'.sql" > /dev/null )
+        [ $LOGGING -eq 1 ] && log_success $? "$log"
+    done
+}
+#
+# Check differences between two databases - patched database and standalone installed here
+#
+check_differences() {
+    [ $LOGGING -eq 1 ] && echo "Checking differences for databases ($DATABASES)..."
+    local database
+    local log
+    local exit_code
+    local differences
+    for database in $DATABASES
+    do
+        log=$( docker exec -t $CONTAINER_NAME sh -c "mysqldiff --skip-table-options --force --server1=root:'$PASSWORD'@mysql --server2=root@localhost '$database':'$database'" )
+        exit_code=$?
+        # Check if command executed properly
+        if [ $exit_code -ne 0 ]; then
+            [ $LOGGING -eq 1 ] && echo "$log"
+            remove_container
+            exit $exit_code
+        fi
+        differences=$(echo "$log" | grep -E "^# WARNING: Objects in server|^# Comparing .*\[FAIL\]")
+        if [ $( echo differences | wc -l ) -eq 0 ]; then
+            echo "SUCCESS in $database"
+        else
+            echo "FAIL in $database"
+            [ $LOGGING -eq 1 ] && echo "$differences"
+        fi
+    done
 }
 #
 # Stop and remove running container
 #
 remove_container() {
-    echo -n "Stopping and removing container..."
-    LOG=$( docker stop $CONTAINER_NAME;docker rm -v $CONTAINER_NAME > /dev/null)
-    log_success $? "$LOG"
+    [ $LOGGING -eq 1 ] && echo -n "Stopping and removing container..."
+    local log=$( docker stop $CONTAINER_NAME;docker rm -v $CONTAINER_NAME > /dev/null)
+    [ $LOGGING -eq 1 ] && log_success $? "$log"
 }
 #
-# Getting the Mysql root password
+# Create and start container for testing mysql patch
+#
+start_container() {
+    [ $LOGGING -eq 1 ] && echo -n "Starting mysql patch test container..."
+    local log=$( docker run -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -d --name=$CONTAINER_NAME $NETWORK $IMAGE > /dev/null )
+    [ $LOGGING -eq 1 ] && log_success $? "$log"
+}
+#
+# print command line option onto console
+#
+print_help()
+{
+    echo
+    echo "Syntax:   mysqlpatchtest.sh -d \"database_name_1 [database_name_2 ...]\" [-p some_password] [-q]"
+    echo
+    echo "Options:"
+    echo "    -d"
+    echo "        list databases to test"
+    echo "    -p"
+    echo "        Mysql root password"
+    echo "    -q"
+    echo "        run \"quietly\" with just final info about success"
+    echo
+}
+#
+# Getting the function arguments
 #
 PASSWORD="kyn_RO0T_password" #TODO
-while getopts p: OPT; do
+LOGGING=1
+DATABASES=""
+while getopts p:qd: OPT; do
 	[ $OPT == "p" ] && PASSWORD=$OPTARG
+    [ $OPT == "q" ] && LOGGING=0
+    [ $OPT == "d" ] && DATABASES=$OPTARG
 done
 shift $((OPTIND-1))
+if [ -z $DATABASES ]; then
+    [ $LOGGING -eq 1 ] && print_help
+    exit
+fi
 #
 # Setting variables
 #
@@ -83,37 +151,20 @@ fi
 #
 # Create and start container for testing mysql patch
 #
-echo -n "Starting mysql patch test container..."
-LOG=$( docker run -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -d --name=$CONTAINER_NAME $NETWORK kyn/mysqltest > /dev/null )
-log_success $? "$LOG"
+start_container
 #
 # Wait Mysql to start
 #
-echo -n "Waiting for mysql to start"
 wait_mysql_start
 #
 # Import test databases
 #
-echo -n "Importing test databases..."
 add_databases
 #
-# Check differences between two databases - patched database and standalone installed here
+# Check differences for all databases
 #
-echo "Checking differences between databases..."
-MYOUTPUT=$(docker exec -t $CONTAINER_NAME sh -c "mysqldiff --skip-table-options --force --server1=root:'$PASSWORD'@mysql --server2=root@localhost aql_db:aql_db")
-EXIT_CODE=$?
-echo "exit code: $EXIT_CODE"
-if [ $EXIT_CODE -ne 0 ]; then
-    echo "ide output: $MYOUTPUT"
-    remove_container
-    exit $EXIT_CODE
-fi
-DIFFERENCES=$(echo "$MYOUTPUT" | grep -E "^# WARNING: Objects in server|^# Comparing .*\[FAIL\]" -c)
-if [ $DIFFERENCES -eq 0 ]; then
-    echo "SUCCESS No differences"
-else
-    echo "FAIL There are $DIFFERENCES differences"
-    echo "$MYOUTPUT"
-fi
+check_differences
+#
 # Stop and remove container
+#
 remove_container
