@@ -32,9 +32,9 @@ my_echo() {
     shift $((OPTIND-1))
     #
     if [ $same_line -eq 1 ]; then
-        echo -n $message
+        echo -n "$message"
     else
-        echo $message
+        echo "$message"
     fi
 }
 #
@@ -49,7 +49,7 @@ mysql_check() {
 # SAFETY_CHECK_* - For some reason mysql server goes up, and after couple of seconds down again, and then up again. To verify if it is up definitely, we use "safety check"
 #
 wait_mysql_start() {
-    my_echo -n "Waiting for mysql to start"
+    my_echo -n -m "Waiting for mysql to start"
     local RETRY=3
     local SAFETY_CHECK_MAX=5
     local safety_check_current=$SAFETY_CHECK_MAX
@@ -61,12 +61,12 @@ wait_mysql_start() {
         else
             safety_check_current=$SAFETY_CHECK_MAX
         fi
-        my_echo -n "."
+        my_echo -n -m "."
         sleep $RETRY
         log=$( mysql_check > /dev/null )
         exit_code=$?
     done
-    [ $LOGGING -eq 1 ] && log_success $exit_code "$log"
+    my_echo -m "$( log_success $exit_code "$log" )
 }
 #
 # Run sql scripts to import databases
@@ -76,16 +76,16 @@ add_databases() {
     local log
     for database in $DATABASES
     do
-        [ $LOGGING -eq 1 ] && echo -n "Importing test database $database..."
+        my_echo -n -m "Importing test database $database..."
         local log=$( docker exec -t $CONTAINER_NAME sh -c "mysql < ./tmp/scripts/'$database'.sql" > /dev/null )
-        [ $LOGGING -eq 1 ] && log_success $? "$log"
+        my_echo -m "$( log_success $? "$log" )
     done
 }
 #
 # Check differences between two databases - patched database and standalone installed here
 #
 check_differences() {
-    [ $LOGGING -eq 1 ] && echo "Checking differences for databases ($DATABASES)..."
+    my_echo -m "Checking differences for databases ($DATABASES)..."
     local database
     local log
     local exit_code
@@ -96,7 +96,7 @@ check_differences() {
         exit_code=$?
         # Check if command executed properly
         if [ $exit_code -ne 0 ]; then
-            my_echo "$log"
+            my_echo -m "$log"
             remove_container
             exit $exit_code
         fi
@@ -105,7 +105,7 @@ check_differences() {
             echo "SUCCESS [$database]"
         else
             echo "FAIL [$database]"
-            my_echo "$differences"
+            my_echo -m "$differences"
         fi
     done
 }
@@ -113,17 +113,17 @@ check_differences() {
 # Stop and remove running container
 #
 remove_container() {
-    [ $LOGGING -eq 1 ] && echo -n "Stopping and removing container..."
+    my_echo -n -m "Stopping and removing container..."
     local log=$( docker stop $CONTAINER_NAME;docker rm -v $CONTAINER_NAME > /dev/null)
-    [ $LOGGING -eq 1 ] && log_success $? "$log"
+    my_echo -m "$( log_success $? "$log" )
 }
 #
 # Create and start container for testing mysql patch
 #
 start_container() {
-    [ $LOGGING -eq 1 ] && echo -n "Starting mysql patch test container..."
+    my_echo -n -m "Starting mysql patch test container..."
     local log=$( docker run -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -d --name=$CONTAINER_NAME $NETWORK $IMAGE > /dev/null )
-    [ $LOGGING -eq 1 ] && log_success $? "$log"
+    my_echo -m "$( log_success $? "$log" )
 }
 #
 # print command line option onto console
