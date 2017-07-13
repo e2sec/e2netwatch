@@ -18,7 +18,27 @@
 #
 . ./ci_scripts/common
 #
-# Check if Mysql is up and running
+# Custom version of echo function which first checks if logging is enabled
+#
+my_echo() {
+    [ $LOGGING -eq 0 ] && return
+    local OPTIND
+    local same_line=0
+    local message=""
+    while getopts nm: OPT; do
+        [ $OPT == "n" ] && same_line=1
+        [ $OPT == "m" ] && message=$OPTARG
+    done
+    shift $((OPTIND-1))
+    #
+    if [ $same_line -eq 1 ]; then
+        echo -n $message
+    else
+        echo $message
+    fi
+}
+#
+# Get check answer from mysql server
 #
 mysql_check() {
     docker exec -t kyn_mysqlpatchtest_1 mysql -e "select 1"
@@ -26,8 +46,10 @@ mysql_check() {
 #
 # Wait for Mysql to start
 #
+# SAFETY_CHECK_* - For some reason mysql server goes up, and after couple of seconds down again, and then up again. To verify if it is up definitely, we use "safety check"
+#
 wait_mysql_start() {
-    [ $LOGGING -eq 1 ] && echo -n "Waiting for mysql to start"
+    my_echo -n "Waiting for mysql to start"
     local RETRY=3
     local SAFETY_CHECK_MAX=5
     local safety_check_current=$SAFETY_CHECK_MAX
@@ -39,7 +61,7 @@ wait_mysql_start() {
         else
             safety_check_current=$SAFETY_CHECK_MAX
         fi
-        [ $LOGGING -eq 1 ] && echo -n "."
+        my_echo -n "."
         sleep $RETRY
         log=$( mysql_check > /dev/null )
         exit_code=$?
@@ -47,7 +69,7 @@ wait_mysql_start() {
     [ $LOGGING -eq 1 ] && log_success $exit_code "$log"
 }
 #
-# Import test databases inside container
+# Run sql scripts to import databases
 #
 add_databases() {
     local database
@@ -74,16 +96,16 @@ check_differences() {
         exit_code=$?
         # Check if command executed properly
         if [ $exit_code -ne 0 ]; then
-            [ $LOGGING -eq 1 ] && echo "$log"
+            my_echo "$log"
             remove_container
             exit $exit_code
         fi
         differences=$(echo "$log" | grep -E "^# WARNING: Objects in server|^# Comparing .*\[FAIL\]")
         if [ $( echo differences | wc -l ) -eq 0 ]; then
-            echo "SUCCESS in $database"
+            echo "SUCCESS [$database]"
         else
-            echo "FAIL in $database"
-            [ $LOGGING -eq 1 ] && echo "$differences"
+            echo "FAIL [$database]"
+            my_echo "$differences"
         fi
     done
 }
@@ -123,16 +145,16 @@ print_help()
 #
 # Getting the function arguments
 #
-PASSWORD="kyn_RO0T_password" #TODO
+PASSWORD=""
 LOGGING=1
-DATABASES=""
+DATABASES=
 while getopts p:qd: OPT; do
 	[ $OPT == "p" ] && PASSWORD=$OPTARG
     [ $OPT == "q" ] && LOGGING=0
     [ $OPT == "d" ] && DATABASES=$OPTARG
 done
 shift $((OPTIND-1))
-if [ -z $DATABASES ]; then
+if [ -z "$DATABASES" ]; then
     [ $LOGGING -eq 1 ] && print_help
     exit
 fi
