@@ -66,7 +66,7 @@ wait_mysql_start() {
         log=$( mysql_check > /dev/null )
         exit_code=$?
     done
-    my_echo -m "$( log_success $exit_code "$log" )
+    my_echo -m "$( log_success $exit_code "$log" )"
 }
 #
 # Run sql scripts to import databases
@@ -78,20 +78,22 @@ add_databases() {
     do
         my_echo -n -m "Importing test database $database..."
         local log=$( docker exec -t $CONTAINER_NAME sh -c "mysql < ./tmp/scripts/'$database'.sql" > /dev/null )
-        my_echo -m "$( log_success $? "$log" )
+        my_echo -m "$( log_success $? "$log" )"
     done
 }
 #
 # Check differences between two databases - patched database and standalone installed here
 #
 check_differences() {
-    my_echo -m "Checking differences for databases ($DATABASES)..."
+    my_echo -m "Checking differences for databases..."
+    local grep_expression="^# WARNING: Objects in server|^# Comparing .*\[FAIL\]"
     local database
     local log
     local exit_code
     local differences
     for database in $DATABASES
     do
+        my_echo -m "Checking difference for $database..."
         log=$( docker exec -t $CONTAINER_NAME sh -c "mysqldiff --skip-table-options --force --server1=root:'$PASSWORD'@mysql --server2=root@localhost '$database':'$database'" )
         exit_code=$?
         # Check if command executed properly
@@ -100,8 +102,9 @@ check_differences() {
             remove_container
             exit $exit_code
         fi
-        differences=$(echo "$log" | grep -E "^# WARNING: Objects in server|^# Comparing .*\[FAIL\]")
-        if [ $( echo differences | wc -l ) -eq 0 ]; then
+        differences=$(echo "$log" | grep -E "$grep_expression")
+        differences_number=$(echo "$log" | grep -E "$grep_expression" -c)
+        if [ $differences_number -eq 0 ]; then
             echo "SUCCESS [$database]"
         else
             echo "FAIL [$database]"
@@ -115,7 +118,7 @@ check_differences() {
 remove_container() {
     my_echo -n -m "Stopping and removing container..."
     local log=$( docker stop $CONTAINER_NAME;docker rm -v $CONTAINER_NAME > /dev/null)
-    my_echo -m "$( log_success $? "$log" )
+    my_echo -m "$( log_success $? "$log" )"
 }
 #
 # Create and start container for testing mysql patch
@@ -123,7 +126,7 @@ remove_container() {
 start_container() {
     my_echo -n -m "Starting mysql patch test container..."
     local log=$( docker run -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -d --name=$CONTAINER_NAME $NETWORK $IMAGE > /dev/null )
-    my_echo -m "$( log_success $? "$log" )
+    my_echo -m "$( log_success $? "$log" )"
 }
 #
 # print command line option onto console

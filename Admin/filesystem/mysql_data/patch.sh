@@ -49,6 +49,10 @@ done
 #
 shift $((OPTIND-1))
 #
+# Starting message
+#
+echo "Patching $DATABASE"
+#
 # Getting the database version number
 #
 echo -n "Getting database version number..."
