@@ -62,11 +62,9 @@ public interface AQLManager {
 	
 	/**
 	 * Manage validating AQL rule
-	 *
-	 * @param rule - AQL rule to be validated
 	 * 
 	 * @return success info
 	 */
-	JsonReturnData<String> aqlRuleValidation(final String rule);
+	JsonReturnData<String> aqlRuleValidation(final AqlParams params);
 	
 }

@@ -296,3 +296,22 @@
         - compare: {jsonpath_mini: "status", comparator: "eq", expected: 1}
         # Check if error message is right
         - compare: {jsonpath_mini: "errorMessage", comparator: "eq", expected: 'AQL rule not found'}
+
+#
+# Validate AQL rule - OK
+#
+- test:
+    - name: "Validate AQL rule - OK"
+    - url: "/KynKiteWebApp/rest/aql/rules/validate"
+    - method: "POST"
+    - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
+    - body: '
+        {
+            "rule": "(SUM SSCOPE \"0.0.0.0/0\",\"now-15m\", \"now\", PRT MATCHES 23) > 0",
+        }
+    '
+    - validators:
+        # Check if status is 0
+        - compare: {jsonpath_mini: "status", comparator: "eq", expected: 0}
+        # Check if error message is right
+        - compare: {jsonpath_mini: "errorMessage", comparator: "eq", expected: 'OK'}

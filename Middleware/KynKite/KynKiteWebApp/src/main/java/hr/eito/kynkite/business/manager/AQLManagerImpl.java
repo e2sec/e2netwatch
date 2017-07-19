@@ -154,9 +154,13 @@ public class AQLManagerImpl implements AQLManager {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Override
-	public JsonReturnData<String> aqlRuleValidation(String rule) {
+	public JsonReturnData<String> aqlRuleValidation(final AqlParams params) {
+		return this.validateRule(params.getRule());
+	}
+	
+	@SuppressWarnings("deprecation")
+	private JsonReturnData<String> validateRule(String rule) {
 		// Check if rule is empty
 		if (isRuleEmpty(rule)) {
 			return new JsonReturnData<>(CustomError.AQL_RULE_MISSING.getErrorMessage());

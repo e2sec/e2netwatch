@@ -228,7 +228,9 @@ public class AQLManagerImplTest {
 	 * @param rule to be validated
 	 */
 	private void testSingleAqlRuleValidation(final String rule) {
-		JsonReturnData<String> resultMissingRule = aqlManager.aqlRuleValidation(rule);
+		AqlParams params = new AqlParams();
+		params.setRule(rule);
+		JsonReturnData<String> resultMissingRule = aqlManager.aqlRuleValidation(params);
 		
 		Assert.assertTrue(resultMissingRule.isOK());
 		Assert.assertEquals(CustomMessage.AQL_RULE_VALID.getMessage(), resultMissingRule.getContent());
@@ -240,7 +242,9 @@ public class AQLManagerImplTest {
 	@Test
 	public void testAqlRuleValidation_invalid() {
 		String rule = "invalid_rule";
-		JsonReturnData<String> resultMissingRule = aqlManager.aqlRuleValidation(rule);
+		AqlParams params = new AqlParams();
+		params.setRule(rule);
+		JsonReturnData<String> resultMissingRule = aqlManager.aqlRuleValidation(params);
 		
 		Assert.assertFalse(resultMissingRule.isOK());
 	}
