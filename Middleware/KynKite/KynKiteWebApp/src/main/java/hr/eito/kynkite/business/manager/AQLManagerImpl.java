@@ -20,6 +20,8 @@
 
 package hr.eito.kynkite.business.manager;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,11 +29,14 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import cup.parser;
+import jflex.Scanner;
 import hr.eito.kynkite.aql.dao.RulesetDAO;
 import hr.eito.kynkite.aql.model.AqlParams;
 import hr.eito.kynkite.aql.model.Ruleset;
 import hr.eito.kynkite.aql.model.dto.RulesetReturnResult;
 import hr.eito.kynkite.utils.CustomError;
+import hr.eito.kynkite.utils.CustomMessage;
 import hr.eito.model.JsonReturnData;
 
 
@@ -147,6 +152,43 @@ public class AQLManagerImpl implements AQLManager {
 		} catch (Exception e) {
 			return new JsonReturnData<>(e.getMessage());
 		}
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Override
+	public JsonReturnData<String> aqlRuleValidation(String rule) {
+		// Check if rule is empty
+		if (isRuleEmpty(rule)) {
+			return new JsonReturnData<>(CustomError.AQL_RULE_MISSING.getErrorMessage());
+		}
+		// Create return object
+		JsonReturnData<String> returnJson = new JsonReturnData<>();
+		
+		// Create a stream to hold the output
+	    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	    PrintStream ps = new PrintStream(baos);
+	    // IMPORTANT: Save the old System.out and System.err
+	    PrintStream oldOut = System.out;
+	    PrintStream oldErr = System.err;
+	    // Tell Java to use your special stream
+	    System.setOut(ps);
+	    System.setErr(ps);
+		try {
+			// Try parsing the rule
+			parser p = new parser(new Scanner(new java.io.StringReader(rule)));
+			p.parse();
+			
+			// Prepare success answer
+			returnJson.setOK();
+			returnJson.setContent(CustomMessage.AQL_RULE_VALID.getMessage());
+		} catch (Exception e) {
+			returnJson.setErrorMessage(baos.toString() + e.getMessage());
+		} finally {
+			// Put things back
+		    System.setOut(oldOut);
+		    System.setErr(oldErr);
+		}
+		return returnJson;
 	}
 	
 	/**

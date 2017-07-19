@@ -60,4 +60,13 @@ public interface AQLManager {
 	 */
 	JsonReturnData<String> deleteAqlRule(final AqlParams params);
 	
+	/**
+	 * Manage validating AQL rule
+	 *
+	 * @param rule - AQL rule to be validated
+	 * 
+	 * @return success info
+	 */
+	JsonReturnData<String> aqlRuleValidation(final String rule);
+	
 }
