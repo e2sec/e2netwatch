@@ -307,7 +307,7 @@
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
         {
-            "rule": "(SUM SSCOPE \"0.0.0.0/0\",\"now-15m\", \"now\", PRT MATCHES 23) > 0",
+            "rule": "(SUM SSCOPE \"0.0.0.0/0\",\"now-15m\", \"now\", PRT MATCHES 23) > 0"
         }
     '
     - validators:
@@ -315,3 +315,39 @@
         - compare: {jsonpath_mini: "status", comparator: "eq", expected: 0}
         # Check if error message is right
         - compare: {jsonpath_mini: "errorMessage", comparator: "eq", expected: 'OK'}
+
+#
+# Validate AQL rule - invalid - empty rule
+#
+- test:
+    - name: "Validate AQL rule - invalid - empty rule"
+    - url: "/KynKiteWebApp/rest/aql/rules/validate"
+    - method: "POST"
+    - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
+    - body: '
+        {
+            "rule": ""
+        }
+    '
+    - validators:
+        # Check if status is 1
+        - compare: {jsonpath_mini: "status", comparator: "eq", expected: 1}
+        # Check if error message is right
+        - compare: {jsonpath_mini: "errorMessage", comparator: "eq", expected: 'Empty rule not allowed'}
+
+#
+# Validate AQL rule - invalid
+#
+- test:
+    - name: "Validate AQL rule - invalid"
+    - url: "/KynKiteWebApp/rest/aql/rules/validate"
+    - method: "POST"
+    - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
+    - body: '
+        {
+            "rule": "invalid_rule"
+        }
+    '
+    - validators:
+        # Check if status is 1
+        - compare: {jsonpath_mini: "status", comparator: "eq", expected: 1}
