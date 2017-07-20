@@ -252,11 +252,11 @@ public class ElasticSearchManagerTest {
 		Assert.assertTrue(result.isOK());
 
 		CMDBReturnResult content = result.getContent();
-		Assert.assertEquals(4, content.getData().size());
+		Assert.assertEquals(1, content.getData().size());
 
 		CMDBReturnResultData entry = content.getData().get(0);
 		checkCMDBEntry(entry, "10.0.0.2", "255.255.255.255", 32, "testing.com. (active PTR), testing.net.", "IP-Admin", "Bochum", "DE");
-		entry = content.getData().get(1);
+		entry = content.getData().get(0);
 	}
 
 	/**
