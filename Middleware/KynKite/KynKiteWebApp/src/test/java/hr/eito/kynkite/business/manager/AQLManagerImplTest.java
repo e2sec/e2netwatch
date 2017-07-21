@@ -216,24 +216,11 @@ public class AQLManagerImplTest {
 				"(SUM SSCOPE \"0.0.0.0/0\", \"now-15m\", \"now\", PROTO MATCHES 47) > 0",
 				"(SUM SSCOPE \"0.0.0.0/0\",\"now-15m\", \"now\", SRC MATCHES \"0.0.0.0/0\")/(SUM SSCOPE \"0.0.0.0/0\",\"now-30m\", \"now-15m\", SRC MATCHES \"0.0.0.0/0\") > 10",
 				"((COUNT SSCOPE \"0.0.0.0/0\", \"now-1d\",\"now\",PRT MATCHES 53)/(DCARD SSCOPE \"10.0.0.0/0\", \"now-1d\",\"now\",PRT MATCHES 80))/((COUNT SSCOPE \"10.0.0.0/0\", \"now-7d\",\"now-1d\",PRT MATCHES 53)/(DCARD SSCOPE \"10.0.0.0/0\", \"now-7d\",\"now-1d\",PRT MATCHES 80))<20",
-				"(((SUM DSCOPE \"213.0.0.0/8\", \"now-15m\",\"now\", PRT MATCHES 80)/(COUNT DSCOPE \"213.0.0.0/8\", \"now-15m\",\"now\", PRT MATCHES 80))/((SUM DSCOPE \"213.0.0.0/8\", \"now-30m\",\"now-15m\", PRT MATCHES 80)/(COUNT DSCOPE \"213.0.0.0/8\", \"now-15m\",\"now\", PRT MATCHES 80))>10) OR (((SUM DSCOPE \"213.0.0.0/8\",\"now-15m\",\"now\", PRT MATCHES 80)/(COUNT DSCOPE \"213.0.0.0/8\",\"now-15m\",\"now\", PRT MATCHES 80))/((SUM DSCOPE \"213.0.0.0/8\",\"now-30m\",\"now-15m\", PRT MATCHES 80)/(COUNT DSCOPE \"213.0.0.0/8\",\"now-15m\",\"now\", PRT MATCHES 80))<0.1)"};
+				"(((SUM DSCOPE \"213.0.0.0/8\", \"now-15m\",\"now\", PRT MATCHES 80)/(COUNT DSCOPE \"213.0.0.0/8\", \"now-15m\",\"now\", PRT MATCHES 80))/((SUM DSCOPE \"213.0.0.0/8\", \"now-30m\",\"now-15m\", PRT MATCHES 80)/(COUNT DSCOPE \"213.0.0.0/8\", \"now-15m\",\"now\", PRT MATCHES 80))>10) OR (((SUM DSCOPE \"213.0.0.0/8\",\"now-15m\",\"now\", PRT MATCHES 80)/(COUNT DSCOPE \"213.0.0.0/8\",\"now-15m\",\"now\", PRT MATCHES 80))/((SUM DSCOPE \"213.0.0.0/8\",\"now-30m\",\"now-15m\", PRT MATCHES 80)/(COUNT DSCOPE \"213.0.0.0/8\",\"now-15m\",\"now\", PRT MATCHES 80))<0.1)"
+		};
 		for (String rule : ruleList) {
-			testSingleAqlRuleValidation(rule);
+			testSingleAqlRuleValidation(rule, true);
 		}
-	}
-	
-	/**
-	 * Helper method for validating single aql rule
-	 * 
-	 * @param rule to be validated
-	 */
-	private void testSingleAqlRuleValidation(final String rule) {
-		AqlParams params = new AqlParams();
-		params.setRule(rule);
-		JsonReturnData<String> resultMissingRule = aqlManager.aqlRuleValidation(params);
-		
-		Assert.assertTrue(resultMissingRule.isOK());
-		Assert.assertEquals(CustomMessage.AQL_RULE_VALID.getMessage(), resultMissingRule.getContent());
 	}
 	
 	/**
@@ -241,12 +228,43 @@ public class AQLManagerImplTest {
 	 */
 	@Test
 	public void testAqlRuleValidation_invalid() {
-		String rule = "invalid_rule";
+		String[] ruleList = {
+				"invalid_rule",
+				"(SUMA SSCOPE \"0.0.0.0/0\",\"now-15m\", \"now\", PRT MATCHES 23) > 0"
+		};
+		for (String rule : ruleList) {
+			testSingleAqlRuleValidation(rule, false);
+		}
+	}
+	
+	/**
+	 * Helper method for validating single aql rule
+	 * 
+	 * @param rule to be validated
+	 * @param isValid expecting valid or invalid rule
+	 */
+	private void testSingleAqlRuleValidation(final String rule, boolean isValid) {
 		AqlParams params = new AqlParams();
 		params.setRule(rule);
-		JsonReturnData<String> resultMissingRule = aqlManager.aqlRuleValidation(params);
+		JsonReturnData<String> result = aqlManager.aqlRuleValidation(params);
 		
-		Assert.assertFalse(resultMissingRule.isOK());
+		Assert.assertEquals(new StringBuilder().append("Rule:\n")
+				.append(rule)
+				.append("\nexpected to be " + (isValid?"":"in") + "valid, but got:\n")
+				.append(result.getErrorMessage())
+				.append("\n")
+				.toString()
+				, isValid, result.isOK());
+		
+		if (isValid) {
+			Assert.assertEquals(new StringBuilder().append("Expected return message:\n")
+					.append(CustomMessage.AQL_RULE_VALID.getMessage())
+					.append("\nbut got message:\n")
+					.append(result.getContent())
+					.append("\n")
+					.toString()
+					, CustomMessage.AQL_RULE_VALID.getMessage(), result.getContent());
+		}
 	}
 	
 }
