@@ -194,29 +194,13 @@ public class AQLManagerImplTest {
 	 */
 	@Test
 	public void testAqlRuleValidation() {
-		String[] ruleList = {"((COUNT SSCOPE \"10.0.0.0/8\", \"now-15m\", \"now\", DST FOUND (LISTED \"now-30d\",\"now\",\"ip\" AS \"kyn-malware\")) > 0)",
-				"((DCARD SSCOPE \"0.0.0.0/0\", \"now-15m\", \"now\",PRT MATCHES 22) > 5) AND ((DCARD SSCOPE \"0.0.0.0/0\", \"now-10080m\", \"now-15m\",PRT MATCHES 22)<5)",
-				"((COUNT DSCOPE \"0.0.0.0/0\",\"now-15m\", \"now\", PRT MATCHES 22)/(COUNT DSCOPE \"0.0.0.0/0\",\"now-30m\", \"now-15m\", PRT MATCHES 22) > 10) AND ((SUM DSCOPE \"0.0.0.0/0\",\"now-15m\", \"now\", PRT MATCHES 22)/(SUM DSCOPE \"0.0.0.0/0\",\"now-30m\", \"now-15m\", PRT MATCHES 22) < 2)",
-				"((COUNT SSCOPE \"10.0.0.0/0\", \"now-15m\",\"now\", DST FOUND (LISTED \"now-30d\",\"now\",\"ip\" AS \"kyn-malware\")) > 0)",
-				"((SUM SSCOPE \"10.0.0.0/8\",\"now-15m\",\"now\",PRT MATCHES 445)>0) AND ((COUNT SSCOPE \"10.0.0.0/8\",\"now-15m\",\"now\",DST FOUND (LISTED \"now-30d\",\"now\",\"ip\" AS \"kyn-malware\")) > 0)",
-				"(COUNT SSCOPE \"0.0.0.0/0\",\"now-15m\", \"now\", SRC MATCHES \"0.0.0.0/0\")/(COUNT \"now-30m\", \"now-15m\", SRC MATCHES \"0.0.0.0/0\") > 10",
-				"(DCARD SSCOPE \"0.0.0.0/0\", \"now-15m\",\"now\", SRC MATCHES \"0.0.0.0/0\")/(DCARD SSCOPE \"0.0.0.0/0\", \"now-1440m\",\"now-15m\", SRC MATCHES \"0.0.0.0/0\") > 10",
-				"(SCARD DSCOPE \"10.0.0.0/8\", \"now-15m\", \"now\", PRT MATCHES 53)/(SCARD DSCOPE \"10.0.0.0/8\", \"now-1d\", \"now-15m\", PRT MATCHES 53)>10",
-				"((SCARD DSCOPE \"0.0.0.0/0\", \"now-15m\", \"now\", FLAGS MATCHES \"....S.\") > 5) AND ((SCARD DSCOPE \"0.0.0.0/0\", \"now-15m\", \"now\", FLAGS MATCHES \".A....\") = 0)",
-				"((COUNT SSCOPE \"10.0.0.0/0\", \"now-15m\",\"now\",DST FOUND(LISTED \"now-365d\",\"now\",\"IP\" AS \"protectedhosts\"))>0) AND ((COUNT SSCOPE \"10.0.0.0/0\", \"now-30d\",\"now\",DST FOUND(LISTED \"now-365d\",\"now\",\"IP\" AS \"protectedhosts\")) = 0)",
-				"(SUM SSCOPE \"0.0.0.0/0\",\"now-15m\", \"now\", PRT MATCHES 23) > 0",
-				"(COUNT DSCOPE \"0.0.0.0/0\",\"now-15m\", \"now\", PRT MATCHES 88)/(COUNT DSCOPE \"0.0.0.0/0\",\"now-30m\", \"now-15m\", PRT MATCHES 88) > 10",
-				"((SCARD DSCOPE \"0.0.0.0/0\",\"now-15m\",\"now\",PRT MATCHES 88) > 0) AND ((SCARD DSCOPE \"0.0.0.0/0\",\"now-7d\",\"now-15m\",PRT MATCHES 88) = 0)",
-				"(SUM DSCOPE \"0.0.0.0/0\",\"now-15m\", \"now\", PRT MATCHES 88)/(SUM DSCOPE \"0.0.0.0/0\",\"now-30m\", \"now-15m\", PRT MATCHES 88) > 10",
-				"(COUNT SSCOPE \"10.0.0.0/8\", \"now-15m\", \"now\", DST FOUND (LISTED \"now-30d\",\"now\",\"ip\" AS \"kyn-malware\")) > 0",
-				"((DCARD SSCOPE \"0.0.0.0/0\", \"now-60m\", \"now\",PROTO MATCHES 6) >100)",
-				"((PCARD SSCOPE \"0.0.0.0/0\", \"now-15m\", \"now\",PROTO MATCHES 6)>100) AND ((PCARD SSCOPE \"0.0.0.0/0\", \"now-30m\", \"now-15m\",PROTO MATCHES 6)<50)",
-				"(SCARD DSCOPE \"0.0.0.0/0\", \"now-15m\",\"now\", DST MATCHES \"0.0.0.0/0\")/(SCARD DSCOPE \"0.0.0.0/8\", \"now-1440m\",\"now-15m\", DST MATCHES \"0.0.0.0/0\") > 10",
-				"(SCARD DSCOPE \"0.0.0.0/0\",\"now-15m\", \"now\", PRT MATCHES 445)/(SCARD DSCOPE \"0.0.0.0/0\",\"now-30m\", \"now-15m\", PRT MATCHES 445) > 10",
-				"(SUM SSCOPE \"0.0.0.0/0\", \"now-15m\", \"now\", PROTO MATCHES 47) > 0",
-				"(SUM SSCOPE \"0.0.0.0/0\",\"now-15m\", \"now\", SRC MATCHES \"0.0.0.0/0\")/(SUM SSCOPE \"0.0.0.0/0\",\"now-30m\", \"now-15m\", SRC MATCHES \"0.0.0.0/0\") > 10",
-				"((COUNT SSCOPE \"0.0.0.0/0\", \"now-1d\",\"now\",PRT MATCHES 53)/(DCARD SSCOPE \"10.0.0.0/0\", \"now-1d\",\"now\",PRT MATCHES 80))/((COUNT SSCOPE \"10.0.0.0/0\", \"now-7d\",\"now-1d\",PRT MATCHES 53)/(DCARD SSCOPE \"10.0.0.0/0\", \"now-7d\",\"now-1d\",PRT MATCHES 80))<20",
-				"(((SUM DSCOPE \"213.0.0.0/8\", \"now-15m\",\"now\", PRT MATCHES 80)/(COUNT DSCOPE \"213.0.0.0/8\", \"now-15m\",\"now\", PRT MATCHES 80))/((SUM DSCOPE \"213.0.0.0/8\", \"now-30m\",\"now-15m\", PRT MATCHES 80)/(COUNT DSCOPE \"213.0.0.0/8\", \"now-15m\",\"now\", PRT MATCHES 80))>10) OR (((SUM DSCOPE \"213.0.0.0/8\",\"now-15m\",\"now\", PRT MATCHES 80)/(COUNT DSCOPE \"213.0.0.0/8\",\"now-15m\",\"now\", PRT MATCHES 80))/((SUM DSCOPE \"213.0.0.0/8\",\"now-30m\",\"now-15m\", PRT MATCHES 80)/(COUNT DSCOPE \"213.0.0.0/8\",\"now-15m\",\"now\", PRT MATCHES 80))<0.1)"
+		String[] ruleList = {
+				"SRC MATCHES DST"
+				, "(SRC FOUND (LISTED \"now-10m\", \"now\", \"some_identifier\" AS \"some-identifier18\"))"
+				, "(SUM \"now-15m\", \"now-5m\" ,\"192.168.0.4\") > 10"
+				, "(COUNT \"now-60m\", \"now\", \"192.168.0.4/0\" = 0)"
+				, "(SUM SSCOPE \"0.0.0.0/0\", \"now-365d\", \"now\", PRT MATCHES 3306) > 0"
+				, "(PCARD DSCOPE \"0.0.0.0/0\", \"now-1d\", \"now\", FLAGS MATCHES \"..P...\") > 0"
 		};
 		for (String rule : ruleList) {
 			testSingleAqlRuleValidation(rule, true);
@@ -229,8 +213,20 @@ public class AQLManagerImplTest {
 	@Test
 	public void testAqlRuleValidation_invalid() {
 		String[] ruleList = {
+				// invalid term
 				"invalid_rule",
-				"(SUMA SSCOPE \"0.0.0.0/0\",\"now-15m\", \"now\", PRT MATCHES 23) > 0"
+				 // non-existing keyword SRCA
+				"SRCA MATCHES DST"
+				 // identifier must start with letter
+				, "(SRC FOUND (LISTED \"now-10m\", \"now\", \"some_identifier\" AS \"18some-identifier18\"))"
+				// invalid IP address
+				, "(SUM \"now-15m\", \"now-5m\", \"392.168.0.4\") > 10"
+				// time sign "h" unknown
+				, "(COUNT \"now-60h\", \"now\", \"192.168.0.4/0\" = 0)"
+				// invalid ip mask
+				, "(SUM SSCOPE \"0.0.0.0/33\", \"now-365d\", \"now\", PRT MATCHES 3306) > 0"
+				// decimal number invalid
+				, "(PCARD DSCOPE \"0.0.0.0/0\", \"now-1d\", \"now\", FLAGS MATCHES \"..P...\") > 0,5"
 		};
 		for (String rule : ruleList) {
 			testSingleAqlRuleValidation(rule, false);
