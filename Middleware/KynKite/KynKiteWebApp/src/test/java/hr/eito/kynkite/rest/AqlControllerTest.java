@@ -111,4 +111,15 @@ public class AqlControllerTest {
 		Assert.assertFalse(result.isOK());
 	}
 	
+	/**
+	 * Test validating AQL rule API method
+	 */
+	@Test
+	public void testValidateAqlRule() {
+		AqlParams params = new AqlParams();
+		JsonReturnData<String> result = controller.validateAqlRule(params);
+		
+		Assert.assertFalse(result.isOK());
+	}
+	
 }

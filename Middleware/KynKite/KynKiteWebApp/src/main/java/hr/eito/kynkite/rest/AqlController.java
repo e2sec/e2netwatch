@@ -86,5 +86,16 @@ public class AqlController {
 		JsonReturnData<String> successInfo = aqlManager.deleteAqlRule(params);
 		return successInfo;
 	}
+	
+	/**
+	 * Validate AQL rule
+	 * 
+	 * @return success info as JSON
+	 */
+	@RequestMapping(value = "/aql/rules/validate", method = RequestMethod.POST, headers = "Accept=application/json")
+	public JsonReturnData<String> validateAqlRule(@RequestBody AqlParams params) {
+		JsonReturnData<String> successInfo = aqlManager.aqlRuleValidation(params);
+		return successInfo;
+	}
 
 }

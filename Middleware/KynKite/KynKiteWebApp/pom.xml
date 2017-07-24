@@ -227,12 +227,20 @@
 		    <artifactId>commons-validator</artifactId>
 		    <version>1.6</version>
 		</dependency>
+		
+		<!-- Java Cup -->
+		<dependency>
+			<groupId>com.github.vbmacher</groupId>
+			<artifactId>java-cup-runtime</artifactId>
+			<version>11b-20160615</version>
+		</dependency>
 
 	</dependencies>
 
 	<build>
 		<finalName>KynKiteWebApp</finalName>
 		<plugins>
+		
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -245,6 +253,7 @@
 					<showDeprecation>true</showDeprecation>
 				</configuration>
 			</plugin>
+			
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.6</version>
@@ -274,6 +283,7 @@
 					<filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
 				</configuration>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -322,8 +332,68 @@
 					</execution>
 				</executions>
 			</plugin>
+			
+			<!-- Generate parser.java and sym.java from java/main/cup/parser.cup -->
+			<plugin>
+				<groupId>com.github.vbmacher</groupId>
+				<artifactId>cup-maven-plugin</artifactId>
+				<version>11b-20160615</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<className>parser</className>
+					<symbolsName>sym</symbolsName>
+					<symbolsInterface>false</symbolsInterface>
+					<packageName>cup</packageName>
+					<outputDirectory>${project.build.directory}/generated-sources/aqlcheck</outputDirectory>
+				</configuration>
+			</plugin>
+			
+			<!-- Generate jflex Scanner.java from java/main/jflex/*.flex -->
+			<plugin>
+				<groupId>de.jflex</groupId>
+				<artifactId>jflex-maven-plugin</artifactId>
+				<version>1.6.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/generated-sources/aqlcheck</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<!-- Adding sources to classpath -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${project.build.directory}/generated-sources/aqlcheck/</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
 		</plugins>
 	</build>
+	
 	<reporting>
 		<plugins>
 			<plugin>

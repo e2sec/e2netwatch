@@ -33,6 +33,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import hr.eito.kynkite.aql.model.AqlParams;
 import hr.eito.kynkite.aql.model.dto.RulesetReturnResult;
 import hr.eito.kynkite.utils.CustomError;
+import hr.eito.kynkite.utils.CustomMessage;
 import hr.eito.model.JsonReturnData;
 
 /**
@@ -186,6 +187,80 @@ public class AQLManagerImplTest {
 		JsonReturnData<String> resultCorrectRule = aqlManager.deleteAqlRule(paramsCorrectRule);
 		
 		Assert.assertTrue(resultCorrectRule.isOK());
+	}
+	
+	/**
+	 * Test AQL rule validation
+	 */
+	@Test
+	public void testAqlRuleValidation() {
+		String[] ruleList = {
+				"SRC MATCHES DST"
+				, "(SRC FOUND (LISTED \"now-10m\", \"now\", \"some_identifier\" AS \"some-identifier18\"))"
+				, "(SUM \"now-15m\", \"now-5m\" ,\"192.168.0.4\") > 10"
+				, "(COUNT \"now-60m\", \"now\", \"192.168.0.4/0\" = 0)"
+				, "(SUM SSCOPE \"0.0.0.0/0\", \"now-365d\", \"now\", PRT MATCHES 3306) > 0"
+				, "(PCARD DSCOPE \"0.0.0.0/0\", \"now-1d\", \"now\", FLAGS MATCHES \"..P...\") > 0"
+		};
+		for (String rule : ruleList) {
+			testSingleAqlRuleValidation(rule, true);
+		}
+	}
+	
+	/**
+	 * Test AQL rule validation - invalid rule
+	 */
+	@Test
+	public void testAqlRuleValidation_invalid() {
+		String[] ruleList = {
+				// invalid term
+				"invalid_rule",
+				 // non-existing keyword SRCA
+				"SRCA MATCHES DST"
+				 // identifier must start with letter
+				, "(SRC FOUND (LISTED \"now-10m\", \"now\", \"some_identifier\" AS \"18some-identifier18\"))"
+				// invalid IP address
+				, "(SUM \"now-15m\", \"now-5m\", \"392.168.0.4\") > 10"
+				// time sign "h" unknown
+				, "(COUNT \"now-60h\", \"now\", \"192.168.0.4/0\" = 0)"
+				// invalid ip mask
+				, "(SUM SSCOPE \"0.0.0.0/33\", \"now-365d\", \"now\", PRT MATCHES 3306) > 0"
+				// decimal number invalid
+				, "(PCARD DSCOPE \"0.0.0.0/0\", \"now-1d\", \"now\", FLAGS MATCHES \"..P...\") > 0,5"
+		};
+		for (String rule : ruleList) {
+			testSingleAqlRuleValidation(rule, false);
+		}
+	}
+	
+	/**
+	 * Helper method for validating single aql rule
+	 * 
+	 * @param rule to be validated
+	 * @param isValid expecting valid or invalid rule
+	 */
+	private void testSingleAqlRuleValidation(final String rule, boolean isValid) {
+		AqlParams params = new AqlParams();
+		params.setRule(rule);
+		JsonReturnData<String> result = aqlManager.aqlRuleValidation(params);
+		
+		Assert.assertEquals(new StringBuilder().append("Rule:\n")
+				.append(rule)
+				.append("\nexpected to be " + (isValid?"":"in") + "valid, but got:\n")
+				.append(result.getErrorMessage())
+				.append("\n")
+				.toString()
+				, isValid, result.isOK());
+		
+		if (isValid) {
+			Assert.assertEquals(new StringBuilder().append("Expected return message:\n")
+					.append(CustomMessage.AQL_RULE_VALID.getMessage())
+					.append("\nbut got message:\n")
+					.append(result.getContent())
+					.append("\n")
+					.toString()
+					, CustomMessage.AQL_RULE_VALID.getMessage(), result.getContent());
+		}
 	}
 	
 }
