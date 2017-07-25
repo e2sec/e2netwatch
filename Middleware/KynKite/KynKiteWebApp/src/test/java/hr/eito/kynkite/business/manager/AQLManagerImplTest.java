@@ -110,7 +110,7 @@ public class AQLManagerImplTest {
 		Assert.assertEquals("Adding existing rule did not return expected error message", 
 				CustomError.AQL_RULE_ALREADY_EXISTS.getErrorMessage(), resultExistingRule.getErrorMessage());
 		
-		// TODO: Test addition of invalid rule
+		// Test addition of invalid rule
 		String invalidRule = "SOME INVALID RULE";
 		AqlParams paramsInvalidRule = new AqlParams();
 		paramsInvalidRule.setRule(invalidRule);
@@ -120,7 +120,7 @@ public class AQLManagerImplTest {
 				resultInvalidRule.isOK());
 		
 		// Test correct insert
-		String newRule = "New Rule";
+		String newRule = "SRC MATCHES DST";
 		String newDescription = "Description for new rule";
 		AqlParams paramsCorrectRule = new AqlParams();
 		paramsCorrectRule.setRule(newRule);
@@ -169,7 +169,7 @@ public class AQLManagerImplTest {
 		// Test editing missing rule
 		AqlParams paramsMissingRule = new AqlParams();
 		paramsMissingRule.setId(99);
-		paramsMissingRule.setRule("some rule");
+		paramsMissingRule.setRule("SRC = \"0.0.0.0\"");
 		JsonReturnData<RulesetReturnResult> resultMissingRule = aqlManager.editAqlRule(paramsMissingRule);
 		
 		Assert.assertFalse("Editing missing rule did not return error status", 
@@ -177,7 +177,7 @@ public class AQLManagerImplTest {
 		Assert.assertEquals("Editing missing rule did not return expected error message", 
 				CustomError.AQL_RULESET_MISSING.getErrorMessage(), resultMissingRule.getErrorMessage());
 		
-		// TODO: Test editing to invalid rule
+		// Test editing to invalid rule
 		String invalidRule = "SOME INVALID RULE";
 		AqlParams paramsInvalidRule = new AqlParams();
 		paramsInvalidRule.setId(2);
@@ -189,7 +189,7 @@ public class AQLManagerImplTest {
 		
 		// Test correct edit
 		Integer id = 2;
-		String rule = "Edit of rule 2";
+		String rule = "PRT > 8000";
 		String description = "Edited description for rule 2";
 		AqlParams paramsCorrectRule = new AqlParams();
 		paramsCorrectRule.setId(id);
