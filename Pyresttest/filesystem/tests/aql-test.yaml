@@ -43,7 +43,7 @@
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
         {
-            "rule": "Smoketest added rule",
+            "rule": "SRC MATCHES DST",
             "description": "smoke_added_rule"
         }
     '
@@ -57,7 +57,7 @@
         # Check if recordsFiltered is 1
         - compare: {jsonpath_mini: "content.recordsFiltered", comparator: "eq", expected: 1}
         # Check if rule text is as sent
-        - compare: {jsonpath_mini: "content.data.0.rule", comparator: "eq", expected: "Smoketest added rule"}
+        - compare: {jsonpath_mini: "content.data.0.rule", comparator: "eq", expected: "SRC MATCHES DST"}
         # Check if description is as sent
         - compare: {jsonpath_mini: "content.data.0.description", comparator: "eq", expected: "smoke_added_rule"}
     - extract_binds:
@@ -73,7 +73,7 @@
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
         {
-            "rule": "Smoketest added rule - for existance smoketest check",
+            "rule": "PRT > 3306",
             "description": ""
         }
     '
@@ -87,7 +87,7 @@
         # Check if recordsFiltered is 1
         - compare: {jsonpath_mini: "content.recordsFiltered", comparator: "eq", expected: 1}
         # Check if rule text is as sent
-        - compare: {jsonpath_mini: "content.data.0.rule", comparator: "eq", expected: "Smoketest added rule - for existance smoketest check"}
+        - compare: {jsonpath_mini: "content.data.0.rule", comparator: "eq", expected: "PRT > 3306"}
         # Check if description is as sent
         - compare: {jsonpath_mini: "content.data.0.description", comparator: "eq", expected: ""}
     - extract_binds:
@@ -112,6 +112,24 @@
         - compare: {jsonpath_mini: "status", comparator: "eq", expected: 1}
         # Check if error message is right
         - compare: {jsonpath_mini: "errorMessage", comparator: "eq", expected: 'Empty rule not allowed'}
+        
+#
+# Add new AQL rule - Invalid rule field
+#
+- test:
+    - name: "Add new AQL rule - Invalid rule field"
+    - url: "/KynKiteWebApp/rest/aql/rules/add"
+    - method: "POST"
+    - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
+    - body: '
+        {
+            "rule": "SOME INVALID RULE",
+            "description": ""
+        }
+    '
+    - validators:
+        # Check if status is 1
+        - compare: {jsonpath_mini: "status", comparator: "eq", expected: 1}
 
 #
 # Add new AQL rule - Rule exists
@@ -123,7 +141,7 @@
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
         {
-            "rule": "Smoketest added rule",
+            "rule": "SRC MATCHES DST",
             "description": "smoke_added_rule"
         }
     '
@@ -144,7 +162,7 @@
     - body: {template: '
         {
             "id": $id,
-            "rule": "EDITED: Smoketest added rule",
+            "rule": "DST MATCHES SRC",
             "description": "EDITED: smoke_added_rule"
         }
     '}
@@ -158,7 +176,7 @@
         # Check if recordsFiltered is 1
         - compare: {jsonpath_mini: "content.recordsFiltered", comparator: "eq", expected: 1}
         # Check if rule text is as sent
-        - compare: {jsonpath_mini: "content.data.0.rule", comparator: "eq", expected: "EDITED: Smoketest added rule"}
+        - compare: {jsonpath_mini: "content.data.0.rule", comparator: "eq", expected: "DST MATCHES SRC"}
         # Check if description is as sent
         - compare: {jsonpath_mini: "content.data.0.description", comparator: "eq", expected: "EDITED: smoke_added_rule"}
 
@@ -182,6 +200,25 @@
         - compare: {jsonpath_mini: "status", comparator: "eq", expected: 1}
         # Check if error message is right
         - compare: {jsonpath_mini: "errorMessage", comparator: "eq", expected: 'Empty rule not allowed'}
+        
+#
+# Edit AQL rule - Invalid rule field
+#
+- test:
+    - name: "Edit AQL rule - Invalid rule field"
+    - url: "/KynKiteWebApp/rest/aql/rules/edit"
+    - method: "POST"
+    - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
+    - body: {template: '
+        {
+            "id": $id,
+            "rule": "EDIT SOME INVALID RULE",
+            "description": ""
+        }
+    '}
+    - validators:
+        # Check if status is 1
+        - compare: {jsonpath_mini: "status", comparator: "eq", expected: 1}
 
 #
 # Edit AQL rule - Rule exists
@@ -194,7 +231,7 @@
     - body: {template: '
         {
             "id": $id,
-            "rule": "Smoketest added rule - for existance smoketest check",
+            "rule": "PRT > 3306",
             "description": ""
         }
     '}
@@ -215,7 +252,7 @@
     - body: '
         {
             "id": -1,
-            "rule": "Some random text",
+            "rule": "PRT > 8000",
             "description": ""
         }
     '

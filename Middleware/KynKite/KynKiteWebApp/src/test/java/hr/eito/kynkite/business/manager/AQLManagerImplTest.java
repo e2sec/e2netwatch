@@ -77,9 +77,12 @@ public class AQLManagerImplTest {
 	public void testAqlRulesList() {
 		JsonReturnData<RulesetReturnResult> returnResult = aqlManager.aqlRulesList();
 		
-		Assert.assertNotNull(returnResult.getContent());
-		Assert.assertEquals(3, returnResult.getContent().getRecordsFiltered());
-		Assert.assertEquals(3, returnResult.getContent().getRecordsTotal());
+		Assert.assertNotNull("List of rules null", 
+				returnResult.getContent());
+		Assert.assertEquals("List of filtered rules not expected size", 
+				3, returnResult.getContent().getRecordsFiltered());
+		Assert.assertEquals("List of rules not expected size", 
+				3, returnResult.getContent().getRecordsTotal());
 	}
 	
 	/**
@@ -92,31 +95,50 @@ public class AQLManagerImplTest {
 		paramsEmptyRule.setRule("");
 		JsonReturnData<RulesetReturnResult> resultEmptyRule = aqlManager.addAqlRule(paramsEmptyRule);
 		
-		Assert.assertFalse(resultEmptyRule.isOK());
-		Assert.assertEquals(CustomError.AQL_RULE_MISSING.getErrorMessage(), resultEmptyRule.getErrorMessage());
+		Assert.assertFalse("Empty rule did not return error status", 
+				resultEmptyRule.isOK());
+		Assert.assertEquals("Empty rule did not return expected error message", 
+				CustomError.AQL_RULE_MISSING.getErrorMessage(), resultEmptyRule.getErrorMessage());
 		
 		// Test adding existing rule
 		AqlParams paramsExistingRule = new AqlParams();
 		paramsExistingRule.setRule(aqlManager.aqlRulesList().getContent().getData().get(0).getRule()); // Rule from first ruleset
 		JsonReturnData<RulesetReturnResult> resultExistingRule = aqlManager.addAqlRule(paramsExistingRule);
 		
-		Assert.assertFalse(resultExistingRule.isOK());
-		Assert.assertEquals(CustomError.AQL_RULE_ALREADY_EXISTS.getErrorMessage(), resultExistingRule.getErrorMessage());
+		Assert.assertFalse("Adding existing rule did not return error status", 
+				resultExistingRule.isOK());
+		Assert.assertEquals("Adding existing rule did not return expected error message", 
+				CustomError.AQL_RULE_ALREADY_EXISTS.getErrorMessage(), resultExistingRule.getErrorMessage());
+		
+		// Test addition of invalid rule
+		String invalidRule = "SOME INVALID RULE";
+		AqlParams paramsInvalidRule = new AqlParams();
+		paramsInvalidRule.setRule(invalidRule);
+		JsonReturnData<RulesetReturnResult> resultInvalidRule = aqlManager.addAqlRule(paramsInvalidRule);
+		
+		Assert.assertFalse("Adding invalid rule did not return error status", 
+				resultInvalidRule.isOK());
 		
 		// Test correct insert
-		String newRule = "New Rule";
+		String newRule = "SRC MATCHES DST";
 		String newDescription = "Description for new rule";
 		AqlParams paramsCorrectRule = new AqlParams();
 		paramsCorrectRule.setRule(newRule);
 		paramsCorrectRule.setDescription(newDescription);
 		JsonReturnData<RulesetReturnResult> resultCorrectRule = aqlManager.addAqlRule(paramsCorrectRule);
 		
-		Assert.assertNotNull(resultCorrectRule.getContent());
-		Assert.assertEquals(1, resultCorrectRule.getContent().getRecordsFiltered());
-		Assert.assertEquals(1, resultCorrectRule.getContent().getRecordsTotal());
-		Assert.assertEquals(new Integer(4), resultCorrectRule.getContent().getData().get(0).getId());
-		Assert.assertEquals(newRule, resultCorrectRule.getContent().getData().get(0).getRule());
-		Assert.assertEquals(newDescription, resultCorrectRule.getContent().getData().get(0).getDescription());
+		Assert.assertNotNull("Adding rule action returned null object", 
+				resultCorrectRule.getContent());
+		Assert.assertEquals("Adding rule action did not return exactly 1 filtered record", 
+				1, resultCorrectRule.getContent().getRecordsFiltered());
+		Assert.assertEquals("Adding rule action did not return exactly 1 record", 
+				1, resultCorrectRule.getContent().getRecordsTotal());
+		Assert.assertEquals("Adding rule action did not return expected ID", 
+				new Integer(4), resultCorrectRule.getContent().getData().get(0).getId());
+		Assert.assertEquals("Adding rule action did not return expected rule text", 
+				newRule, resultCorrectRule.getContent().getData().get(0).getRule());
+		Assert.assertEquals("Adding rule action did not return expected rule description", 
+				newDescription, resultCorrectRule.getContent().getData().get(0).getDescription());
 	}
 	
 	/**
@@ -129,29 +151,45 @@ public class AQLManagerImplTest {
 		paramsEmptyRule.setRule("");
 		JsonReturnData<RulesetReturnResult> resultEmptyRule = aqlManager.editAqlRule(paramsEmptyRule);
 		
-		Assert.assertFalse(resultEmptyRule.isOK());
-		Assert.assertEquals(CustomError.AQL_RULE_MISSING.getErrorMessage(), resultEmptyRule.getErrorMessage());
+		Assert.assertFalse("Empty rule edit did not return error status", 
+				resultEmptyRule.isOK());
+		Assert.assertEquals("Empty rule edit did not return expected error message", 
+				CustomError.AQL_RULE_MISSING.getErrorMessage(), resultEmptyRule.getErrorMessage());
 		
 		// Test editing with existing rule
 		AqlParams paramsExistingRule = new AqlParams();
 		paramsExistingRule.setRule(aqlManager.aqlRulesList().getContent().getData().get(0).getRule()); // Rule from first ruleset
 		JsonReturnData<RulesetReturnResult> resultExistingRule = aqlManager.editAqlRule(paramsExistingRule);
 		
-		Assert.assertFalse(resultExistingRule.isOK());
-		Assert.assertEquals(CustomError.AQL_RULE_ALREADY_EXISTS.getErrorMessage(), resultExistingRule.getErrorMessage());
+		Assert.assertFalse("Editing to existing rule did not return error status", 
+				resultExistingRule.isOK());
+		Assert.assertEquals("Editing to existing rule did not return expected error message", 
+				CustomError.AQL_RULE_ALREADY_EXISTS.getErrorMessage(), resultExistingRule.getErrorMessage());
 		
 		// Test editing missing rule
 		AqlParams paramsMissingRule = new AqlParams();
 		paramsMissingRule.setId(99);
-		paramsMissingRule.setRule("some rule");
+		paramsMissingRule.setRule("SRC = \"0.0.0.0\"");
 		JsonReturnData<RulesetReturnResult> resultMissingRule = aqlManager.editAqlRule(paramsMissingRule);
 		
-		Assert.assertFalse(resultMissingRule.isOK());
-		Assert.assertEquals(CustomError.AQL_RULESET_MISSING.getErrorMessage(), resultMissingRule.getErrorMessage());
+		Assert.assertFalse("Editing missing rule did not return error status", 
+				resultMissingRule.isOK());
+		Assert.assertEquals("Editing missing rule did not return expected error message", 
+				CustomError.AQL_RULESET_MISSING.getErrorMessage(), resultMissingRule.getErrorMessage());
+		
+		// Test editing to invalid rule
+		String invalidRule = "SOME INVALID RULE";
+		AqlParams paramsInvalidRule = new AqlParams();
+		paramsInvalidRule.setId(2);
+		paramsInvalidRule.setRule(invalidRule);
+		JsonReturnData<RulesetReturnResult> resultInvalidRule = aqlManager.editAqlRule(paramsInvalidRule);
+		
+		Assert.assertFalse("Editing to invalid rule did not return error status", 
+				resultInvalidRule.isOK());
 		
 		// Test correct edit
 		Integer id = 2;
-		String rule = "Edit of rule 2";
+		String rule = "PRT > 8000";
 		String description = "Edited description for rule 2";
 		AqlParams paramsCorrectRule = new AqlParams();
 		paramsCorrectRule.setId(id);
@@ -159,12 +197,18 @@ public class AQLManagerImplTest {
 		paramsCorrectRule.setDescription(description);
 		JsonReturnData<RulesetReturnResult> resultCorrectRule = aqlManager.editAqlRule(paramsCorrectRule);
 		
-		Assert.assertNotNull(resultCorrectRule.getContent());
-		Assert.assertEquals(1, resultCorrectRule.getContent().getRecordsFiltered());
-		Assert.assertEquals(1, resultCorrectRule.getContent().getRecordsTotal());
-		Assert.assertEquals(new Integer(2), resultCorrectRule.getContent().getData().get(0).getId());
-		Assert.assertEquals(rule, resultCorrectRule.getContent().getData().get(0).getRule());
-		Assert.assertEquals(description, resultCorrectRule.getContent().getData().get(0).getDescription());
+		Assert.assertNotNull("Edit rule action returned null object", 
+				resultCorrectRule.getContent());
+		Assert.assertEquals("Edit rule action did not return exactly 1 filtered record",
+				1, resultCorrectRule.getContent().getRecordsFiltered());
+		Assert.assertEquals("Edit rule action did not return exactly 1 record", 
+				1, resultCorrectRule.getContent().getRecordsTotal());
+		Assert.assertEquals("Edit rule action did not return edited record with expected ID", 
+				id, resultCorrectRule.getContent().getData().get(0).getId());
+		Assert.assertEquals("Edit rule action did not return edited record with expected rule text", 
+				rule, resultCorrectRule.getContent().getData().get(0).getRule());
+		Assert.assertEquals("Edit rule action did not return edited record with expected rule description", 
+				description, resultCorrectRule.getContent().getData().get(0).getDescription());
 	}
 	
 	/**
@@ -177,8 +221,10 @@ public class AQLManagerImplTest {
 		paramsMissingRule.setId(99);
 		JsonReturnData<String> resultMissingRule = aqlManager.deleteAqlRule(paramsMissingRule);
 		
-		Assert.assertFalse(resultMissingRule.isOK());
-		Assert.assertEquals(CustomError.AQL_RULESET_MISSING.getErrorMessage(), resultMissingRule.getErrorMessage());
+		Assert.assertFalse("Missing rule deletion did not return error status", 
+				resultMissingRule.isOK());
+		Assert.assertEquals("Missing rule deletion did not return expected error message", 
+				CustomError.AQL_RULESET_MISSING.getErrorMessage(), resultMissingRule.getErrorMessage());
 
 		// Test correct delete
 		Integer id = 2;
@@ -186,7 +232,8 @@ public class AQLManagerImplTest {
 		paramsCorrectRule.setId(id);
 		JsonReturnData<String> resultCorrectRule = aqlManager.deleteAqlRule(paramsCorrectRule);
 		
-		Assert.assertTrue(resultCorrectRule.isOK());
+		Assert.assertTrue("Delete rule action did not return OK result", 
+				resultCorrectRule.isOK());
 	}
 	
 	/**

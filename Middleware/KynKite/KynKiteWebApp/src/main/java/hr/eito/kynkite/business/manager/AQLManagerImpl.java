@@ -66,9 +66,10 @@ public class AQLManagerImpl implements AQLManager {
 	@Override
 	public JsonReturnData<RulesetReturnResult> addAqlRule(AqlParams params) {
 		try {
-			// Check if rule is empty
-			if (isRuleEmpty(params.getRule())) {
-				return new JsonReturnData<>(CustomError.AQL_RULE_MISSING.getErrorMessage());
+			// Validate rule
+			JsonReturnData<String> validationResult = this.validateRule(params.getRule());
+			if (!validationResult.isOK()) {
+				return new JsonReturnData<>(validationResult.getErrorMessage());
 			}
 			
 			// Check if rule already exists in database
@@ -97,9 +98,10 @@ public class AQLManagerImpl implements AQLManager {
 	@Override
 	public JsonReturnData<RulesetReturnResult> editAqlRule(AqlParams params) {
 		try {
-			// Check if rule is empty
-			if (isRuleEmpty(params.getRule())) {
-				return new JsonReturnData<>(CustomError.AQL_RULE_MISSING.getErrorMessage());
+			// Validate rule
+			JsonReturnData<String> validationResult = this.validateRule(params.getRule());
+			if (!validationResult.isOK()) {
+				return new JsonReturnData<>(validationResult.getErrorMessage());
 			}
 			
 			// Check if rule already exists in database in some other

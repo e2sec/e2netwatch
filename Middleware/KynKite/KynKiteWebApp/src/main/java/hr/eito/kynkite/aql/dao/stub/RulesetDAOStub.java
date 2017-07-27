@@ -41,17 +41,17 @@ public class RulesetDAOStub implements RulesetDAO {
 		
 		Ruleset r1 = new Ruleset();
 		r1.setId(1);
-		r1.setRule("Rule for ruleset 1");
+		r1.setRule("DST MATCHES SRC");
 		r1.setDescription("");
 		
 		Ruleset r2 = new Ruleset();
 		r2.setId(2);
-		r2.setRule("Rule for ruleset 2");
+		r2.setRule("SRC = \"192.0.11.4\"");
 		r2.setDescription("Description for ruleset 2");
 		
 		Ruleset r3 = new Ruleset();
 		r3.setId(3);
-		r3.setRule("Rule for ruleset 3");
+		r3.setRule("(COUNT \"now-60m\", \"now\", \"192.168.0.4/0\" = 0)");
 		r3.setDescription("");
 		
 		repository.add(r1);
