@@ -20,39 +20,44 @@
 
 package hr.eito.kynkite.usermanagement.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
-import org.springframework.security.core.GrantedAuthority;
-
+/**
+ * User entity for db table "profile_menu"
+ * 
+ * @author Hrvoje
+ *
+ */
 @Entity
-@Table(name = "authority")
-public class Authority implements GrantedAuthority {
+@Table(name = "profile_menu")
+public class ProfileMenu {
 	
-	private static final long serialVersionUID = 4856386809577481429L;
-
 	@Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @Column(name = "name")
-    @NotNull
-    private String name;
-    
-    @Column(name = "description")
-    @NotNull
-    private String description;
-    
-    @Override
-    public String getAuthority() {
-        return name;
-    }
+	@ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="mnc_id")
+    private MenuComponent menuComponent;
+	
+	@Column(name = "position")
+    private Integer position;
+	
+	@OneToMany
+	@JoinColumn(name="super_prm_id")
+	private List<ProfileMenu> profileSubmenus;
 
     public Integer getId() {
         return id;
@@ -62,20 +67,28 @@ public class Authority implements GrantedAuthority {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-	public String getDescription() {
-		return description;
+	public MenuComponent getMenuComponent() {
+		return menuComponent;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setMenuComponent(MenuComponent menuComponent) {
+		this.menuComponent = menuComponent;
 	}
-	
+
+	public Integer getPosition() {
+		return position;
+	}
+
+	public void setPosition(Integer position) {
+		this.position = position;
+	}
+
+	public List<ProfileMenu> getProfileSubmenus() {
+		return profileSubmenus;
+	}
+
+	public void setProfileSubmenus(List<ProfileMenu> profileSubmenus) {
+		this.profileSubmenus = profileSubmenus;
+	}
+    
 }

@@ -20,6 +20,8 @@
 
 package hr.eito.kynkite.usermanagement.model;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,14 +30,16 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.security.core.GrantedAuthority;
-
+/**
+ * User entity for db table "timezone"
+ * 
+ * @author Hrvoje
+ *
+ */
 @Entity
-@Table(name = "authority")
-public class Authority implements GrantedAuthority {
+@Table(name = "timezone")
+public class Timezone {
 	
-	private static final long serialVersionUID = 4856386809577481429L;
-
 	@Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -44,15 +48,10 @@ public class Authority implements GrantedAuthority {
     @Column(name = "name")
     @NotNull
     private String name;
-    
-    @Column(name = "description")
+
+    @Column(name = "offset")
     @NotNull
-    private String description;
-    
-    @Override
-    public String getAuthority() {
-        return name;
-    }
+    private BigDecimal offset;
 
     public Integer getId() {
         return id;
@@ -62,20 +61,20 @@ public class Authority implements GrantedAuthority {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-	public String getDescription() {
-		return description;
+	public String getName() {
+		return name;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setName(String name) {
+		this.name = name;
 	}
-	
+
+	public BigDecimal getOffset() {
+		return offset;
+	}
+
+	public void setOffset(BigDecimal offset) {
+		this.offset = offset;
+	}
+    
 }

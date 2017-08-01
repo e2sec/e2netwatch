@@ -20,22 +20,24 @@
 
 package hr.eito.kynkite.usermanagement.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.security.core.GrantedAuthority;
-
 @Entity
-@Table(name = "authority")
-public class Authority implements GrantedAuthority {
+@Table(name = "user_group")
+public class UserGroup {
 	
-	private static final long serialVersionUID = 4856386809577481429L;
-
 	@Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -49,10 +51,12 @@ public class Authority implements GrantedAuthority {
     @NotNull
     private String description;
     
-    @Override
-    public String getAuthority() {
-        return name;
-    }
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "ugr_aty",
+            joinColumns = {@JoinColumn(name = "ugr_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "aty_id", referencedColumnName = "id")})
+    private List<Authority> authorities;
 
     public Integer getId() {
         return id;
@@ -76,6 +80,14 @@ public class Authority implements GrantedAuthority {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public List<Authority> getAuthorities() {
+		return authorities;
+	}
+
+	public void setAuthorities(List<Authority> authorities) {
+		this.authorities = authorities;
 	}
 	
 }

@@ -72,12 +72,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
     	auth.jdbcAuthentication().dataSource(dataSource)
 		.usersByUsernameQuery(
-			"select username, password, enabled from user where username=?")
+			"select username, password, 1 from user where username=?")
 		.authoritiesByUsernameQuery(
-			"select usr.username, aty.name "
-			+ "from user usr join user_authority uay on uay.user_id = usr.id "
-			+ "join authority aty on aty.id = uay.authority_id "
-			+ "where usr.username = ?")
+				new StringBuilder()
+				.append("select usr.username, aty.name ")
+				.append("from user usr join usr_aty uay on uay.usr_id = usr.id ")
+				.append("join authority aty on aty.id = uay.aty_id ")
+				.append("where usr.username=? ")
+				.append("union select usr.username, aty.name ")
+				.append("from user usr join usr_ugr uug on uug.usr_id = usr.id ")
+				.append("join user_group ugr on ugr.id = uug.ugr_id ")
+				.append("join ugr_aty uga on uga.ugr_id = ugr.id ")
+				.append("join authority aty on aty.id = uga.aty_id")
+				.toString())
 		.passwordEncoder(passwordEncoder());
     }
     

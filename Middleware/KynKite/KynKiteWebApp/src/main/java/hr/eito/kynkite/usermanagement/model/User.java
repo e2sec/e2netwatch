@@ -20,8 +20,11 @@
 
 package hr.eito.kynkite.usermanagement.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -63,17 +66,32 @@ public class User implements UserDetails {
     @Column(name = "password")
     @NotNull
     private String password;
-
-    @Column(name = "enabled", columnDefinition = "BIT", length = 1)
+    
+    @Column(name = "first_name")
     @NotNull
-    private Boolean enabled;
+    private String firstName;
+    
+    @Column(name = "last_name")
+    @NotNull
+    private String lastName;
+    
+    @Column(name = "email")
+    @NotNull
+    private String email;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "user_authority",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "authority_id", referencedColumnName = "id")})
+            name = "usr_aty",
+            joinColumns = {@JoinColumn(name = "usr_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "aty_id", referencedColumnName = "id")})
     private List<Authority> authorities;
+    
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "usr_ugr",
+            joinColumns = {@JoinColumn(name = "usr_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "ugr_id", referencedColumnName = "id")})
+    private List<UserGroup> userGroups;
 
     public Integer getId() {
         return id;
@@ -99,24 +117,53 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public Boolean getEnabled() {
-        return enabled;
-    }
+    public String getFirstName() {
+		return firstName;
+	}
 
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
 
-    @Override
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	@Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.authorities;
+		List<Authority> authoritiesFromUserGroup = new ArrayList<>();
+		for (UserGroup userGroup : this.userGroups) {
+			authoritiesFromUserGroup.addAll(userGroup.getAuthorities());
+		}
+        return Stream.concat(authoritiesFromUserGroup.stream(), this.authorities.stream())
+                .collect(Collectors.toList());
     }
 
     public void setAuthorities(List<Authority> authorities) {
         this.authorities = authorities;
     }
     
-    @Override
+    public List<UserGroup> getUserGroups() {
+		return userGroups;
+	}
+
+	public void setUserGroups(List<UserGroup> userGroups) {
+		this.userGroups = userGroups;
+	}
+
+	@Override
     public boolean isAccountNonExpired() {
         return true;
     }
