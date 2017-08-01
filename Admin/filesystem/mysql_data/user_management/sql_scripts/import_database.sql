@@ -228,27 +228,29 @@ create table ugr_aty (
     , constraint fk_ugr_aty_ugr foreign key(ugr_id) references user_group(id) on delete cascade
 );
     
--- definition for table menu
-create table menu (
+-- definition for table menu_component
+create table menu_component (
     id integer primary key auto_increment
     , name varchar(15) not null
     , url varchar(150)
     , icon_name varchar(50)
-    , position integer
     , alignment varchar(10)
     , name_hidden boolean
-    , super_mnu_id integer
-    , constraint fk_mnu_mnu foreign key(super_mnu_id) references menu(id) on delete cascade
+    , default_position integer
+    , default_super_mnc_id integer
+    , constraint fk_mnc_mnc foreign key(default_super_mnc_id) references menu_component(id) on delete cascade
 );
     
 -- definition for table mnu_ppr
-create table mnu_ppr (
+create table profile_menu (
     id integer primary key auto_increment
     , ppr_id integer not null
-    , mnu_id integer not null
-    , constraint uk_mnu_ppr unique (ppr_id, mnu_id)
-    , constraint fk_mnu_ppr_ppr foreign key(ppr_id) references profile_preference(id) on delete cascade
-    , constraint fk_mnu_ppr_mnu foreign key(mnu_id) references menu(id) on delete cascade
+    , mnc_id integer not null
+    , position integer
+    , super_prm_id integer
+    , constraint fk_prm_ppr foreign key(ppr_id) references profile_preference(id) on delete cascade
+    , constraint fk_prm_mnc foreign key(mnc_id) references menu_component(id) on delete cascade
+    , constraint fk_prm_prm foreign key(super_prm_id) references profile_menu(id) on delete cascade
 );
 
 -- definition for table version

@@ -5,8 +5,8 @@ delete from user_group;
 delete from authority;
 delete from usr_ugr;
 delete from ugr_aty;
-delete from menu;
-delete from mnu_ppr;
+delete from menu_component;
+delete from profile_menu;
 
 insert into user (username, password, first_name, last_name, email) values 
     ('admin', '$argon2i$v=19$m=65536,t=2,p=1$8buuloxG+y4CecxZjlKhPw$UDAi/srpZrmgCOny30uhGcMnBJYgBQFECvGB9H/GA44', 'John', 'Admin', 'john.admin@e-ito.de')
@@ -30,8 +30,8 @@ insert into ugr_aty (ugr_id, aty_id) values
     
 update profile_preference set default_tzn_id = (select id from timezone where name like '%Berlin%');
 
--- inserting into menu table
-insert into menu (id, name, url, icon_name, position, super_mnu_id, alignment, name_hidden) values
+-- inserting into menu_component table
+insert into menu_component (id, name, url, icon_name, default_position, default_super_mnc_id, alignment, name_hidden) values
     (1, 'Dashboard', '/dashboard', 'fa-home', 1, null, null, null)
     ,(2, 'Main', '/dashboard/main', 'fa-home', 1, 1, null, null)
     ,(3, 'User', '/dashboard/user', 'user-o', 2, 1, null, null)
@@ -57,33 +57,37 @@ insert into menu (id, name, url, icon_name, position, super_mnu_id, alignment, n
     ,(23, 'Administration', '/administration', 'fa-cogs', 3, 20, null, null)
     ,(24, 'Usermanagement', '/usermanagement', 'fa-users', 4, 20, null, null)
     ,(25, 'Konfiguration', '/usermanagement', 'fa-wrench', 5, 20, null, null)
-    ,(26, 'Logout', '/logout', 'fa-sign-out', 6, 20, null, null);
-alter table menu AUTO_INCREMENT=27;
+    ,(26, 'Logout', '/logout', 'fa-sign-out', 6, 20, null, null)
+    ,(27, '[divider]', null, null, null, null, null, null);
+alter table menu_component AUTO_INCREMENT=28;
 
-insert into mnu_ppr (ppr_id, mnu_id) values
-    ((select id from profile_preference where usr_id is null and ugr_id is null), 1)
-    ,((select id from profile_preference where usr_id is null and ugr_id is null), 2)
-    ,((select id from profile_preference where usr_id is null and ugr_id is null), 3)
-    ,((select id from profile_preference where usr_id is null and ugr_id is null), 4)
-    ,((select id from profile_preference where usr_id is null and ugr_id is null), 5)
-    ,((select id from profile_preference where usr_id is null and ugr_id is null), 6)
-    ,((select id from profile_preference where usr_id is null and ugr_id is null), 7)
-    ,((select id from profile_preference where usr_id is null and ugr_id is null), 8)
-    ,((select id from profile_preference where usr_id is null and ugr_id is null), 9)
-    ,((select id from profile_preference where usr_id is null and ugr_id is null), 10)
-    ,((select id from profile_preference where usr_id is null and ugr_id is null), 11)
-    ,((select id from profile_preference where usr_id is null and ugr_id is null), 12)
-    ,((select id from profile_preference where usr_id is null and ugr_id is null), 13)
-    ,((select id from profile_preference where usr_id is null and ugr_id is null), 14)
-    ,((select id from profile_preference where usr_id is null and ugr_id is null), 15)
-    ,((select id from profile_preference where usr_id is null and ugr_id is null), 16)
-    ,((select id from profile_preference where usr_id is null and ugr_id is null), 17)
-    ,((select id from profile_preference where usr_id is null and ugr_id is null), 18)
-    ,((select id from profile_preference where usr_id is null and ugr_id is null), 19)
-    ,((select id from profile_preference where usr_id is null and ugr_id is null), 20)
-    ,((select id from profile_preference where usr_id is null and ugr_id is null), 21)
-    ,((select id from profile_preference where usr_id is null and ugr_id is null), 22)
-    ,((select id from profile_preference where usr_id is null and ugr_id is null), 23)
-    ,((select id from profile_preference where usr_id is null and ugr_id is null), 24)
-    ,((select id from profile_preference where usr_id is null and ugr_id is null), 25)
-    ,((select id from profile_preference where usr_id is null and ugr_id is null), 26);
+insert into profile_menu (id, ppr_id, mnc_id, position, super_prm_id) values
+    (1, (select id from profile_preference where usr_id is null and ugr_id is null), 1, 1, null)
+    ,(2, (select id from profile_preference where usr_id is null and ugr_id is null), 2, 1, 1)
+    ,(3, (select id from profile_preference where usr_id is null and ugr_id is null), 3, 2, 1)
+    ,(4, (select id from profile_preference where usr_id is null and ugr_id is null), 4, 3, 1)
+    ,(5, (select id from profile_preference where usr_id is null and ugr_id is null), 5, 2, null)
+    ,(6, (select id from profile_preference where usr_id is null and ugr_id is null), 6, 3, null)
+    ,(7, (select id from profile_preference where usr_id is null and ugr_id is null), 7, 4, null)
+    ,(8, (select id from profile_preference where usr_id is null and ugr_id is null), 8, 5, null)
+    ,(9, (select id from profile_preference where usr_id is null and ugr_id is null), 9, 1, 8)
+    ,(10, (select id from profile_preference where usr_id is null and ugr_id is null), 10, 2, 8)
+    ,(11, (select id from profile_preference where usr_id is null and ugr_id is null), 11, 1, 10)
+    ,(12, (select id from profile_preference where usr_id is null and ugr_id is null), 12, 2, 10)
+    ,(13, (select id from profile_preference where usr_id is null and ugr_id is null), 13, 3, 10)
+    ,(14, (select id from profile_preference where usr_id is null and ugr_id is null), 14, 3, 8)
+    ,(15, (select id from profile_preference where usr_id is null and ugr_id is null), 15, 4, 8)
+    ,(16, (select id from profile_preference where usr_id is null and ugr_id is null), 16, 5, 8)
+    ,(17, (select id from profile_preference where usr_id is null and ugr_id is null), 17, 6, 8)
+    ,(18, (select id from profile_preference where usr_id is null and ugr_id is null), 18, 7, 8)
+    ,(19, (select id from profile_preference where usr_id is null and ugr_id is null), 19, 6, null)
+    ,(20, (select id from profile_preference where usr_id is null and ugr_id is null), 20, 7, null)
+    ,(21, (select id from profile_preference where usr_id is null and ugr_id is null), 21, 1, 20)
+    ,(22, (select id from profile_preference where usr_id is null and ugr_id is null), 22, 2, 20)
+    ,(23, (select id from profile_preference where usr_id is null and ugr_id is null), 27, 3, 20)
+    ,(24, (select id from profile_preference where usr_id is null and ugr_id is null), 23, 4, 20)
+    ,(25, (select id from profile_preference where usr_id is null and ugr_id is null), 24, 5, 20)
+    ,(26, (select id from profile_preference where usr_id is null and ugr_id is null), 25, 6, 20)
+    ,(27, (select id from profile_preference where usr_id is null and ugr_id is null), 27, 7, 20)
+    ,(28, (select id from profile_preference where usr_id is null and ugr_id is null), 26, 8, 20);
+alter table profile_menu AUTO_INCREMENT=29;
