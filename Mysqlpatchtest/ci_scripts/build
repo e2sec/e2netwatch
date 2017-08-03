@@ -1,0 +1,47 @@
+#!/bin/bash
+#
+# Mysql build script
+#
+# Author: Hrvoje Zeljko
+#
+# Date: 21-03-2017
+#
+# Purpose: Build the mysql.
+#
+# Usage: build builddir
+#
+####################################################################################################
+# Files to ship.
+#
+SHIP_FILES=( Dockerfile 
+		   )
+#
+####################################################################################################
+# Database modules to test.
+#
+DATABASE_MODULES="user_management aql"
+#
+####################################################################################################
+# Include convenience functions.
+#
+. ../ci_scripts/common
+#
+####################################################################################################
+# Build dir
+#
+BUILD_DIR=${1:-../build/kyn/Mysqltest}
+####################################################################################################
+# Ship into the staging area.
+#
+ship SHIP_FILES[@] $BUILD_DIR
+####################################################################################################
+# Prepare scripts directory and get import_database script from Admin for each Mysql database.
+#
+mkdir $BUILD_DIR/scripts
+for database_module in $DATABASE_MODULES
+do
+    cp ../Admin/filesystem/mysql_data/${database_module}/sql_scripts/import_database.sql $BUILD_DIR/scripts/${database_module}_db.sql
+done
+#
+####################################################################################################
+exit 0

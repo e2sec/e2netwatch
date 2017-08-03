@@ -126,4 +126,4 @@ select_docker_tag()
 
 BUILD_DIR="$(normalize_path $(realpath $(dirname $BASH_SOURCE))/../build)"
 
-MODULES="Capture Backend Middleware Frontend Elasticsearch Logstash Kibana Spark Mysql Reports Admin Pyresttest"
+MODULES="Capture Backend Middleware Frontend Elasticsearch Logstash Kibana Spark Mysql Reports Admin Pyresttest Mysqlpatchtest"

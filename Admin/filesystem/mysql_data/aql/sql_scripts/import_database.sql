@@ -8,3 +8,8 @@ create table ruleset (
     , rule text not null
     , description varchar(255)
 );
+
+create table version (
+    version_number integer default 0
+);
+insert into version (version_number) values (0);

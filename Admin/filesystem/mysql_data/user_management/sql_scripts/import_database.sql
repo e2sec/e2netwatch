@@ -21,3 +21,8 @@ create table user_authority (
     constraint fk_user_authority_authority foreign key(authority_id) references authority(id)
 );
 create unique index ix_user_authority on user_authority (user_id, authority_id);
+
+create table version (
+    version_number integer default 0
+);
+insert into version (version_number) values (0);
