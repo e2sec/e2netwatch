@@ -20,39 +20,49 @@
 
 package hr.eito.kynkite.usermanagement.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
-import org.springframework.security.core.GrantedAuthority;
-
+/**
+ * User entity for db table "profile_preference"
+ * 
+ * @author Hrvoje
+ *
+ */
 @Entity
-@Table(name = "authority")
-public class Authority implements GrantedAuthority {
+@Table(name = "profile_preference")
+public class ProfilePreference {
 	
-	private static final long serialVersionUID = 4856386809577481429L;
-
 	@Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @Column(name = "name")
-    @NotNull
-    private String name;
-    
-    @Column(name = "description")
-    @NotNull
-    private String description;
-    
-    @Override
-    public String getAuthority() {
-        return name;
-    }
+	@ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="usr_id")
+    private User user;
+
+	@ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="ugr_id")
+    private UserGroup userGroup;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="default_tzn_id")
+    private Timezone timezone;
+	
+	@OneToMany
+	@JoinColumn(name="ppr_id")
+	private List<ProfileMenu> profileMenus;
 
     public Integer getId() {
         return id;
@@ -62,20 +72,36 @@ public class Authority implements GrantedAuthority {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-	public String getDescription() {
-		return description;
+	public User getUser() {
+		return user;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setUser(User user) {
+		this.user = user;
 	}
-	
+
+	public UserGroup getUserGroup() {
+		return userGroup;
+	}
+
+	public void setUserGroup(UserGroup userGroup) {
+		this.userGroup = userGroup;
+	}
+
+	public Timezone getTimezone() {
+		return timezone;
+	}
+
+	public void setTimezone(Timezone timezone) {
+		this.timezone = timezone;
+	}
+
+	public List<ProfileMenu> getProfileMenus() {
+		return profileMenus;
+	}
+
+	public void setProfileMenus(List<ProfileMenu> profileMenus) {
+		this.profileMenus = profileMenus;
+	}
+    
 }
