@@ -31,6 +31,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -48,11 +49,11 @@ public class ProfilePreference {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-	@ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="usr_id")
+	@OneToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "usr_id")
     private User user;
 
-	@ManyToOne(fetch=FetchType.LAZY)
+	@OneToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="ugr_id")
     private UserGroup userGroup;
 	
