@@ -20,6 +20,8 @@
 
 package hr.eito.kynkite.usermanagement.dao;
 
+import java.util.List;
+
 import hr.eito.kynkite.usermanagement.model.ProfileMenu;
 
 /**
@@ -37,5 +39,14 @@ public interface ProfileMenuDAO {
 	 * @return ProfileMenu
 	 */
 	public ProfileMenu getById(final Integer id);
+	
+	/**
+	 * Getting the list of ProfileMenus by ProfilePreference
+	 * 
+	 * @param pprId ProfilePreference ID
+	 * 
+	 * @return list of ProfileMenus
+	 */
+	public List<ProfileMenu> getAllByProfilePreference(final Integer pprId);
 
 }

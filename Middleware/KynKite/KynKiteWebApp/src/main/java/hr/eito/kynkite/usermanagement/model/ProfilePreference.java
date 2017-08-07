@@ -20,8 +20,6 @@
 
 package hr.eito.kynkite.usermanagement.model;
 
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,7 +28,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -60,10 +57,6 @@ public class ProfilePreference {
 	@ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="default_tzn_id")
     private Timezone timezone;
-	
-	@OneToMany
-	@JoinColumn(name="ppr_id")
-	private List<ProfileMenu> profileMenus;
 
     public Integer getId() {
         return id;
@@ -95,14 +88,6 @@ public class ProfilePreference {
 
 	public void setTimezone(Timezone timezone) {
 		this.timezone = timezone;
-	}
-
-	public List<ProfileMenu> getProfileMenus() {
-		return profileMenus;
-	}
-
-	public void setProfileMenus(List<ProfileMenu> profileMenus) {
-		this.profileMenus = profileMenus;
 	}
     
 }

@@ -20,6 +20,10 @@
 
 package hr.eito.kynkite.usermanagement.dao.impl;
 
+import java.util.List;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -39,6 +43,19 @@ public class ProfileMenuDAOImpl implements ProfileMenuDAO {
 	public ProfileMenu getById(Integer id) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ProfileMenu> getAllByProfilePreference(Integer pprId) {
+		Session session = sessionFactory.getCurrentSession();
+		Query query = session.createSQLQuery("select * from profile_menu where ppr_id = :ppr_id")
+				.addEntity(ProfileMenu.class)
+				.setParameter("ppr_id", pprId);
+		List<ProfileMenu> profileMenus = query.list();
+		session.flush();
+		
+		return profileMenus;
 	}
 	
 }

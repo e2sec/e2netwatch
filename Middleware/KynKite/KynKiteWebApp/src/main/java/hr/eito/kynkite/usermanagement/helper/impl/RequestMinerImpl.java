@@ -23,7 +23,6 @@ package hr.eito.kynkite.usermanagement.helper.impl;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -38,9 +37,8 @@ import hr.eito.kynkite.usermanagement.helper.RequestMiner;
 @Component
 @Profile({"dev","prod"})
 public class RequestMinerImpl implements RequestMiner {
-		
-	@Value("${jwt.user_cookie}")
-    private String USER_COOKIE_NAME;
+	
+    private String USER_COOKIE_NAME = "c_user";
 	
 	@Autowired
 	private HttpServletRequest request;

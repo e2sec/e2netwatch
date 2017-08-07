@@ -31,6 +31,7 @@ import org.springframework.stereotype.Repository;
 
 import hr.eito.kynkite.usermanagement.dao.MenuComponentDAO;
 import hr.eito.kynkite.usermanagement.dao.ProfileMenuDAO;
+import hr.eito.kynkite.usermanagement.dao.ProfilePreferenceDAO;
 import hr.eito.kynkite.usermanagement.model.ProfileMenu;
 
 @Repository
@@ -39,6 +40,9 @@ public class ProfileMenuDAOStub implements ProfileMenuDAO {
 	
 	@Autowired
 	private MenuComponentDAO menuComponentDAO;
+	
+	@Autowired
+	private ProfilePreferenceDAO profilePreferenceDAO;
 	
 	private List<ProfileMenu> repository;
 	
@@ -79,6 +83,7 @@ public class ProfileMenuDAOStub implements ProfileMenuDAO {
 		menu1.setPosition(1);
 		menu1.setMenuComponent(menuComponentDAO.getById(1));
 		menu1.setProfileSubmenus(profileSubmenus1);
+		menu1.setProfilePreference(profilePreferenceDAO.getById(1));
 		
 		List<ProfileMenu> profileSubmenus2 = new ArrayList<>();
 		profileSubmenus2.add(menu6);
@@ -87,6 +92,7 @@ public class ProfileMenuDAOStub implements ProfileMenuDAO {
 		menu2.setPosition(2);
 		menu2.setMenuComponent(menuComponentDAO.getById(2));
 		menu2.setProfileSubmenus(profileSubmenus2);
+		menu1.setProfilePreference(profilePreferenceDAO.getById(1));
 		
 		repository.add(menu1);
 		repository.add(menu2);
@@ -104,6 +110,17 @@ public class ProfileMenuDAOStub implements ProfileMenuDAO {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public List<ProfileMenu> getAllByProfilePreference(Integer pprId) {
+		List<ProfileMenu> profileMenus = new ArrayList<>();
+		for(ProfileMenu pmu : repository) {
+			if(pmu.getProfilePreference().getId().equals(pprId)) {
+				profileMenus.add(pmu);
+			}
+		}
+		return profileMenus;
 	}
 	
 }

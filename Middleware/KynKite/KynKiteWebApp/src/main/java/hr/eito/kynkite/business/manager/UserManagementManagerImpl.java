@@ -20,12 +20,16 @@
 
 package hr.eito.kynkite.business.manager;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import hr.eito.kynkite.usermanagement.dao.ProfileMenuDAO;
 import hr.eito.kynkite.usermanagement.dao.ProfilePreferenceDAO;
 import hr.eito.kynkite.usermanagement.dao.UserDAO;
 import hr.eito.kynkite.usermanagement.helper.RequestMiner;
+import hr.eito.kynkite.usermanagement.model.ProfileMenu;
 import hr.eito.kynkite.usermanagement.model.ProfilePreference;
 import hr.eito.kynkite.usermanagement.model.User;
 import hr.eito.kynkite.usermanagement.model.UserGroup;
@@ -50,6 +54,9 @@ public class UserManagementManagerImpl implements UserManagementManager {
 	
 	@Autowired
 	private ProfilePreferenceDAO profilePreferenceDAO;
+	
+	@Autowired
+	private ProfileMenuDAO profileMenuDAO;
 	
 	@Override
 	public JsonReturnData<MenuReturnResult> getMenuForCurrentUser() {
@@ -77,10 +84,10 @@ public class UserManagementManagerImpl implements UserManagementManager {
 	 */
 	private MenuReturnResult getMenuForUser(final String username) throws Exception {
 		ProfilePreference profilePreference = null;
-		
+
 		// Getting the User
 		User user = userDAO.getByUsername(username);
-		
+
 		// Detect the ProfilePreference for the User
 		if (user!=null) {
 			// Get ProfilePreference record for user
@@ -106,7 +113,9 @@ public class UserManagementManagerImpl implements UserManagementManager {
 		if (profilePreference==null) {
 			menuReturnResult = new MenuReturnResult(null);
 		} else {
-			menuReturnResult = new MenuReturnResult(profilePreference.getProfileMenus());
+			// Get ProfileMenus for given ProfilePreference and create menu
+			List<ProfileMenu> profileMenus = profileMenuDAO.getAllByProfilePreference(profilePreference.getId());
+			menuReturnResult = new MenuReturnResult(profileMenus);
 		}
 		
 		return menuReturnResult;

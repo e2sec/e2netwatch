@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import hr.eito.kynkite.usermanagement.model.MenuComponent;
 import hr.eito.kynkite.usermanagement.model.ProfileMenu;
 
@@ -33,6 +36,7 @@ import hr.eito.kynkite.usermanagement.model.ProfileMenu;
  * @author Hrvoje
  *
  */
+@JsonInclude(Include.NON_NULL)
 public class MenuReturnResultData {
 	
 	private String name;

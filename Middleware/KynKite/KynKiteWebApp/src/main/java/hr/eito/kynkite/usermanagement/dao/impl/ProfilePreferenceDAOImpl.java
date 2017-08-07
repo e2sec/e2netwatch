@@ -20,6 +20,8 @@
 
 package hr.eito.kynkite.usermanagement.dao.impl;
 
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -37,14 +39,25 @@ public class ProfilePreferenceDAOImpl implements ProfilePreferenceDAO {
 
 	@Override
 	public ProfilePreference getGlobal() {
-		// TODO Auto-generated method stub
-		return null;
+		Session session = sessionFactory.getCurrentSession();
+		Query query = session
+				.createSQLQuery("select * from profile_preference where usr_id is null and ugr_id is null")
+				.addEntity(ProfilePreference.class);
+		ProfilePreference profilePreference = (ProfilePreference) query.uniqueResult();
+		session.flush();
+        return profilePreference;
 	}
 
 	@Override
 	public ProfilePreference getById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		Session session = sessionFactory.getCurrentSession();
+		Query query = session
+				.createSQLQuery("select * from profile_preference where id = :id")
+				.addEntity(ProfilePreference.class)
+				.setParameter("id", id);
+		ProfilePreference profilePreference = (ProfilePreference) query.uniqueResult();
+		session.flush();
+        return profilePreference;
 	}
 	
 }
