@@ -23,6 +23,8 @@ package hr.eito.kynkite.usermanagement.dao.stub;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
@@ -36,7 +38,8 @@ public class AuthorityDAOStub implements AuthorityDAO {
 	
 	private List<Authority> repository;
 	
-	public AuthorityDAOStub() {
+	@PostConstruct
+	public void init() {
 		repository = new ArrayList<>();
 		
 		Authority a1 = new Authority();

@@ -23,6 +23,8 @@ package hr.eito.kynkite.usermanagement.dao.stub;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -46,7 +48,8 @@ public class UserGroupDAOStub implements UserGroupDAO {
 	
 	private List<UserGroup> repository;
 	
-	public UserGroupDAOStub() {
+	@PostConstruct
+	public void init() {
 		repository = new ArrayList<>();
 		
 		UserGroup ug1 = new UserGroup();
@@ -56,6 +59,7 @@ public class UserGroupDAOStub implements UserGroupDAO {
 		authorities1.add(authorityDAO.getByName("ROLE_ADMIN"));
 		ug1.setAuthorities(authorities1);
 		ug1.setProfilePreference(profilePreferenceDAO.getById(2));
+		profilePreferenceDAO.getById(2).setUserGroup(ug1);
 		
 		UserGroup ug2 = new UserGroup();
 		ug2.setName("Users");

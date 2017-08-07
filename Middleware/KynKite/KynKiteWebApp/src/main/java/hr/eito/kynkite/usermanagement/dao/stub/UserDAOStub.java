@@ -23,6 +23,8 @@ package hr.eito.kynkite.usermanagement.dao.stub;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -42,7 +44,8 @@ public class UserDAOStub implements UserDAO {
 	
 	private List<User> repository;
 	
-	public UserDAOStub() {
+	@PostConstruct
+	public void init() {
 		repository = new ArrayList<>();
 		
 		User u1 = new User();

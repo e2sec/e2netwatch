@@ -23,12 +23,15 @@ package hr.eito.kynkite.usermanagement.dao.stub;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
+import hr.eito.kynkite.usermanagement.dao.ProfileMenuDAO;
 import hr.eito.kynkite.usermanagement.dao.ProfilePreferenceDAO;
-import hr.eito.kynkite.usermanagement.dao.UserGroupDAO;
+import hr.eito.kynkite.usermanagement.model.ProfileMenu;
 import hr.eito.kynkite.usermanagement.model.ProfilePreference;
 
 @Repository
@@ -36,22 +39,30 @@ import hr.eito.kynkite.usermanagement.model.ProfilePreference;
 public class ProfilePreferenceDAOStub implements ProfilePreferenceDAO {
 	
 	@Autowired
-	private UserGroupDAO userGroupDAO;
+	private ProfileMenuDAO profileMenuDAO;
 	
 	private List<ProfilePreference> repository;
 	
-	public ProfilePreferenceDAOStub() {
+	@PostConstruct
+	public void init() {
 		repository = new ArrayList<>();
 		
 		ProfilePreference ppr1 = new ProfilePreference();
 		ppr1.setId(1);
 		ppr1.setUser(null);
 		ppr1.setUserGroup(null);
+		List<ProfileMenu> profileMenus1 = new ArrayList<>();
+		profileMenus1.add(profileMenuDAO.getById(1));
+		ppr1.setProfileMenus(profileMenus1);
 		
 		ProfilePreference ppr2 = new ProfilePreference();
 		ppr2.setId(2);
 		ppr2.setUser(null);
-		ppr2.setUserGroup(userGroupDAO.getByName("Administrators"));
+		ppr2.setUserGroup(null);
+		List<ProfileMenu> profileMenus2 = new ArrayList<>();
+		profileMenus2.add(profileMenuDAO.getById(1));
+		profileMenus2.add(profileMenuDAO.getById(2));
+		ppr2.setProfileMenus(profileMenus2);
 		
 		repository.add(ppr1);
 		repository.add(ppr2);
