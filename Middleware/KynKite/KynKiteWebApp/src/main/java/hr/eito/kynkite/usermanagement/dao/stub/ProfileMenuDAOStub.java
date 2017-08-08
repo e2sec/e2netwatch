@@ -83,7 +83,7 @@ public class ProfileMenuDAOStub implements ProfileMenuDAO {
 		menu1.setPosition(1);
 		menu1.setMenuComponent(menuComponentDAO.getById(1));
 		menu1.setProfileSubmenus(profileSubmenus1);
-		menu1.setProfilePreference(profilePreferenceDAO.getById(1));
+		menu1.setProfilePreference(profilePreferenceDAO.getById(2));
 		
 		List<ProfileMenu> profileSubmenus2 = new ArrayList<>();
 		profileSubmenus2.add(menu6);
@@ -92,7 +92,7 @@ public class ProfileMenuDAOStub implements ProfileMenuDAO {
 		menu2.setPosition(2);
 		menu2.setMenuComponent(menuComponentDAO.getById(2));
 		menu2.setProfileSubmenus(profileSubmenus2);
-		menu1.setProfilePreference(profilePreferenceDAO.getById(1));
+		menu2.setProfilePreference(profilePreferenceDAO.getById(2));
 		
 		repository.add(menu1);
 		repository.add(menu2);
@@ -116,7 +116,7 @@ public class ProfileMenuDAOStub implements ProfileMenuDAO {
 	public List<ProfileMenu> getAllByProfilePreference(Integer pprId) {
 		List<ProfileMenu> profileMenus = new ArrayList<>();
 		for(ProfileMenu pmu : repository) {
-			if(pmu.getProfilePreference().getId().equals(pprId)) {
+			if(pmu.getProfilePreference()!=null && pmu.getProfilePreference().getId().equals(pprId)) {
 				profileMenus.add(pmu);
 			}
 		}

@@ -43,7 +43,7 @@ public class UserManagementController {
 	private UserManagementManager manager;
 	
 	/**
-	 * Get Mene for current user
+	 * Get Menu for current user
 	 * 
 	 * @return Menu for current user as JSON
 	 */

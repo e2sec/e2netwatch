@@ -168,6 +168,12 @@
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jaxrs</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>javassist</groupId>
+					<artifactId>javassist</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 		    <groupId>org.elasticsearch.client</groupId>
@@ -209,9 +215,9 @@
         
 		<!-- Docker Java Client API -->
 		<dependency>
-		      <groupId>com.github.docker-java</groupId>
-		      <artifactId>docker-java</artifactId>
-		      <version>3.0.6</version>
+			<groupId>com.github.docker-java</groupId>
+			<artifactId>docker-java</artifactId>
+			<version>3.0.6</version>
 		</dependency>
 		
 		<!-- Argon2 API -->
