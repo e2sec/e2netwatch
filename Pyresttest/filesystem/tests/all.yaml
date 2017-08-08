@@ -6,3 +6,4 @@
 - import: ntv-test.yaml
 - import: syslog-test.yaml
 - import: kite-test.yaml
+- import: usermanagement-test.yaml

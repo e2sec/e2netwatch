@@ -1,0 +1,54 @@
+---
+- config:
+    - testset: "AQL test set"
+    - variable_binds: 
+        {  
+            username : 'admin'
+            , password : 'admin'
+        }
+    - timeout: 100  # Increase timeout from the default 10 seconds
+
+- test:
+    - name: "Successful login"
+    - url: "/KynKiteWebApp/rest/login"
+    - method: "POST"
+    - body: {template: 'username=$username&password=$password'}
+    - headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    - extract_binds:
+      - 'authtoken_cookie' : { jsonpath_mini : 'content.access_token_cookie' }
+      - 'authtoken' : { jsonpath_mini : 'content.access_token' }
+      - 'username_cookie' : { jsonpath_mini : 'content.username_cookie' }
+      - 'username' : { jsonpath_mini : 'content.username' }
+
+
+#
+# Get menu for current User
+#
+- test:
+    - name: "Get menu for current User"
+    - url: "/KynKiteWebApp/rest/usermanagement/getMenuForCurrentUser"
+    - method: "POST"
+    - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
+    - validators:
+        # Check if status is 0 - OK
+        - compare: {jsonpath_mini: "status", comparator: "eq", expected: 0}
+        # Check if error message is right
+        - compare: {jsonpath_mini: "errorMessage", comparator: "eq", expected: 'OK'}
+        # Check if recordsTotal is 1
+        - compare: {jsonpath_mini: "content.recordsTotal", comparator: "eq", expected: 7}
+        # Check if recordsFiltered is 1
+        - compare: {jsonpath_mini: "content.recordsFiltered", comparator: "eq", expected: 7}
+        # Check if first menu is Dashboard
+        - compare: {jsonpath_mini: "content.data.0.name", comparator: "eq", expected: "Dashboard"}
+        # Check if first menu has 3 submenus
+        - compare: {jsonpath_mini: "content.data.0.submenu", comparator: "count_eq", expected: 3}
+        # Check if fifth menu has 7 submenus
+        - compare: {jsonpath_mini: "content.data.4.submenu", comparator: "count_eq", expected: 7}
+        # Check if second submenu of fifth menu has 3 submenu
+        - compare: {jsonpath_mini: "content.data.4.submenu.1.submenu", comparator: "count_eq", expected: 3}
+        # Check if last submenu of fifth menu is Reports
+        - compare: {jsonpath_mini: "content.data.4.submenu.6.name", comparator: "eq", expected: "Reports"}
+        # Check if fifth menu has alignment right
+        - compare: {jsonpath_mini: "content.data.5.alignment", comparator: "eq", expected: "right"}
+        # Check if third submenu of last menu is [divider]
+        - compare: {jsonpath_mini: "content.data.6.submenu.2.name", comparator: "eq", expected: "[divider]"}
