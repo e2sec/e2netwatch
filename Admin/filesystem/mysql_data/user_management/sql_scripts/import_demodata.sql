@@ -8,17 +8,17 @@ delete from ugr_aty;
 delete from menu_component;
 delete from profile_menu;
 
-insert into user (username, password, first_name, last_name, email) values 
-    ('admin', '$argon2i$v=19$m=65536,t=2,p=1$8buuloxG+y4CecxZjlKhPw$UDAi/srpZrmgCOny30uhGcMnBJYgBQFECvGB9H/GA44', 'John', 'Admin', 'john.admin@e-ito.de')
-    ,('user', '$argon2i$v=19$m=65536,t=2,p=1$8buuloxG+y4CecxZjlKhPw$UDAi/srpZrmgCOny30uhGcMnBJYgBQFECvGB9H/GA44', 'Jack', 'User', 'jack.user@e-ito.de');
+insert into user (id, username, password, first_name, last_name, email) values 
+    (1, 'admin', '$argon2i$v=19$m=65536,t=2,p=1$8buuloxG+y4CecxZjlKhPw$UDAi/srpZrmgCOny30uhGcMnBJYgBQFECvGB9H/GA44', 'John', 'Admin', 'john.admin@e-ito.de')
+    ,(2, 'user', '$argon2i$v=19$m=65536,t=2,p=1$8buuloxG+y4CecxZjlKhPw$UDAi/srpZrmgCOny30uhGcMnBJYgBQFECvGB9H/GA44', 'Jack', 'User', 'jack.user@e-ito.de');
     
-insert into user_group (name, description) values 
-    ('Administrators', 'Description for user group administrators')
-    ,('Users', 'User group users description');
+insert into user_group (id, name, description) values 
+    (1, 'Administrators', 'Description for user group administrators')
+    ,(2, 'Users', 'User group users description');
     
-insert into authority (name) values 
-    ('ROLE_ADMIN')
-    ,('ROLE_USER');
+insert into authority (id, name) values 
+    (1, 'ROLE_ADMIN')
+    ,(2, 'ROLE_USER');
     
 insert into usr_ugr (usr_id, ugr_id) values 
     ((select id from user where username = 'admin'), (select id from user_group where name = 'Administrators'))
@@ -29,6 +29,8 @@ insert into ugr_aty (ugr_id, aty_id) values
     ,((select id from user_group where name = 'Users'), (select id from authority where name = 'ROLE_USER'));
     
 update profile_preference set default_tzn_id = (select id from timezone where name like '%Berlin%');
+insert into profile_preference (id, default_tzn_id, ugr_id) values
+    (2, null, 2);
 
 -- inserting into menu_component table
 insert into menu_component (id, name, url, icon_name, default_position, default_super_mnc_id, alignment, name_hidden) values
@@ -62,6 +64,7 @@ insert into menu_component (id, name, url, icon_name, default_position, default_
 alter table menu_component AUTO_INCREMENT=28;
 
 insert into profile_menu (id, ppr_id, mnc_id, position, super_prm_id) values
+    -- profile menu for global
     (1, 1, 1, 1, null)
     ,(2, null, 2, 1, 1)
     ,(3, null, 3, 2, 1)
@@ -89,5 +92,18 @@ insert into profile_menu (id, ppr_id, mnc_id, position, super_prm_id) values
     ,(25, null, 24, 5, 20)
     ,(26, null, 25, 6, 20)
     ,(27, null, 27, 7, 20)
-    ,(28, null, 26, 8, 20);
-alter table profile_menu AUTO_INCREMENT=29;
+    ,(28, null, 26, 8, 20)
+    -- profile menu for Administrators group
+    ,(29, 2, 1, 1, null)
+    ,(30, null, 3, 1, 29)
+    ,(31, 2, 6, 2, null)
+    ,(32, 2, 8, 3, null)
+    ,(33, null, 9, 1, 32)
+    ,(34, null, 18, 2, 32)
+    ,(35, 2, 19, 4, null)
+    ,(36, 2, 20, 5, null)
+    ,(37, null, 21, 1, 36)
+    ,(38, null, 22, 2, 36)
+    ,(39, null, 27, 3, 36)
+    ,(40, null, 26, 4, 36);
+alter table profile_menu AUTO_INCREMENT=41;
