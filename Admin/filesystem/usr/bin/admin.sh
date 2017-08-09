@@ -106,8 +106,8 @@ init_mysql_db() {
 }
 # importing demo data to mysql databases
 import_mysql_demo() {
-    import_userdb_demodata $*
-    import_aqldb_demodata $*
+    echo
+    /mysql_data/import_demodata.sh -h $MYSQLHOST -b ${1-""} /tmp/mysqldemodata/*
 }
 # init kyn user database in service container "mysql"
 init_userdb() {
@@ -118,16 +118,6 @@ init_userdb() {
 init_aqldb() {
     echo
     /mysql_data/aql/init_db.sh -h $MYSQLHOST -b ${1-""}
-}
-# import mysql user management demo data
-import_userdb_demodata() {
-    echo
-    /mysql_data/user_management/import_demodata.sh -h $MYSQLHOST -b ${1-""}
-}
-# import mysql aql demo data
-import_aqldb_demodata() {
-    echo
-    /mysql_data/aql/import_demodata.sh -h $MYSQLHOST -b ${1-""}
 }
 # set mysql access rights
 set_mysql_access() {
@@ -232,26 +222,7 @@ do
         
         importmysqldemo)
             import_mysql_demo $PASSWORD
-            ;;
-            
-        inituserdb)
-            init_userdb $PASSWORD
-            ;;
-
-        initaqldb)
-            init_aqldb $PASSWORD
-            ;;
-            
-        importuserdbdemodata)
-            import_userdb_demodata $PASSWORD
-            ;;
-
-        importaqldbdemodata)
-            import_aqldb_demodata $PASSWORD
-            ;;
-
-        setmysqlaccess)
-            set_mysql_access $PASSWORD
+            shift
             ;;
             
         *)

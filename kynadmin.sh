@@ -67,6 +67,15 @@ if [ "$1" = "eslicense" ]; then
         echo "Installing an ES license requires a license file as second argument!"
         exit 1
     fi
+# Special case for "importmysqldemo" command
+elif [ "$1" = "importmysqldemo" ]; then
+    if [ -d "$2" ]; then
+        MYSQL_DEMO_FILE_PATH=`realpath $2`
+        VOLUME="$VOLUME --volume=$MYSQL_DEMO_FILE_PATH:/tmp/mysqldemodata"
+    else
+        echo "Importing demo data into mysql database requests directory path containing .sql files as second argument!"
+        exit 1
+    fi
 fi
 
 #######################################################################
