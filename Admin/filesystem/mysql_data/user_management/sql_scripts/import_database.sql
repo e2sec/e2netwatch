@@ -195,8 +195,8 @@ create table profile_preference (
     , constraint fk_pps_tzn foreign key(default_tzn_id) references timezone(id) on delete set null
 );
 -- global profile preferences
-insert into profile_preference (id, default_tzn_id) values
-    (1, null);
+insert into profile_preference (default_tzn_id) values
+    (null);
     
 -- definition for table usr_aty
 create table usr_aty (
