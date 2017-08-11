@@ -29,7 +29,7 @@
 - test:
     - name: "Get menu for current User"
     - url: "/KynKiteWebApp/rest/usermanagement/getMenuForCurrentUser"
-    - method: "POST"
+    - method: "GET"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - validators:
         # Check if status is 0 - OK
@@ -79,7 +79,7 @@
 - test:
     - name: "Get menu for current User from user group Users"
     - url: "/KynKiteWebApp/rest/usermanagement/getMenuForCurrentUser"
-    - method: "POST"
+    - method: "GET"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - validators:
         # Check if status is 0 - OK

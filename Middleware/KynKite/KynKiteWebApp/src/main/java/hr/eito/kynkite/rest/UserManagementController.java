@@ -47,7 +47,7 @@ public class UserManagementController {
 	 * 
 	 * @return Menu for current user as JSON
 	 */
-	@RequestMapping(value = "/getMenuForCurrentUser", method = RequestMethod.POST, headers = "Accept=application/json")
+	@RequestMapping(value = "/getMenuForCurrentUser", method = RequestMethod.GET, headers = "Accept=application/json")
 	public JsonReturnData<MenuReturnResult> getMenuForCurrentUser() {
 		JsonReturnData<MenuReturnResult> menuResult = manager.getMenuForCurrentUser();
 		return menuResult;
