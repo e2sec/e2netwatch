@@ -6,7 +6,7 @@
             username : 'admin'
             , password : 'admin'
             , username_user : 'user'
-            , password_user : 'admin'
+            , password_user : 'user'
         }
     - timeout: 100  # Increase timeout from the default 10 seconds
 
