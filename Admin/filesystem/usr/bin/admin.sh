@@ -22,46 +22,6 @@ install_eslicense()
     /usr/bin/install_es_license.sh -h $ELASTICHOST /tmp/es_license.json
 }
 
-
-# init kyn user database in service container "mysql"
-init_userdb()
-{
-    echo
-    /mysql_data/user_management/init_db.sh -h $MYSQLHOST -b ${1-""}
-}
-
-# init kyn aql database in service container "mysql"
-init_aqldb()
-{
-    echo
-    /mysql_data/aql/init_db.sh -h $MYSQLHOST -b ${1-""}
-}
-
-
-# import mysql user management demo data
-import_userdb_demodata()
-{
-    echo
-    /mysql_data/user_management/import_demodata.sh -h $MYSQLHOST -b ${1-""}
-}
-
-
-# import mysql aql demo data
-import_aqldb_demodata()
-{
-    echo
-    /mysql_data/aql/import_demodata.sh -h $MYSQLHOST -b ${1-""}
-}
-
-
-# set mysql access rights
-set_mysql_access()
-{
-    echo
-    /mysql_data/set_access.sh -h $MYSQLHOST
-}
-
-
 import_es_templates()
 {
     echo
@@ -138,6 +98,42 @@ patch_mysql_database()
     /mysql_data/patch.sh -h $MYSQLHOST -b ${1-""} -d "user_management_db" -f "/mysql_data/user_management/"
 }
 
+# initializing mysql databases - creating databases and setting user access
+init_mysql_db() {
+    init_userdb $*
+    init_aqldb $*
+    set_mysql_access $*
+}
+# importing demo data to mysql databases
+import_mysql_demo() {
+    import_userdb_demodata $*
+    import_aqldb_demodata $*
+}
+# init kyn user database in service container "mysql"
+init_userdb() {
+    echo
+    /mysql_data/user_management/init_db.sh -h $MYSQLHOST -b ${1-""}
+}
+# init kyn aql database in service container "mysql"
+init_aqldb() {
+    echo
+    /mysql_data/aql/init_db.sh -h $MYSQLHOST -b ${1-""}
+}
+# import mysql user management demo data
+import_userdb_demodata() {
+    echo
+    /mysql_data/user_management/import_demodata.sh -h $MYSQLHOST -b ${1-""}
+}
+# import mysql aql demo data
+import_aqldb_demodata() {
+    echo
+    /mysql_data/aql/import_demodata.sh -h $MYSQLHOST -b ${1-""}
+}
+# set mysql access rights
+set_mysql_access() {
+    echo
+    /mysql_data/set_access.sh -h $MYSQLHOST -b ${1-""}
+}
 
 # print command line option onto console
 print_help()
@@ -148,22 +144,8 @@ print_help()
     echo "Commands:"
     echo "    eslicense"
     echo "        install elastic search license"
-    echo "    inituserdb"
-    echo "        reset and initialise kyn user database"
-    echo "    initaqldb"
-    echo "        reset and initialise kyn aql database"
-    echo "    importestemplates"
-    echo "        import elasticsearch templates"
-    echo "    importesindices"
-    echo "        import elasticsearch indices"
     echo "    importesdemodata"
     echo "        import elasticsearch demo data"
-    echo "    importuserdbdemodata"
-    echo "        import mysql user management demo data"
-    echo "    importaqldbdemodata"
-    echo "        import mysql aql demo data"
-    echo "    setmysqlaccess"
-    echo "        set mysql access rights"
     echo "    up"
     echo "        start all kyn containers"
     echo "    down"
@@ -174,6 +156,10 @@ print_help()
     echo "        overview about running containers and networks"
     echo "    patchmysqldatabase"
     echo "        patch all mysql databases"
+    echo "    initmysqldb"
+    echo "        reset all mysql databases and set user access to mysql databases"
+    echo "    importmysqldemo"
+    echo "        import demo data for all mysql databases"
     echo
 }
 
@@ -204,15 +190,7 @@ do
             install_eslicense
             shift
             ;;
-
-        inituserdb)
-            init_userdb $PASSWORD
-            ;;
-
-        initaqldb)
-            init_aqldb $PASSWORD
-            ;;
-
+            
         importestemplates)
             import_es_templates
             ;;
@@ -224,19 +202,7 @@ do
         importesdemodata)
             import_es_demodata
             ;;
-
-        importuserdbdemodata)
-            import_userdb_demodata $PASSWORD
-            ;;
-
-        importaqldbdemodata)
-            import_aqldb_demodata $PASSWORD
-            ;;
-
-        setmysqlaccess)
-            set_mysql_access
-            ;;
-
+            
         up)
             start_kyn
             ;;
@@ -247,10 +213,9 @@ do
 
         init)
             install_eslicense
-            init_userdb $PASSWORD
-            init_aqldb $PASSWORD
             import_es_templates
             import_es_indices
+            init_mysql_db $PASSWORD
             ;;
 
         status)
@@ -259,6 +224,34 @@ do
 
         patchmysqldatabase)
             patch_mysql_database $PASSWORD
+            ;;
+            
+        initmysqldb)
+            init_mysql_db $PASSWORD
+            ;;
+        
+        importmysqldemo)
+            import_mysql_demo $PASSWORD
+            ;;
+            
+        inituserdb)
+            init_userdb $PASSWORD
+            ;;
+
+        initaqldb)
+            init_aqldb $PASSWORD
+            ;;
+            
+        importuserdbdemodata)
+            import_userdb_demodata $PASSWORD
+            ;;
+
+        importaqldbdemodata)
+            import_aqldb_demodata $PASSWORD
+            ;;
+
+        setmysqlaccess)
+            set_mysql_access $PASSWORD
             ;;
             
         *)
