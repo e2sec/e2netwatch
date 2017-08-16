@@ -32,15 +32,15 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import javax.persistence.JoinColumn;
 
 /**
  * User entity for db table "user"
@@ -92,6 +92,9 @@ public class User implements UserDetails {
             joinColumns = {@JoinColumn(name = "usr_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "ugr_id", referencedColumnName = "id")})
     private List<UserGroup> userGroups;
+    
+    @OneToOne(mappedBy = "user")
+    private ProfilePreference profilePreference;
 
     public Integer getId() {
         return id;
@@ -161,6 +164,14 @@ public class User implements UserDetails {
 
 	public void setUserGroups(List<UserGroup> userGroups) {
 		this.userGroups = userGroups;
+	}
+
+	public ProfilePreference getProfilePreference() {
+		return profilePreference;
+	}
+
+	public void setProfilePreference(ProfilePreference profilePreference) {
+		this.profilePreference = profilePreference;
 	}
 
 	@Override

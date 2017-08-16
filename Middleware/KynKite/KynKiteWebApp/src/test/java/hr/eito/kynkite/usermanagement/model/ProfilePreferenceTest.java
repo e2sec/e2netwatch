@@ -59,14 +59,11 @@ public class ProfilePreferenceTest {
 		profilePreference.setUser(user);
 		profilePreference.setUserGroup(userGroup);
 		profilePreference.setTimezone(timezone);
-		profilePreference.setProfileMenus(profileMenus);
 		
 		Assert.assertEquals("ProfilePreference id set and get wrong", id, profilePreference.getId());
 		Assert.assertEquals("ProfilePreference user set and get wrong", user, profilePreference.getUser());
 		Assert.assertEquals("ProfilePreference userGroup set and get wrong", userGroup, profilePreference.getUserGroup());
 		Assert.assertEquals("ProfilePreference timezone set and get wrong", timezone, profilePreference.getTimezone());
-		
-		Assert.assertEquals("Number of profileMenus for ProfilePreference is wrong", 2, profilePreference.getProfileMenus().size());
 	}
 
 }

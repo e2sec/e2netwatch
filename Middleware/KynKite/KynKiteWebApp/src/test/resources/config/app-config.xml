@@ -13,7 +13,11 @@
 	</beans>
 
 	<beans profile="test">
-		<context:component-scan base-package="hr.eito.kynkite.rest, hr.eito.kynkite.business.manager, hr.eito.kynkite.business.dao.stub, hr.eito.kynkite.aql.dao" />
+		<context:component-scan base-package="
+		hr.eito.kynkite.rest, hr.eito.kynkite.business.manager, 
+		hr.eito.kynkite.business.dao.stub, hr.eito.kynkite.aql.dao.stub,
+		hr.eito.kynkite.usermanagement.helper.stub,
+		hr.eito.kynkite.usermanagement.dao.stub" />
 		<context:property-placeholder
 			location="classpath:hr/eito/kynkite/application-test.properties"
 			ignore-unresolvable="true" />

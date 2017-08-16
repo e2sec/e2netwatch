@@ -49,6 +49,7 @@ public class ProfileMenuTest {
 		List<ProfileMenu> profileSubmenus = new ArrayList<>();
 		profileSubmenus.add(new ProfileMenu());
 		profileSubmenus.add(new ProfileMenu());
+		ProfilePreference profilePreference = new ProfilePreference();
 		
 		Integer id = 1;
 		MenuComponent menuComponent = new MenuComponent();
@@ -59,10 +60,12 @@ public class ProfileMenuTest {
 		profileMenu.setMenuComponent(menuComponent);
 		profileMenu.setPosition(position);
 		profileMenu.setProfileSubmenus(profileSubmenus);
+		profileMenu.setProfilePreference(profilePreference);
 		
 		Assert.assertEquals("ProfileMenu id set and get wrong", id, profileMenu.getId());
 		Assert.assertEquals("ProfileMenu menuComponent set and get wrong", menuComponent, profileMenu.getMenuComponent());
 		Assert.assertEquals("ProfileMenu position set and get wrong", position, profileMenu.getPosition());
+		Assert.assertEquals("ProfileMenu profilePreference set and get wrong", profilePreference, profileMenu.getProfilePreference());
 		
 		Assert.assertEquals("Number of profileSubmenus for ProfileMenu is wrong", 2, profileMenu.getProfileSubmenus().size());
 	}

@@ -31,6 +31,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -57,6 +58,9 @@ public class UserGroup {
             joinColumns = {@JoinColumn(name = "ugr_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "aty_id", referencedColumnName = "id")})
     private List<Authority> authorities;
+    
+    @OneToOne(mappedBy = "userGroup")
+    private ProfilePreference profilePreference;
 
     public Integer getId() {
         return id;
@@ -88,6 +92,14 @@ public class UserGroup {
 
 	public void setAuthorities(List<Authority> authorities) {
 		this.authorities = authorities;
+	}
+	
+	public ProfilePreference getProfilePreference() {
+		return profilePreference;
+	}
+
+	public void setProfilePreference(ProfilePreference profilePreference) {
+		this.profilePreference = profilePreference;
 	}
 	
 }

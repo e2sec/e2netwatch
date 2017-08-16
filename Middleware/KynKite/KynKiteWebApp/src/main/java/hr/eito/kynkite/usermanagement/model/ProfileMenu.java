@@ -48,14 +48,18 @@ public class ProfileMenu {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="mnc_id")
     private MenuComponent menuComponent;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="ppr_id")
+    private ProfilePreference profilePreference;
 	
 	@Column(name = "position")
     private Integer position;
 	
-	@OneToMany
+	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name="super_prm_id")
 	private List<ProfileMenu> profileSubmenus;
 
@@ -89,6 +93,14 @@ public class ProfileMenu {
 
 	public void setProfileSubmenus(List<ProfileMenu> profileSubmenus) {
 		this.profileSubmenus = profileSubmenus;
+	}
+
+	public ProfilePreference getProfilePreference() {
+		return profilePreference;
+	}
+
+	public void setProfilePreference(ProfilePreference profilePreference) {
+		this.profilePreference = profilePreference;
 	}
     
 }

@@ -8,17 +8,17 @@ delete from ugr_aty;
 delete from menu_component;
 delete from profile_menu;
 
-insert into user (username, password, first_name, last_name, email) values 
-    ('admin', '$argon2i$v=19$m=65536,t=2,p=1$8buuloxG+y4CecxZjlKhPw$UDAi/srpZrmgCOny30uhGcMnBJYgBQFECvGB9H/GA44', 'John', 'Admin', 'john.admin@e-ito.de')
-    ,('user', '$argon2i$v=19$m=65536,t=2,p=1$8buuloxG+y4CecxZjlKhPw$UDAi/srpZrmgCOny30uhGcMnBJYgBQFECvGB9H/GA44', 'Jack', 'User', 'jack.user@e-ito.de');
+insert into user (id, username, password, first_name, last_name, email) values 
+    (1, 'admin', '$argon2i$v=19$m=65536,t=2,p=1$8buuloxG+y4CecxZjlKhPw$UDAi/srpZrmgCOny30uhGcMnBJYgBQFECvGB9H/GA44', 'John', 'Admin', 'john.admin@e-ito.de')
+    ,(2, 'user', '$argon2i$v=19$m=65536,t=2,p=1$Bzf5J8QwlC/h+HPqJ2np9Q$BRdbtvsoXDQlTEknHSfCs6h+p5A5OV+wq2xwQPEecSk', 'Jack', 'User', 'jack.user@e-ito.de');
     
-insert into user_group (name, description) values 
-    ('Administrators', 'Description for user group administrators')
-    ,('Users', 'User group users description');
+insert into user_group (id, name, description) values 
+    (1, 'Administrators', 'Description for user group administrators')
+    ,(2, 'Users', 'User group users description');
     
-insert into authority (name) values 
-    ('ROLE_ADMIN')
-    ,('ROLE_USER');
+insert into authority (id, name) values 
+    (1, 'ROLE_ADMIN')
+    ,(2, 'ROLE_USER');
     
 insert into usr_ugr (usr_id, ugr_id) values 
     ((select id from user where username = 'admin'), (select id from user_group where name = 'Administrators'))
@@ -29,6 +29,8 @@ insert into ugr_aty (ugr_id, aty_id) values
     ,((select id from user_group where name = 'Users'), (select id from authority where name = 'ROLE_USER'));
     
 update profile_preference set default_tzn_id = (select id from timezone where name like '%Berlin%');
+insert into profile_preference (id, default_tzn_id, ugr_id) values
+    (2, null, 2);
 
 -- inserting into menu_component table
 insert into menu_component (id, name, url, icon_name, default_position, default_super_mnc_id, alignment, name_hidden) values
@@ -62,32 +64,46 @@ insert into menu_component (id, name, url, icon_name, default_position, default_
 alter table menu_component AUTO_INCREMENT=28;
 
 insert into profile_menu (id, ppr_id, mnc_id, position, super_prm_id) values
-    (1, (select id from profile_preference where usr_id is null and ugr_id is null), 1, 1, null)
-    ,(2, (select id from profile_preference where usr_id is null and ugr_id is null), 2, 1, 1)
-    ,(3, (select id from profile_preference where usr_id is null and ugr_id is null), 3, 2, 1)
-    ,(4, (select id from profile_preference where usr_id is null and ugr_id is null), 4, 3, 1)
-    ,(5, (select id from profile_preference where usr_id is null and ugr_id is null), 5, 2, null)
-    ,(6, (select id from profile_preference where usr_id is null and ugr_id is null), 6, 3, null)
-    ,(7, (select id from profile_preference where usr_id is null and ugr_id is null), 7, 4, null)
-    ,(8, (select id from profile_preference where usr_id is null and ugr_id is null), 8, 5, null)
-    ,(9, (select id from profile_preference where usr_id is null and ugr_id is null), 9, 1, 8)
-    ,(10, (select id from profile_preference where usr_id is null and ugr_id is null), 10, 2, 8)
-    ,(11, (select id from profile_preference where usr_id is null and ugr_id is null), 11, 1, 10)
-    ,(12, (select id from profile_preference where usr_id is null and ugr_id is null), 12, 2, 10)
-    ,(13, (select id from profile_preference where usr_id is null and ugr_id is null), 13, 3, 10)
-    ,(14, (select id from profile_preference where usr_id is null and ugr_id is null), 14, 3, 8)
-    ,(15, (select id from profile_preference where usr_id is null and ugr_id is null), 15, 4, 8)
-    ,(16, (select id from profile_preference where usr_id is null and ugr_id is null), 16, 5, 8)
-    ,(17, (select id from profile_preference where usr_id is null and ugr_id is null), 17, 6, 8)
-    ,(18, (select id from profile_preference where usr_id is null and ugr_id is null), 18, 7, 8)
-    ,(19, (select id from profile_preference where usr_id is null and ugr_id is null), 19, 6, null)
-    ,(20, (select id from profile_preference where usr_id is null and ugr_id is null), 20, 7, null)
-    ,(21, (select id from profile_preference where usr_id is null and ugr_id is null), 21, 1, 20)
-    ,(22, (select id from profile_preference where usr_id is null and ugr_id is null), 22, 2, 20)
-    ,(23, (select id from profile_preference where usr_id is null and ugr_id is null), 27, 3, 20)
-    ,(24, (select id from profile_preference where usr_id is null and ugr_id is null), 23, 4, 20)
-    ,(25, (select id from profile_preference where usr_id is null and ugr_id is null), 24, 5, 20)
-    ,(26, (select id from profile_preference where usr_id is null and ugr_id is null), 25, 6, 20)
-    ,(27, (select id from profile_preference where usr_id is null and ugr_id is null), 27, 7, 20)
-    ,(28, (select id from profile_preference where usr_id is null and ugr_id is null), 26, 8, 20);
-alter table profile_menu AUTO_INCREMENT=29;
+    -- profile menu for global
+    (1, 1, 1, 1, null)
+    ,(2, null, 2, 1, 1)
+    ,(3, null, 3, 2, 1)
+    ,(4, null, 4, 3, 1)
+    ,(5, 1, 5, 2, null)
+    ,(6, 1, 6, 3, null)
+    ,(7, 1, 7, 4, null)
+    ,(8, 1, 8, 5, null)
+    ,(9, null, 9, 1, 8)
+    ,(10, null, 10, 2, 8)
+    ,(11, null, 11, 1, 10)
+    ,(12, null, 12, 2, 10)
+    ,(13, null, 13, 3, 10)
+    ,(14, null, 14, 3, 8)
+    ,(15, null, 15, 4, 8)
+    ,(16, null, 16, 5, 8)
+    ,(17, null, 17, 6, 8)
+    ,(18, null, 18, 7, 8)
+    ,(19, 1, 19, 6, null)
+    ,(20, 1, 20, 7, null)
+    ,(21, null, 21, 1, 20)
+    ,(22, null, 22, 2, 20)
+    ,(23, null, 27, 3, 20)
+    ,(24, null, 23, 4, 20)
+    ,(25, null, 24, 5, 20)
+    ,(26, null, 25, 6, 20)
+    ,(27, null, 27, 7, 20)
+    ,(28, null, 26, 8, 20)
+    -- profile menu for Administrators group
+    ,(29, 2, 1, 1, null)
+    ,(30, null, 3, 1, 29)
+    ,(31, 2, 6, 2, null)
+    ,(32, 2, 8, 3, null)
+    ,(33, null, 9, 1, 32)
+    ,(34, null, 18, 2, 32)
+    ,(35, 2, 19, 4, null)
+    ,(36, 2, 20, 5, null)
+    ,(37, null, 21, 1, 36)
+    ,(38, null, 22, 2, 36)
+    ,(39, null, 27, 3, 36)
+    ,(40, null, 26, 4, 36);
+alter table profile_menu AUTO_INCREMENT=41;

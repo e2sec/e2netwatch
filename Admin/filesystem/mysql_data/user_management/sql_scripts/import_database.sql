@@ -244,7 +244,7 @@ create table menu_component (
 -- definition for table mnu_ppr
 create table profile_menu (
     id integer primary key auto_increment
-    , ppr_id integer not null
+    , ppr_id integer
     , mnc_id integer not null
     , position integer
     , super_prm_id integer
