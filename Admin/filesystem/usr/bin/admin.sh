@@ -43,9 +43,7 @@ import_es_indices()
 import_es_demodata()
 {
     echo
-    cd /elasticsearch_data/
-    ./import_data.sh -h $ELASTICHOST demo/*
-    cd /
+    ./elasticsearch_data/import_data.sh -h $ELASTICHOST /tmp/esdemodata/*
 }
 
 
@@ -191,6 +189,7 @@ do
 
         importesdemodata)
             import_es_demodata
+            shift
             ;;
             
         up)

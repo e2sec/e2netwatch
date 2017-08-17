@@ -89,6 +89,15 @@ if [ "$1" = "eslicense" ]; then
         echo "Installing an ES license requires a license file as second argument!"
         exit 1
     fi
+# Special case for "importesdemodata" command
+elif [ "$1" = "importesdemodata" ]; then
+    if [ -d "$2" ]; then
+        ES_DEMO_DIRECTORY_PATH=`realpath $2`
+        VOLUME="$VOLUME --volume=$ES_DEMO_DIRECTORY_PATH:/tmp/esdemodata"
+    else
+        echo "Importing demo data into Elsticsearch requests directory path containing .json files as second argument!"
+        exit 1
+    fi
 fi
 
 # Special case for "importmysqldata" command
