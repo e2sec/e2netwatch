@@ -105,9 +105,9 @@ init_mysql_db() {
     set_mysql_access $*
 }
 # importing demo data to mysql databases
-import_mysql_demo() {
+import_mysql_data() {
     echo
-    /mysql_data/import_demodata.sh -h $MYSQLHOST -b ${1-""} /tmp/mysqldemodata/*
+    /mysql_data/import_data.sh -h $MYSQLHOST -b ${1-""} /tmp/mysqldata/*
 }
 # init kyn user database in service container "mysql"
 init_userdb() {
@@ -148,8 +148,8 @@ print_help()
     echo "        patch all mysql databases"
     echo "    initmysqldb"
     echo "        reset all mysql databases and set user access to mysql databases"
-    echo "    importmysqldemo"
-    echo "        import demo data for all mysql databases"
+    echo "    importmysqldata"
+    echo "        import data for all mysql databases"
     echo
 }
 
@@ -220,8 +220,8 @@ do
             init_mysql_db $PASSWORD
             ;;
         
-        importmysqldemo)
-            import_mysql_demo $PASSWORD
+        importmysqldata)
+            import_mysql_data $PASSWORD
             shift
             ;;
             

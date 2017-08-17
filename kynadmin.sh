@@ -43,6 +43,28 @@ get_network()
     fi
 }
 
+### setting sqldata volume if needed
+#
+set_sqldata_volume()
+{
+    # convert arguments to array and loop through to find command name
+    array=( "$@" )
+    for i in ${!array[@]};
+    do
+        if [ ${array[$i]} == "importmysqldata" ]; then
+            # check if next argument is valid directory and if yes set to mount point
+            if [ -d "${array[$((i+1))]}" ]; then
+                MYSQL_DATA_DIRECTORY_PATH=`realpath ${array[$((i+1))]}`
+                VOLUME="$VOLUME --volume=$MYSQL_DATA_DIRECTORY_PATH:/tmp/mysqldata"
+            else
+                echo "Importing data into mysql database requests directory path containing .sql files as second argument!"
+                exit 1
+            fi
+            break
+        fi
+    done
+}
+
 #######################################################################
 #
 ### kyn docker parameters
@@ -67,16 +89,10 @@ if [ "$1" = "eslicense" ]; then
         echo "Installing an ES license requires a license file as second argument!"
         exit 1
     fi
-# Special case for "importmysqldemo" command
-elif [ "$1" = "importmysqldemo" ]; then
-    if [ -d "$2" ]; then
-        MYSQL_DEMO_FILE_PATH=`realpath $2`
-        VOLUME="$VOLUME --volume=$MYSQL_DEMO_FILE_PATH:/tmp/mysqldemodata"
-    else
-        echo "Importing demo data into mysql database requests directory path containing .sql files as second argument!"
-        exit 1
-    fi
 fi
+
+# Special case for "importmysqldata" command
+set_sqldata_volume $@
 
 #######################################################################
 #
