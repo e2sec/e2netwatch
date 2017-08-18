@@ -105,9 +105,9 @@ init_mysql_db() {
     set_mysql_access $*
 }
 # importing demo data to mysql databases
-import_mysql_demo() {
-    import_userdb_demodata $*
-    import_aqldb_demodata $*
+import_mysql_data() {
+    echo
+    /mysql_data/import_data.sh -h $MYSQLHOST -b ${1-""} /tmp/mysqldata/*
 }
 # init kyn user database in service container "mysql"
 init_userdb() {
@@ -118,16 +118,6 @@ init_userdb() {
 init_aqldb() {
     echo
     /mysql_data/aql/init_db.sh -h $MYSQLHOST -b ${1-""}
-}
-# import mysql user management demo data
-import_userdb_demodata() {
-    echo
-    /mysql_data/user_management/import_demodata.sh -h $MYSQLHOST -b ${1-""}
-}
-# import mysql aql demo data
-import_aqldb_demodata() {
-    echo
-    /mysql_data/aql/import_demodata.sh -h $MYSQLHOST -b ${1-""}
 }
 # set mysql access rights
 set_mysql_access() {
@@ -158,8 +148,8 @@ print_help()
     echo "        patch all mysql databases"
     echo "    initmysqldb"
     echo "        reset all mysql databases and set user access to mysql databases"
-    echo "    importmysqldemo"
-    echo "        import demo data for all mysql databases"
+    echo "    importmysqldata"
+    echo "        import data for all mysql databases"
     echo
 }
 
@@ -230,28 +220,9 @@ do
             init_mysql_db $PASSWORD
             ;;
         
-        importmysqldemo)
-            import_mysql_demo $PASSWORD
-            ;;
-            
-        inituserdb)
-            init_userdb $PASSWORD
-            ;;
-
-        initaqldb)
-            init_aqldb $PASSWORD
-            ;;
-            
-        importuserdbdemodata)
-            import_userdb_demodata $PASSWORD
-            ;;
-
-        importaqldbdemodata)
-            import_aqldb_demodata $PASSWORD
-            ;;
-
-        setmysqlaccess)
-            set_mysql_access $PASSWORD
+        importmysqldata)
+            import_mysql_data $PASSWORD
+            shift
             ;;
             
         *)
