@@ -92,10 +92,10 @@ if [ "$1" = "eslicense" ]; then
 # Special case for "importesdemodata" command
 elif [ "$1" = "importesdemodata" ]; then
     if [ -d "$2" ]; then
-        ES_DEMO_DIRECTORY_PATH=`realpath $2`
-        VOLUME="$VOLUME --volume=$ES_DEMO_DIRECTORY_PATH:/tmp/esdemodata"
+        ES_DATA_DIRECTORY_PATH=`realpath $2`
+        VOLUME="$VOLUME --volume=$ES_DATA_DIRECTORY_PATH:/tmp/esdemodata"
     else
-        echo "Importing demo data into Elsticsearch requests directory path containing .json files as second argument!"
+        echo "Importing demo data into Elasticsearch requests directory path containing .json files as second argument!"
         exit 1
     fi
 fi
