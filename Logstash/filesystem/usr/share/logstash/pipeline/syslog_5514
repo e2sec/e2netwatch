@@ -86,7 +86,7 @@ output {
   #stdout { codec => rubydebug }
   if [type] == "cisco-asa" {
     elasticsearch {
-      index => "kyn-syslog-asa-%{+YYYY-MM-dd}"
+      index => "e2nw-syslog-asa-%{+YYYY-MM-dd}"
       flush_size => 2500
       hosts => ["elasticsearch:9200"]
     }
@@ -107,7 +107,7 @@ filter {
         remove_field => ["timestamp"]
       }
       ruby {
-        init => '@mac = Hash[File.read("/var/kyn/mac_address_vendor.txt").scan(/(.+?) (.+)\r/)]'
+        init => '@mac = Hash[File.read("/var/e2nw/mac_address_vendor.txt").scan(/(.+?) (.+)\r/)]'
         code => 'event["mac_vendor"] = @mac[event["macaddr"][0,8].gsub(/\:/,"-").upcase]'
       }
     }
@@ -117,7 +117,7 @@ filter {
 output {
   if [type] == "dhcp" {
     elasticsearch {
-      index => "kyn-syslog-dhcp-%{+YYYY-MM-dd}"
+      index => "e2nw-syslog-dhcp-%{+YYYY-MM-dd}"
       flush_size => 2500
       hosts => ["elasticsearch:9200"]
     }
@@ -148,7 +148,7 @@ filter {
 output {
   if [type] == "ipslogs" {
     elasticsearch {
-      index => "kyn-syslog-ips-%{+YYYY-MM-dd}"
+      index => "e2nw-syslog-ips-%{+YYYY-MM-dd}"
       flush_size => 2500
       hosts => ["elasticsearch:9200"]
     }
@@ -179,7 +179,7 @@ output {
   if [type] == "syslog-router" {
     #stdout { codec => rubydebug }
     elasticsearch {
-      index => "kyn-syslog-router-%{+YYYY-MM-dd}"
+      index => "e2nw-syslog-router-%{+YYYY-MM-dd}"
       flush_size => 2500
       hosts => ["elasticsearch:9200"]
     }
@@ -256,7 +256,7 @@ filter {
 output {
   if [type] == "voice" or [type] == "voice_kv" {
     elasticsearch {
-      index => "kyn-syslog-voice-%{+YYYY-MM-dd}"
+      index => "e2nw-syslog-voice-%{+YYYY-MM-dd}"
       flush_size => 2500
       hosts => ["elasticsearch:9200"]
     }

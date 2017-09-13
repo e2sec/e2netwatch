@@ -120,7 +120,7 @@ output {
   if [type] == "syslog-proxy" {
     #stdout { codec => rubydebug }
     elasticsearch {
-      index => "kyn-syslog-proxy-%{+YYYY-MM-dd}"
+      index => "e2nw-syslog-proxy-%{+YYYY-MM-dd}"
       flush_size => 2500
       hosts => ["elasticsearch:9200"]
     }
