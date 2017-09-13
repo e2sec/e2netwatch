@@ -37,8 +37,8 @@ cluster = {}
 counter = 0
 lines = 0
 avg = 0
-file = '/var/kyn/tmp/cluster_score.csv'
-es_index = 'kyn-cluster'
+file = '/var/e2nw/tmp/cluster_score.csv'
+es_index = 'e2nw-cluster'
 ingest = true
 
 opts = GetoptLong.new(

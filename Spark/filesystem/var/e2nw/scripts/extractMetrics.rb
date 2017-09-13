@@ -28,8 +28,8 @@ require 'getoptlong'
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 
 ESHOST  = "http://127.0.0.1:9200"
-INDEX   = "kyn-events-201*"
-GINDEX  = "kyn-groups"
+INDEX   = "e2nw-events-201*"
+GINDEX  = "e2nw-groups"
 FILENAME = "kmeansinput.csv"
 
 opts = GetoptLong.new(

@@ -27,14 +27,14 @@ require "open3"
 # XINDEX:  To be replaced with ES index upon execution
 # XEVENT:  To be replaced with list of relevant event ids upon execution
 # XGROUP:  To be replaced with list of relevant groups upon execution
-#CFG          = '/var/kyn/scripts/kynscore.cfg'
-CFG = 'kynscore.cfg'
-EXTRACT_CMD  = '/var/kyn/scripts/extractMetrics.rb --output=XOUTPUT --groups=XGROUP --event=XEVENT'
-#ANALYSIS_CMD = {'KMEANS'=> '/usr/local/spark/bin/spark-shell --driver-memory 16G --executor-memory 32G -i /home/hadoopuser/kyn_cluster_20161230.scala --conf spark.driver.args="XINPUT XOUTPUT XSIZE"'}
-UPLOAD_CMD   = '/var/kyn/scripts/import_ip_cluster.rb --esindex XINDEX --ingest XINPUT'
-GROUP_CMD    = '/var/kyn/scripts/getGroups.rb'
-IMPORT_CMD   = '/var/kyn/scripts/groups2elastic.rb'
-TEMPFILE     = "kyn-analysis"
+#CFG          = '/var/e2nw/scripts/e2nwscore.cfg'
+CFG = 'e2nwscore.cfg'
+EXTRACT_CMD  = '/var/e2nw/scripts/extractMetrics.rb --output=XOUTPUT --groups=XGROUP --event=XEVENT'
+#ANALYSIS_CMD = {'KMEANS'=> '/usr/local/spark/bin/spark-shell --driver-memory 16G --executor-memory 32G -i /home/hadoopuser/e2nw_cluster_20161230.scala --conf spark.driver.args="XINPUT XOUTPUT XSIZE"'}
+UPLOAD_CMD   = '/var/e2nw/scripts/import_ip_cluster.rb --esindex XINDEX --ingest XINPUT'
+GROUP_CMD    = '/var/e2nw/scripts/getGroups.rb'
+IMPORT_CMD   = '/var/e2nw/scripts/groups2elastic.rb'
+TEMPFILE     = "e2nw-analysis"
 ESHOST       = "http://localhost:9200"
 
 def toSec(i)

@@ -44,7 +44,7 @@ from sklearn.cluster import MeanShift, estimate_bandwidth, KMeans, Agglomerative
 Elasticsearch parameter
 '''
 nodes = ['http://elasticsearch:9200']
-index = "kyn-netflow-*"
+index = "e2nw-netflow-*"
 
 ################################################################
 

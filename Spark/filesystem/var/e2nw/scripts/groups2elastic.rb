@@ -27,7 +27,7 @@ require "json"
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 
 ESHOST  = "http://elasticsearch:9200"
-INDEX   = "kyn-groups"
+INDEX   = "e2nw-groups"
 FILE    = "/tmp/kmeans_output_rue.json"
 
 

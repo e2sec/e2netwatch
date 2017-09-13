@@ -19,14 +19,14 @@
 
 
 
-# Get list of group IDs from latest kyn-groups* index.
+# Get list of group IDs from latest e2nw-groups* index.
 
 require "elasticsearch"
 require 'openssl'
 require "getoptlong"
 
 ESHOST  = "http://localhost:9200"
-INDEX   = "kyn-group"
+INDEX   = "e2nw-group"
 
 
 
@@ -69,7 +69,7 @@ client = Elasticsearch::Client.new url: "#{eshost}", log: false, transport_optio
 #z = client.cat.indices
 #lines = z.map{|u| u["index"]}
 ##e = lines.select do |x|
-#  x.include?("kyn-group")
+#  x.include?("e2nw-group")
 #end
 #gindex = e.sort.last
   
