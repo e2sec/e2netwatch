@@ -18,12 +18,12 @@ RUN cd /tmp/ \
         && rm -rf /tmp/* /usr/share/doc/*
 
 
-WORKDIR /var/kyn/scripts
-RUN echo '{"require":{"elasticsearch/elasticsearch": "~2.0"}}' > /var/kyn/scripts/composer.json
+WORKDIR /var/e2nw/scripts
+RUN echo '{"require":{"elasticsearch/elasticsearch": "~2.0"}}' > /var/e2nw/scripts/composer.json
 
 RUN curl -s http://getcomposer.org/installer | php \
-        && php /var/kyn/scripts/composer.phar install -d /var/kyn/scripts/ --no-dev \
-        && rm /var/kyn/scripts/composer.*
+        && php /var/e2nw/scripts/composer.phar install -d /var/e2nw/scripts/ --no-dev \
+        && rm /var/e2nw/scripts/composer.*
 
 COPY ./filesystem/Reports /Reports
 

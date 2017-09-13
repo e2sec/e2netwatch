@@ -23,7 +23,7 @@
 // Script creates per query one dedicated csv File
 //
 
-require '/var/kyn/scripts/vendor/autoload.php';
+require '/var/e2nw/scripts/vendor/autoload.php';
 
 $es_host = ['elasticsearch:9200'];
 
