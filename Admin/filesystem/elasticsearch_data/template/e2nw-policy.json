@@ -1,6 +1,6 @@
 {
   "order": 1,
-  "template": "kyn-hostinfo",
+  "template": "e2nw-hostinfo",
   "mappings": {
     "_default_": {
       "properties": {

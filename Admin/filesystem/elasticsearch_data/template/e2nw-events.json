@@ -1,6 +1,6 @@
 {
   "order": 1,
-  "template": "kyn-events-*",
+  "template": "e2nw-events-*",
   "mappings": {
     "_default_": {
       "properties": {

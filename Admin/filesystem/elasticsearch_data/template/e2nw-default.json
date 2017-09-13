@@ -1,6 +1,6 @@
 {
   "order": 0,
-  "template": "kyn-*",
+  "template": "e2nw-*",
   "settings": {
     "index": {
       "number_of_replicas": "0",

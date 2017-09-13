@@ -1,6 +1,6 @@
 {
     "order": 1,
-    "template": "kyn-syslog-router-*",
+    "template": "e2nw-syslog-voice-*",
     "settings": {
       "index": {
         "codec": "best_compression"
@@ -9,20 +9,23 @@
     "mappings": {
       "_default_": {
         "properties": {
-          "router": {
+          "@timestamp": {
+            "type": "date",
+            "format": "strict_date_optional_time||epoch_millis"
+          },
+          "Dst-ip": {
             "type": "ip"
           },
-          "geoip": {
-            "properties": {
-              "location": {
-                "type": "geo_point"
-              }
-            }
+          "Dst-port": {
+            "type": "integer"
           },
-          "sender": {
+          "Local-ip": {
             "type": "ip"
           },
-          "host": {
+          "Local-port": {
+            "type": "integer"
+          },
+          "voicegw": {
             "type": "ip"
           }
         },

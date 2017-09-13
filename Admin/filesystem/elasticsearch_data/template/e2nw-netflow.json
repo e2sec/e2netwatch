@@ -1,6 +1,6 @@
 {
   "order": 1,
-  "template": "kyn-netflow-*",
+  "template": "e2nw-netflow-*",
   "mappings": {
     "_default_": {
       "properties": {

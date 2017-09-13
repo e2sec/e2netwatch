@@ -1,6 +1,6 @@
 {
     "order": 1,
-    "template": "kyn-cluster*",
+    "template": "e2nw-cluster*",
     "settings": {},
     "mappings": {
       "_default_": {

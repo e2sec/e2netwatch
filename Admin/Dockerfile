@@ -3,8 +3,8 @@ FROM tmaier/docker-compose
 ### Administration container image
 #
 # can be used to
-# * start kyn system
-# * stop kyn system
+# * start e2nw system
+# * stop e2nw system
 #
 # needed to perform
 # * elastic search license init

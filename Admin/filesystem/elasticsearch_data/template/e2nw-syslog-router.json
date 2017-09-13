@@ -1,6 +1,6 @@
 {
     "order": 1,
-    "template": "kyn-syslog-ips-*",
+    "template": "e2nw-syslog-router-*",
     "settings": {
       "index": {
         "codec": "best_compression"
@@ -9,7 +9,7 @@
     "mappings": {
       "_default_": {
         "properties": {
-          "Destination": {
+          "router": {
             "type": "ip"
           },
           "geoip": {
@@ -19,17 +19,11 @@
               }
             }
           },
-          "Sourceport": {
-            "type": "long"
-          },
-          "IPS_System": {
+          "sender": {
             "type": "ip"
           },
-          "Source": {
+          "host": {
             "type": "ip"
-          },
-          "Destinationport": {
-            "type": "long"
           }
         },
         "_all": {

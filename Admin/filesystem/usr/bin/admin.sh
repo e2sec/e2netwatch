@@ -4,7 +4,7 @@
 #
 # Author: Tobias Nieberg
 #
-# Purpose: Initialise kyn system
+# Purpose: Initialise e2nw system
 #
 # Usage: init.sh <actions>
 #
@@ -56,31 +56,31 @@ check_docker_socket()
 dump_docker_status()
 {
     echo
-    echo "=== kyn docker containers ==="
-    docker ps -a --filter name=kyn*
+    echo "=== e2nw docker containers ==="
+    docker ps -a --filter name=e2nw*
     echo
-    echo "=== kyn docker network ======"
-    docker network list --filter name=kyn*
+    echo "=== e2nw docker network ======"
+    docker network list --filter name=e2nw*
     echo
     echo "============================="
     echo
 }
 
 
-start_kyn()
+start_e2nw()
 {
     check_docker_socket
-    cd /opt/kyn
+    cd /opt/e2nw
     docker-compose up -d
     cd /
     dump_docker_status
 }
 
 
-stop_kyn()
+stop_e2nw()
 {
     check_docker_socket
-    cd /opt/kyn
+    cd /opt/e2nw
     docker-compose down
     cd /
     dump_docker_status
@@ -107,12 +107,12 @@ import_mysql_data() {
     echo
     /mysql_data/import_data.sh -h $MYSQLHOST -b ${1-""} /tmp/mysqldata/*
 }
-# init kyn user database in service container "mysql"
+# init e2nw user database in service container "mysql"
 init_userdb() {
     echo
     /mysql_data/user_management/init_db.sh -h $MYSQLHOST -b ${1-""}
 }
-# init kyn aql database in service container "mysql"
+# init e2nw aql database in service container "mysql"
 init_aqldb() {
     echo
     /mysql_data/aql/init_db.sh -h $MYSQLHOST -b ${1-""}
@@ -135,9 +135,9 @@ print_help()
     echo "    importesdemodata"
     echo "        import elasticsearch demo data"
     echo "    up"
-    echo "        start all kyn containers"
+    echo "        start all e2nw containers"
     echo "    down"
-    echo "        stop and remove all kyn containers"
+    echo "        stop and remove all e2nw containers"
     echo "    init"
     echo "        perform all init actions at once"
     echo "    status"
@@ -193,11 +193,11 @@ do
             ;;
             
         up)
-            start_kyn
+            start_e2nw
             ;;
 
         down)
-            stop_kyn
+            stop_e2nw
             ;;
 
         init)

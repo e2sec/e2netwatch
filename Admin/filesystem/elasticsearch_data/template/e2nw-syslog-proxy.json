@@ -1,6 +1,6 @@
 {
   "order": 1,
-  "template": "kyn-syslog-proxy-*",
+  "template": "e2nw-syslog-proxy-*",
   "mappings": {
     "_default_": {
       "properties": {

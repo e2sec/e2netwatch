@@ -1,6 +1,6 @@
 {
   "order": 1,
-  "template": "kyn-newsticker-*",
+  "template": "e2nw-newsticker-*",
   "mappings": {
     "_default_": {
       "properties": {

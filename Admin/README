@@ -1,15 +1,15 @@
 
 ########################################################################
 #
-# This component defines an admin container image for kyn.
-# The container is created on every kyn build, but not executed automatically.
+# This component defines an admin container image for e2nw.
+# The container is created on every e2nw build, but not executed automatically.
 # It must be run manually on the command line:
 #
-# docker run --rm --volume=/var/run/docker.sock:/var/run/docker.sock --network=kyn_default  kyn/admin [command]
+# docker run --rm --volume=/var/run/docker.sock:/var/run/docker.sock --network=e2nw_default  e2nw/admin [command]
 #
 # Or use this wrapper script from the main source dir:
 #
-# ./kynadmin.sh [command]
+# ./e2nwadmin.sh [command]
 #
 # The supported commands are currently:
 #
@@ -19,7 +19,7 @@
 # importesindices   :   import elasticsearch indices
 # importesdemodata  :   import elasticsearch demo data
 # init              :   perform all init commands at once
-# up                :   start all kyn container services
-# down              :   stop all kyn container services
+# up                :   start all e2nw container services
+# down              :   stop all e2nw container services
 #
 ########################################################################

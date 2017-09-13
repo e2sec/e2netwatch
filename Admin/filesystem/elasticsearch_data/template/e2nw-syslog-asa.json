@@ -1,6 +1,6 @@
 {
     "order": 1,
-    "template": "kyn-syslog-asa-*",
+    "template": "e2nw-syslog-asa-*",
     "settings": {},
     "mappings": {
       "_default_": {
