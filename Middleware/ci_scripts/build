@@ -29,7 +29,7 @@ done
 ####################################################################################################
 # Files to ship.
 #
-SHIP_FILES=( KynKite/KynKiteWebApp/target/KynKiteWebApp/WEB-INF \
+SHIP_FILES=( e2nwKite/e2nwKiteWebApp/target/e2nwKiteWebApp/WEB-INF \
 			Dockerfile \
             filesystem \
 		   )
@@ -48,7 +48,7 @@ TAG="latest"
 #
 # Name of the Docker image.
 #
-IMAGE="kyn/middleware-build"
+IMAGE="e2nw/middleware-build"
 #
 # Build directive to disable testing - for now!
 #
