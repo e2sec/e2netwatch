@@ -18,7 +18,7 @@
 
 
 
-require '/var/kyn/scripts/kestrel.rb'
+require '/var/e2nw/scripts/kestrel.rb'
 require "elasticsearch"
 require 'hashie'
 require "getoptlong"
@@ -26,14 +26,14 @@ require 'openssl'
 
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 
-MYINDEX = "kyn-events-*"
+MYINDEX = "e2nw-events-*"
 MAX = 10000
 PORT = 80
 PERPORT = false
 VERSION = "0.1"
 INTERVAL = 900
 ADIFF = [1, 4, 2, 3]
-DESCRIPTION = "kyn-eventdescription"
+DESCRIPTION = "e2nw-eventdescription"
 
 
 class Bloomfilter

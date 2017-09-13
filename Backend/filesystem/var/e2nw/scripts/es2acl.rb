@@ -30,7 +30,7 @@ OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 VERSION    = "20170130-01"
 BASERULES  = "base-rules.acl"
 NEWRULES   = "new-rules.acl"
-POLICY     = "kyn-policy"
+POLICY     = "e2nw-policy"
 IPADMIN    = "http://network-tools.com/default.asp?prog=express&host="
 
 MAX_NET = 7     # Maximum number of additional subnet bits during superneting
@@ -2361,7 +2361,7 @@ class Ruleset
     file.puts "<body onload='init'>"
     file.puts "<div class='container page-content'>"
     file.puts "<h1 class='margin30 no-margin-left no-margin-right' >"
-    file.puts "kyn firewall ruleset"
+    file.puts "e2nw firewall ruleset"
     file.puts "<div class='margin20'></div>"
     file.puts "<div class='panel success collapsed' data-role='panel'>"
     file.puts "<div class='heading'>"

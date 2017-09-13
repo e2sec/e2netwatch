@@ -20,7 +20,7 @@
 
 # Manual Anomaly Detector (MAD)
 
-require '/var/kyn/scripts/kestrel.rb'
+require '/var/e2nw/scripts/kestrel.rb'
 require "syslog"
 require "getoptlong"
 require "mysql2"
@@ -36,7 +36,7 @@ INTERVAL = 900 # 15 minutes
 # BACKTRACE = 96 * 30 # 1 month if interval = 900
 BACKTRACE = 96 * 7 # 1 week if interval = 900
 FILENAMEDEFAULT = "mad_ie.out"
-OUTINDEX = "kyn-anomalymetrics"
+OUTINDEX = "e2nw-anomalymetrics"
 
 def readDbRules()
     t = Array.new
@@ -243,8 +243,8 @@ end
 $esclient = Elasticsearch::Client.new url: "#{eshost}", log: true #, transport_options: { request: { timeout: 3600 } }
 
 if (outindex != "")
-  if !$esclient.indices.exists_template(name: 'kyn-anomalymetrics')
-    $esclient.indices.put_template name: 'kyn-anomalymetrics', body: { template: 'kyn-anomalymetrics*', settings: { 'index.number_of_shards' => 1 }, 
+  if !$esclient.indices.exists_template(name: 'e2nw-anomalymetrics')
+    $esclient.indices.put_template name: 'e2nw-anomalymetrics', body: { template: 'e2nw-anomalymetrics*', settings: { 'index.number_of_shards' => 1 }, 
     mappings: {
       _default_: {
         dynamic_templates: [

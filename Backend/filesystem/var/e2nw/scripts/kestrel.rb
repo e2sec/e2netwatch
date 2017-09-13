@@ -65,7 +65,7 @@ ESHOST  = "http://elasticsearch:9200"
 #ESHOST  = "http://10.11.12.81:9200"
 
 
-INDEX   = "kyn-netflow*"
+INDEX   = "e2nw-netflow*"
 SLICE   = 900
 VERSION = "20170214"
 DEBUG = false
@@ -74,9 +74,9 @@ EVALSTART = "2014-11-11T00:00:00.000Z"
 EVALEND   = "2018-11-11T00:00:00.000Z"
 INTERVAL  = 900
 SCOPESIZE = 2147483647
-TICKER    = "kyn-newsticker"
-EVENTINDEX = "kyn-events"
-EVENTDESC = "kyn-eventdescription"
+TICKER    = "e2nw-newsticker"
+EVENTINDEX = "e2nw-events"
+EVENTDESC = "e2nw-eventdescription"
 CEFVERSION = "0.1"
 
 Intervals = [["now-15m", "now"], ["now-75m", "now-60m"], ["now-1455m", "now-1440m"], ["now-1h", "now"], ["now-1440m", "now"] , ["now-135m", "now-120m"]]
@@ -140,7 +140,7 @@ def alert_event(es,m,v,t,h,s,d,dt)
   es.index index: "#{event}", type: "event", body: { use_case: "#{m}", description: "#{desc}", details: "Actual value: #{v}", "@timestamp" => "#{t}.000Z", host: "#{h}", script: "mad.rb #{VERSION}", eventid: "#{eventid}", details: "#{dt}", src: "#{s}", dst: "#{d}", severity: "#{sev}"}
   
   # CEF:Version|Device Vendor|Device Product|Device Version|Device Event Class ID|Name|Severity|[Extension]
-  #Syslog.open("kyn", 0 | Syslog::LOG_DAEMON) { |s| s.warning "CEF:0|e-ito|kite|#{CEFVERSION}|#{eventid}|#{sev}|Host=#{h};Details=#{desc}" }
+  #Syslog.open("e2nw", 0 | Syslog::LOG_DAEMON) { |s| s.warning "CEF:0|e-ito|kite|#{CEFVERSION}|#{eventid}|#{sev}|Host=#{h};Details=#{desc}" }
 
 end
 
