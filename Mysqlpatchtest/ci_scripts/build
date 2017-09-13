@@ -29,7 +29,7 @@ DATABASE_MODULES="user_management aql"
 ####################################################################################################
 # Build dir
 #
-BUILD_DIR=${1:-../build/kyn/Mysqltest}
+BUILD_DIR=${1:-../build/e2nw/Mysqltest}
 ####################################################################################################
 # Ship into the staging area.
 #
