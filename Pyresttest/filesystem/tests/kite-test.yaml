@@ -10,7 +10,7 @@
 
 - test:
     - name: "Successful login"
-    - url: "/KynKiteWebApp/rest/login"
+    - url: "/e2nwKiteWebApp/rest/login"
     - method: "POST"
     - body: {template: 'username=$username&password=$password'}
     - headers: {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -26,7 +26,7 @@
 #
 - test:
     - name: "Host report - OK"
-    - url: "/KynKiteWebApp/rest/hostReport"
+    - url: "/e2nwKiteWebApp/rest/hostReport"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
@@ -47,7 +47,7 @@
 #
 - test:
     - name: "Host report - Invalid date time range"
-    - url: "/KynKiteWebApp/rest/hostReport"
+    - url: "/e2nwKiteWebApp/rest/hostReport"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
@@ -69,7 +69,7 @@
 #
 - test:
     - name: "Host details reports - OK"
-    - url: "/KynKiteWebApp/rest/hostDetailsReport"
+    - url: "/e2nwKiteWebApp/rest/hostDetailsReport"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
@@ -90,7 +90,7 @@
 #
 - test:
     - name: "Host details reports - Invalid date time range"
-    - url: "/KynKiteWebApp/rest/hostDetailsReport"
+    - url: "/e2nwKiteWebApp/rest/hostDetailsReport"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
@@ -112,7 +112,7 @@
 #
 - test:
     - name: "Host details reports - IP address missing"
-    - url: "/KynKiteWebApp/rest/hostDetailsReport"
+    - url: "/e2nwKiteWebApp/rest/hostDetailsReport"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
@@ -134,7 +134,7 @@
 #
 - test:
     - name: "Host details reports - IP address invalid"
-    - url: "/KynKiteWebApp/rest/hostDetailsReport"
+    - url: "/e2nwKiteWebApp/rest/hostDetailsReport"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
@@ -157,7 +157,7 @@
 #
 - test:
     - name: "Host info reports CMDB - OK"
-    - url: "/KynKiteWebApp/rest/cmdbReport"
+    - url: "/e2nwKiteWebApp/rest/cmdbReport"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '

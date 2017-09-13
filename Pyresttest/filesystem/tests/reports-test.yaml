@@ -10,7 +10,7 @@
 
 - test:
     - name: "Successful login"
-    - url: "/KynKiteWebApp/rest/login"
+    - url: "/e2nwKiteWebApp/rest/login"
     - method: "POST"
     - body: {template: 'username=$username&password=$password'}
     - headers: {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -26,7 +26,7 @@
 #
 - #test:
     - name: "Create report - OK"
-    - url: "/KynKiteWebApp/rest/reports/createReport"
+    - url: "/e2nwKiteWebApp/rest/reports/createReport"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
@@ -48,7 +48,7 @@
 #
 - #test:
     - name: "Create report - invalid date time range"
-    - url: "/KynKiteWebApp/rest/reports/createReport"
+    - url: "/e2nwKiteWebApp/rest/reports/createReport"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
@@ -72,7 +72,7 @@
 #
 - test:
     - name: "Create report - invalid date time range"
-    - url: "/KynKiteWebApp/rest/reports/createReport"
+    - url: "/e2nwKiteWebApp/rest/reports/createReport"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
@@ -95,7 +95,7 @@
 #
 - test:
     - name: "Get list of reports"
-    - url: "/KynKiteWebApp/rest/reports/getList"
+    - url: "/e2nwKiteWebApp/rest/reports/getList"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '{}'
@@ -110,7 +110,7 @@
 #
 - #test:
     - name: "Get report by name"
-    - url: "/KynKiteWebApp/rest/reports/getReportByName"
+    - url: "/e2nwKiteWebApp/rest/reports/getReportByName"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '{"reportName": "report_20170401_20170408.pdf"}'
@@ -120,7 +120,7 @@
 #
 - test:
     - name: "Get report by name"
-    - url: "/KynKiteWebApp/rest/reports/getReportByName"
+    - url: "/e2nwKiteWebApp/rest/reports/getReportByName"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '{"reportName": "madeupname.pdf"}'

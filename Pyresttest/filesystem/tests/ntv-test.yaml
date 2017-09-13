@@ -10,7 +10,7 @@
 
 - test:
     - name: "Successful login"
-    - url: "/KynKiteWebApp/rest/login"
+    - url: "/e2nwKiteWebApp/rest/login"
     - method: "POST"
     - body: {template: 'username=$username&password=$password'}
     - headers: {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -26,7 +26,7 @@
 #
 - test:
     - name: "Resets"
-    - url: "/KynKiteWebApp/rest/resets"
+    - url: "/e2nwKiteWebApp/rest/resets"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
