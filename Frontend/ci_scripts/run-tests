@@ -30,7 +30,7 @@ HOST=${HOST%:*}
 #
 # Name of the Docker image.
 #
-export IMAGE="kyn/frontend"
+export IMAGE="e2nw/frontend"
 #
 # Port the application will listen on.
 #
@@ -84,7 +84,7 @@ done
 #
 # Check content of files.
 #
-check_content index.html "<title>know your network</title>"
+check_content index.html "<title>e2netwatch</title>"
 #
 ################################################################
 # Clean up and exit.

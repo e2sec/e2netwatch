@@ -1,7 +1,7 @@
 {
-  "name": "kyn",
+  "name": "e2nw",
   "version": "1.0.0",
-  "description": "KYN - Know Your Network",
+  "description": "e2netwatch",
   "scripts": {
     "start": "concurrently \"npm run build:watch\" \"node src/server.js\"",
     "build:watch": "tsc -p src/ -w",

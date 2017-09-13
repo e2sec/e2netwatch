@@ -4,7 +4,7 @@ declare var $: any;
 
 @Component({
     moduleId: module.id,
-    selector: 'kyn-app',
+    selector: 'e2nw-app',
     template: `<router-outlet></router-outlet>`
     //templateUrl: 'app.component.html'
 })
