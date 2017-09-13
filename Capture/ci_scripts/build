@@ -29,9 +29,9 @@ MODULE="Capture"
 #
 BUILD_DIR="$BUILD_DIR/Capture"
 #
-IMAGE=kyn/capture-build
+IMAGE=e2nw/capture-build
 #
-CONTAINER=KYNbuildNodeCapture
+CONTAINER=e2nwbuildNodeCapture
 #
 SRC_DIR=/Capture
 #

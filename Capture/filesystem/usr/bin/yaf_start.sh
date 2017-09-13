@@ -19,7 +19,7 @@
 
 
 
-SPAN_IF=${KYN_YAF_INTERFACE:-eth0}
+SPAN_IF=${e2nw_YAF_INTERFACE:-eth0}
 DATAPATH=/var/data/yaf/
 mkdir -p $DATAPATH
 PREFIX=yaf

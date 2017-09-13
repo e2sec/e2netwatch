@@ -19,7 +19,7 @@
 
 
 
-ESHOST="$(docker inspect --format '{{ .NetworkSettings.Networks.kyn_default.IPAddress }}' kyn_elasticsearch_1)"
+ESHOST="$(docker inspect --format '{{ .NetworkSettings.Networks.e2nw_default.IPAddress }}' e2nw_elasticsearch_1)"
 if [ "$?" -ne "0" ]; then
   echo "Can't find Elasticsearch IP."
   exit 1

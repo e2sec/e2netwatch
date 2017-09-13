@@ -288,7 +288,7 @@
 /* #undef TM_IN_SYS_TIME */
 
 /* Version number of package */
-#define VERSION "KYN 1.1 (based on nfdump 1.6.13)"
+#define VERSION "e2nw 1.1 (based on nfdump 1.6.13)"
 
 /* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
    significant byte first (like Motorola and SPARC, unlike Intel). */

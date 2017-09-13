@@ -11,7 +11,7 @@ DESTDIR="$BUILD_DIR/Capture"
 
 ############################################################
 #
-BUILDNODE="KYNbuildNodeCapture"
+BUILDNODE="e2nwbuildNodeCapture"
 #
 MODULE="Capture"
 #

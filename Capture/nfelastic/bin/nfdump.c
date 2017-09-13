@@ -333,7 +333,7 @@ static void usage(char *name) {
 				"\n"
 				"Mode elastic/elastic_db specific options:\n"
 	            "\033[1m-g <index>\tElasticsearch index for netflow data.\033[0m Used in combination with -B and -G.\n"
-				"\t\tDefault: \"kyn-netflow\"\n"
+				"\t\tDefault: \"e2nw-netflow\"\n"
 		        "\033[1m-G <url>\tLink to elasticsearch.\033[0m Used in combination with -g, -k and -u.\n"
 				"\t\t\033[1mRequired\033[0m in mode -o elastic_db.\n"
 			    "\033[1m-k <index>\tRead list of known networks and mark known networks in output.\033[0m\n"

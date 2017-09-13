@@ -3,7 +3,7 @@
 
 AC_PREREQ(2.59)
 AC_REVISION($Revision: 243 $)dnl 
-AC_INIT(nfdump, [KYN 1.1 based on nfdump 1.6.13], phaag@users.sourceforge.net)
+AC_INIT(nfdump, [e2nw 1.1 based on nfdump 1.6.13], phaag@users.sourceforge.net)
 # $Date: 2014-11-16 14:10:20 +0100 (Sun, 16 Nov 2014) $
 #AC_CONFIG_SRCDIR([grammar.y])
 AC_CONFIG_HEADER([config.h])

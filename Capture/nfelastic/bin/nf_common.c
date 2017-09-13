@@ -1275,7 +1275,7 @@ FlowTableRecord_t *ftr = (FlowTableRecord_t *)flowtable_record;
 uint64_t first, last, timestamp;
 char flags_str[16], flags_str_src[16], flags_str_dst[16], srcaddr[MAX_STRING_LENGTH], dstaddr[MAX_STRING_LENGTH], nexthop[MAX_STRING_LENGTH], router[MAX_STRING_LENGTH_ROUTER_LIST], ism[MAX_STRING_LENGTH], odm[MAX_STRING_LENGTH], engine[MAX_STRING_LENGTH], bpp[MAX_STRING_LENGTH], pps[MAX_STRING_LENGTH], bps[MAX_STRING_LENGTH], first_str[MAX_STRING_LENGTH];
 char *index;
-char *index_default = "kyn-netflow";
+char *index_default = "e2nw-netflow";
 char *known = "known";
 char *unknown = "unknown";
 char *source_status, *destination_status, *source_name, *destination_name;
