@@ -63,9 +63,9 @@ build_module() {
 ####################################################################################################
 # Override some of the configuration variables if the user requires it.
 #
-if [ ! -z "$KYN_CONFIG_CONFIG" ]; then
-	. "$KYN_BUILD_CONFIG"
-	check_error $? "Failed to set your custom configuration $KYN_BUILD_CONFIG"
+if [ ! -z "$e2nw_CONFIG_CONFIG" ]; then
+	. "$e2nw_BUILD_CONFIG"
+	check_error $? "Failed to set your custom configuration $e2nw_BUILD_CONFIG"
 fi
 #
 ####################################################################################################

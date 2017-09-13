@@ -33,9 +33,9 @@ stage_module() {
     shift
     if [ -d $MODULE ]; then
         echo "Building Docker image for $MODULE..."
-        docker build -t kyn/$MODULE_LOWER:$TAG $(normalize_path $BUILD_DIR/$MODULE/) | grep Successfully
+        docker build -t e2nw/$MODULE_LOWER:$TAG $(normalize_path $BUILD_DIR/$MODULE/) | grep Successfully
         if [ $TAG == "local" ]; then
-            docker tag kyn/$MODULE_LOWER:$TAG kyn/$MODULE_LOWER:latest
+            docker tag e2nw/$MODULE_LOWER:$TAG e2nw/$MODULE_LOWER:latest
         fi
         check_error $? "Failed to stage $MODULE"
     fi
