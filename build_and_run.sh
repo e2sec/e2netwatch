@@ -18,16 +18,16 @@
 
 
 echo =
-echo === building kyn ====
+echo === building e2nw ====
 echo =
 ./ci_scripts/build
 
 echo =
-echo === staging kyn ====
+echo === staging e2nw ====
 echo =
 ./ci_scripts/stage
 
 echo =
-echo === starting kyn ====
+echo === starting e2nw ====
 echo =
-./kynadmin.sh up
+./e2nwadmin.sh up

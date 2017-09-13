@@ -16,30 +16,30 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-### grep all environment variables with prefix KYN_*
+### grep all environment variables with prefix e2nw_*
 #
 get_environment()
 {
-    env | grep KYN_ | while read line
+    env | grep e2nw_ | while read line
     do
         [ -n "${line}" ] && echo "--env $line "
     done
 }
 
-### kyn docker network autodetection
+### e2nw docker network autodetection
 #
 get_network()
 {
-    KYN_NETWORK=$(docker network list --filter name=kyn* --format {{.Name}})
+    e2nw_NETWORK=$(docker network list --filter name=e2nw* --format {{.Name}})
 
-    if [ ! -z "$KYN_NETWORK" ]; then
-        NUM_NETWORKS=$(echo $KYN_NETWORK | wc -w)
+    if [ ! -z "$e2nw_NETWORK" ]; then
+        NUM_NETWORKS=$(echo $e2nw_NETWORK | wc -w)
         if [ $NUM_NETWORKS -gt 1 ]; then
-            echo "WARNING: more than 1 kyn* network found! [" $KYN_NETWORK "]" 1>&2
-            KYN_NETWORK=$(echo $KYN_NETWORK|cut -f1 -d" ")
-            echo "using $KYN_NETWORK" 1>&2
+            echo "WARNING: more than 1 e2nw* network found! [" $e2nw_NETWORK "]" 1>&2
+            e2nw_NETWORK=$(echo $e2nw_NETWORK|cut -f1 -d" ")
+            echo "using $e2nw_NETWORK" 1>&2
         fi
-        echo "--network=$KYN_NETWORK"
+        echo "--network=$e2nw_NETWORK"
     fi
 }
 
@@ -67,11 +67,11 @@ set_sqldata_volume()
 
 #######################################################################
 #
-### kyn docker parameters
+### e2nw docker parameters
 #
 VOLUME="--volume=/var/run/docker.sock:/var/run/docker.sock"
 #
-IMAGE="kyn/admin"
+IMAGE="e2nw/admin"
 #
 ENV=$(get_environment)
 #
