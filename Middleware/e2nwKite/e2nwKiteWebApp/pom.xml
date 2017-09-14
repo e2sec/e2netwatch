@@ -9,7 +9,7 @@
 
 	<artifactId>e2nwKiteWebApp</artifactId>
 	<packaging>war</packaging>
-	<name>KnowYourNetworkWebApp</name>
+	<name>e2netwatchWebApp</name>
 	<description>The middleware tier that responds to request for data by querying the backend
 	             ElasticSearch instance and returning JSON data.</description>
 	<url>webapp</url>
