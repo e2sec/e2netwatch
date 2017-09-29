@@ -167,7 +167,7 @@ export class RulesetComponent {
                     $(this).append('<ul class="dropdown-menu">' +
                         '<li role="separator" class="label">Investigate</li>' +
                         '<li><a href="#" id="get-host-info"><i class="fa fa-map-marker"></i>  Get Host Info</a></li>' +
-                        '<li><a href="#query='+ip+'"><i class="fa fa-search-plus"></i> Search for IP in kyn</a></li>' +
+                        '<li><a href="#query='+ip+'"><i class="fa fa-search-plus"></i> Search for IP in e2nw</a></li>' +
                         '<li><a href="#" id="show-24h-conversations"><i class="fa fa-exchange"></i> Get 24h Conversations</a></li>' +
                         '<li><a href="#" id="show-30d-conversations"><i class="fa fa-exchange"></i> Get 30d Conversations</a></li>' +
                         '</ul>');
@@ -215,7 +215,7 @@ export class RulesetComponent {
                     $(this).append('<ul class="dropdown-menu">' +
                         '<li role="separator" class="label">Investigate</li>' +
                         '<li><a href="#" data-toggle="modal" data-target="#lara-get-host-info" data-ip="'+ip+'"><i class="fa fa-map-marker"></i>  Get Host Info</a></li>' +
-                        '<li><a href="#query='+ip+'"><i class="fa fa-search-plus"></i> Search for IP in kyn</a></li>' +
+                        '<li><a href="#query='+ip+'"><i class="fa fa-search-plus"></i> Search for IP in e2nw</a></li>' +
                         '<li><a href="#" data-toggle="modal" data-target="#lara-conversations" data-ip="'+ip+'" data-title="24h Conversations" data-source="'+AppConfig.appURL+'app/kibana#/visualize/edit/24h-Conversations?embed=true&_g=(refreshInterval:(display:Off,pause:!f,value:0),time:(from:now-24h,mode:quick,to:now))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:\'SourceAddress:%22'+ip+'%22%20OR%20DestinationAddress:%22'+ip+'%22\')),uiState:(),vis:(aggs:!((id:\'1\',params:(),schema:metric,type:count),(id:\'2\',params:(field:SourceAddress,customLabel:Source,order:desc,orderBy:\'1\',size:2000),schema:bucket,type:terms),(id:\'3\',params:(field:DestinationAddress,customLabel:Destination,order:desc,orderBy:\'1\',size:2000),schema:bucket,type:terms),(id:\'4\',params:(field:Destinationport,customLabel:port,order:desc,orderBy:\'1\',size:2000),schema:bucket,type:terms)),listeners:(),params:(perPage:20,showMeticsAtAllLevels:!f,showPartialRows:!f),title:\'24h%20Conversations\',type:table))"><i class="fa fa-exchange"></i> Get 24h Conversations</a></li>' +
                         '</ul>');
                 });

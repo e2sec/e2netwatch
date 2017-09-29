@@ -56,14 +56,14 @@ if [ $# -lt 1 ]; then
     exit 1
 fi
 #
-IMAGE="kyn/pyresttest"
+IMAGE="e2nw/pyresttest"
 #
-### kyn docker network autodetection
+### e2nw docker network autodetection
 #
-KYN_NETWORK=$(docker network list --filter name=kyn* --format {{.Name}})
+e2nw_NETWORK=$(docker network list --filter name=e2nw* --format {{.Name}})
 #
-if [ ! -z "$KYN_NETWORK" ]; then
-    NETWORK="--network=$KYN_NETWORK"
+if [ ! -z "$e2nw_NETWORK" ]; then
+    NETWORK="--network=$e2nw_NETWORK"
 fi
 #
 #

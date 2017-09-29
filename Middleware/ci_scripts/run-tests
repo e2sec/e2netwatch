@@ -24,7 +24,7 @@ TAG=${1:-"latest"}
 #
 # Name of the Docker image.
 #
-IMAGE="kyn/middleware-test"
+IMAGE="e2nw/middleware-test"
 #
 ####################################################################################################
 # Build and run unit tests.

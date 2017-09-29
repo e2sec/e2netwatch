@@ -118,7 +118,7 @@ void cleanup_elasticsearch(void)
 
 void set_elasticsearch_parameter(const char * url, const char * searchindex, const char * whitelistindex,
 		const char * knownnetworksindex, const int elastic_db) {
-	char *index_default = "kyn-netflow";
+	char *index_default = "e2nw-netflow";
 
 	if (url != NULL) {
 		size_t needed;

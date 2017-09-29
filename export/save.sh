@@ -18,8 +18,8 @@
 
 
 
-# List all kyn images with the "latest" tag, leaving out the build containers
-IMAGES=$(docker images --format "{{.Repository}} {{.Tag}}" | grep "kyn/" | grep "latest" | grep -v "build" | cut -d " " -f 1)
+# List all e2nw images with the "latest" tag, leaving out the build containers
+IMAGES=$(docker images --format "{{.Repository}} {{.Tag}}" | grep "e2nw/" | grep "latest" | grep -v "build" | cut -d " " -f 1)
 
 
 for img in $IMAGES

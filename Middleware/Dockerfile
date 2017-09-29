@@ -21,7 +21,7 @@ RUN apt-get update \
 #
 # Add the application
 #
-COPY KynKite/KynKiteWebApp/target/KynKiteWebApp /var/lib/jetty/webapps/KynKiteWebApp
+COPY e2nwKite/e2nwKiteWebApp/target/e2nwKiteWebApp /var/lib/jetty/webapps/e2nwKiteWebApp
 #
 ADD filesystem /
 #

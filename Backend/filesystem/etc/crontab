@@ -1,2 +1,2 @@
-5,20,35,50 * * * * /var/kyn/scripts/mad_cron.sh >/dev/null 2>&1
-0 1 * * * /var/kyn/malware/reputation_import.rb >/dev/null 2>&1
+5,20,35,50 * * * * /var/e2nw/scripts/mad_cron.sh >/dev/null 2>&1
+0 1 * * * /var/e2nw/malware/reputation_import.rb >/dev/null 2>&1

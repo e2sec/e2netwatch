@@ -21,7 +21,7 @@ class Router:
 	# MTU
 	MTU = 1500
 	# The index record for each flow
-	INDEX = '{"index":{"_index":"kyn-demo-routing","_type":"routing"}}'
+	INDEX = '{"index":{"_index":"e2nw-demo-routing","_type":"routing"}}'
 	# The flow template
 	FLOW = '{{"@timestamp": "{timeStamp}", "source": "{sourceAddress}", "destination": "{destinationAddress}", "router": "{routers}"}}'
 

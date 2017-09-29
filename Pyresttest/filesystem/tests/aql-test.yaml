@@ -10,7 +10,7 @@
 
 - test:
     - name: "Successful login"
-    - url: "/KynKiteWebApp/rest/login"
+    - url: "/e2nwKiteWebApp/rest/login"
     - method: "POST"
     - body: {template: 'username=$username&password=$password'}
     - headers: {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -26,7 +26,7 @@
 #
 - test:
     - name: "Get list of AQL rules"
-    - url: "/KynKiteWebApp/rest/aql/rules/list"
+    - url: "/e2nwKiteWebApp/rest/aql/rules/list"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - validators:
@@ -38,7 +38,7 @@
 #
 - test:
     - name: "Add new AQL rule - OK"
-    - url: "/KynKiteWebApp/rest/aql/rules/add"
+    - url: "/e2nwKiteWebApp/rest/aql/rules/add"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
@@ -68,7 +68,7 @@
 #
 - test:
     - name: "Add new AQL rule - OK - help record"
-    - url: "/KynKiteWebApp/rest/aql/rules/add"
+    - url: "/e2nwKiteWebApp/rest/aql/rules/add"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
@@ -98,7 +98,7 @@
 #
 - test:
     - name: "Add new AQL rule - Empty rule field"
-    - url: "/KynKiteWebApp/rest/aql/rules/add"
+    - url: "/e2nwKiteWebApp/rest/aql/rules/add"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
@@ -118,7 +118,7 @@
 #
 - test:
     - name: "Add new AQL rule - Invalid rule field"
-    - url: "/KynKiteWebApp/rest/aql/rules/add"
+    - url: "/e2nwKiteWebApp/rest/aql/rules/add"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
@@ -136,7 +136,7 @@
 #
 - test:
     - name: "Add new AQL rule - Rule exists"
-    - url: "/KynKiteWebApp/rest/aql/rules/add"
+    - url: "/e2nwKiteWebApp/rest/aql/rules/add"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
@@ -156,7 +156,7 @@
 #
 - test:
     - name: "Edit AQL rule - OK"
-    - url: "/KynKiteWebApp/rest/aql/rules/edit"
+    - url: "/e2nwKiteWebApp/rest/aql/rules/edit"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: {template: '
@@ -185,7 +185,7 @@
 #
 - test:
     - name: "Edit AQL rule - Empty rule field"
-    - url: "/KynKiteWebApp/rest/aql/rules/edit"
+    - url: "/e2nwKiteWebApp/rest/aql/rules/edit"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: {template: '
@@ -206,7 +206,7 @@
 #
 - test:
     - name: "Edit AQL rule - Invalid rule field"
-    - url: "/KynKiteWebApp/rest/aql/rules/edit"
+    - url: "/e2nwKiteWebApp/rest/aql/rules/edit"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: {template: '
@@ -225,7 +225,7 @@
 #
 - test:
     - name: "Edit AQL rule - Rule exists"
-    - url: "/KynKiteWebApp/rest/aql/rules/edit"
+    - url: "/e2nwKiteWebApp/rest/aql/rules/edit"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: {template: '
@@ -246,7 +246,7 @@
 #
 - test:
     - name: "Edit AQL rule - Rule not found"
-    - url: "/KynKiteWebApp/rest/aql/rules/edit"
+    - url: "/e2nwKiteWebApp/rest/aql/rules/edit"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
@@ -267,7 +267,7 @@
 #
 - test:
     - name: "Delete AQL rule - OK"
-    - url: "/KynKiteWebApp/rest/aql/rules/delete"
+    - url: "/e2nwKiteWebApp/rest/aql/rules/delete"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: {template: '
@@ -284,7 +284,7 @@
 #
 - test:
     - name: "Delete AQL rule - OK - help record"
-    - url: "/KynKiteWebApp/rest/aql/rules/delete"
+    - url: "/e2nwKiteWebApp/rest/aql/rules/delete"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: {template: '
@@ -301,7 +301,7 @@
 #
 - test:
     - name: "Delete AQL rule - Rule not found"
-    - url: "/KynKiteWebApp/rest/aql/rules/delete"
+    - url: "/e2nwKiteWebApp/rest/aql/rules/delete"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: {template: '
@@ -320,7 +320,7 @@
 #
 - test:
     - name: "Delete AQL rule - Rule not found - help record"
-    - url: "/KynKiteWebApp/rest/aql/rules/delete"
+    - url: "/e2nwKiteWebApp/rest/aql/rules/delete"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: {template: '
@@ -339,7 +339,7 @@
 #
 - test:
     - name: "Validate AQL rule - OK"
-    - url: "/KynKiteWebApp/rest/aql/rules/validate"
+    - url: "/e2nwKiteWebApp/rest/aql/rules/validate"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
@@ -358,7 +358,7 @@
 #
 - test:
     - name: "Validate AQL rule - invalid - empty rule"
-    - url: "/KynKiteWebApp/rest/aql/rules/validate"
+    - url: "/e2nwKiteWebApp/rest/aql/rules/validate"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
@@ -377,7 +377,7 @@
 #
 - test:
     - name: "Validate AQL rule - invalid"
-    - url: "/KynKiteWebApp/rest/aql/rules/validate"
+    - url: "/e2nwKiteWebApp/rest/aql/rules/validate"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '

@@ -24,7 +24,7 @@ TAG="tmp" # Doesn't matter as we will be deleting it after the build.
 #
 # Name of the Docker image.
 #
-IMAGE="kyn/middleware-docs"
+IMAGE="e2nw/middleware-docs"
 NAME="middleware-docs"
 #
 ####################################################################################################

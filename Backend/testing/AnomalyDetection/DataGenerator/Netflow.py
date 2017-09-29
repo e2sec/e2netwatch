@@ -24,8 +24,8 @@ class Netflow:
 	EVENT_LEN = 1
 	# MTU - Used to give a [meaningful?] value to packet count based on bytes.
 	MTU = 1500
-	INDEX = '{"index":{"_index":"kyn-demo-netflow","_type":"nfdump_0"}}'
-	FLOW = '{{"@timestamp":"{timeStamp}","host":"DE-MUNC-KYN-1-e0","StartTime":"{startTime}","EndTime":"{endTime}","Duration":0,"SourceAddress":"{sourceAddress}","DestinationAddress":"{destinationAddress}","SourcePort":{sourcePort},"DestinationPort":{destinationPort},"ForwardingStatus":0,"TCPFlags":"{tcpFlags}","Protocol":"{protocol}","SourceTOS":0,"InputPackets":{inputPackets},"Bytes":{inputBytes},"InterfaceIN":1,"InterfaceOUT":8,"SourceAS":65020,"DestinationAS":0,"SourceMask":16,"DestinationMask":24,"DestinationTOS":0,"Direction":0,"NextHOPAddress":"10.79.192.1","SourceVLAN":0,"DestinationVLAN":211,"InputSourceMACAddress":"6c:9c:ed:25:f7:00","OutputDestinationMACAddress":"f4:4e:05:4f:35:c3","RouterIPAddress":"{routerIPAddress}","EngineID":0,"bps":13066,"pps":25,"bpp":65}}'
+	INDEX = '{"index":{"_index":"e2nw-demo-netflow","_type":"nfdump_0"}}'
+	FLOW = '{{"@timestamp":"{timeStamp}","host":"DE-MUNC-e2nw-1-e0","StartTime":"{startTime}","EndTime":"{endTime}","Duration":0,"SourceAddress":"{sourceAddress}","DestinationAddress":"{destinationAddress}","SourcePort":{sourcePort},"DestinationPort":{destinationPort},"ForwardingStatus":0,"TCPFlags":"{tcpFlags}","Protocol":"{protocol}","SourceTOS":0,"InputPackets":{inputPackets},"Bytes":{inputBytes},"InterfaceIN":1,"InterfaceOUT":8,"SourceAS":65020,"DestinationAS":0,"SourceMask":16,"DestinationMask":24,"DestinationTOS":0,"Direction":0,"NextHOPAddress":"10.79.192.1","SourceVLAN":0,"DestinationVLAN":211,"InputSourceMACAddress":"6c:9c:ed:25:f7:00","OutputDestinationMACAddress":"f4:4e:05:4f:35:c3","RouterIPAddress":"{routerIPAddress}","EngineID":0,"bps":13066,"pps":25,"bpp":65}}'
 
 	def __init__(self):
 		self.values = {

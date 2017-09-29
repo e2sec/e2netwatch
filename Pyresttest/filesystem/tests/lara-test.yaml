@@ -10,7 +10,7 @@
 
 - test:
     - name: "Successful login"
-    - url: "/KynKiteWebApp/rest/login"
+    - url: "/e2nwKiteWebApp/rest/login"
     - method: "POST"
     - body: {template: 'username=$username&password=$password'}
     - headers: {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -26,7 +26,7 @@
 #
 - test:
     - name: "Get list of routers - OK"
-    - url: "/KynKiteWebApp/rest/lara/routers"
+    - url: "/e2nwKiteWebApp/rest/lara/routers"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - validators:
@@ -38,7 +38,7 @@
 #
 - test:
     - name: "Get list of policies for specific router - OK"
-    - url: "/KynKiteWebApp/rest/lara/policyListForRouter"
+    - url: "/e2nwKiteWebApp/rest/lara/policyListForRouter"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '{"routerIpAddress": "0.0.0.0"}'
@@ -51,7 +51,7 @@
 #
 - test:
     - name: "Lara Cisco ACL"
-    - url: "/KynKiteWebApp/rest/laraCisco"
+    - url: "/e2nwKiteWebApp/rest/laraCisco"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '{"policyId": "<policy ID>"}'
@@ -64,7 +64,7 @@
 #
 - test:
     - name: "Lara Rules"
-    - url: "/KynKiteWebApp/rest/laraRules"
+    - url: "/e2nwKiteWebApp/rest/laraRules"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '{"policyId": "<policy ID>"}'
@@ -77,7 +77,7 @@
 #
 - test:
     - name: "Statistics: Top sources for dynamic hosts ranking"
-    - url: "/KynKiteWebApp/rest/laraRules/topSrcDynamic"
+    - url: "/e2nwKiteWebApp/rest/laraRules/topSrcDynamic"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '{"policyId": "<policy ID>"}'
@@ -90,7 +90,7 @@
 #
 - test:
     - name: "Statistics: Top destinations for dynamic hosts ranking"
-    - url: "/KynKiteWebApp/rest/laraRules/topDstDynamic"
+    - url: "/e2nwKiteWebApp/rest/laraRules/topDstDynamic"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '{"policyId": "<policy ID>"}'
@@ -103,7 +103,7 @@
 #
 - test:
     - name: "Statistics: Top sources for static hosts ranking"
-    - url: "/KynKiteWebApp/rest/laraRules/topSrcStatic"
+    - url: "/e2nwKiteWebApp/rest/laraRules/topSrcStatic"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '{"policyId": "<policy ID>"}'
@@ -116,7 +116,7 @@
 #
 - test:
     - name: "Statistics: Top destinations for static hosts ranking"
-    - url: "/KynKiteWebApp/rest/laraRules/topDstStatic"
+    - url: "/e2nwKiteWebApp/rest/laraRules/topDstStatic"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '{"policyId": "<policy ID>"}'

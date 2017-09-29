@@ -74,7 +74,7 @@ YAF/super_mediator import, works on STDIN. | Syntax:
   --eshost|-e     name of Elasticsearch host. Default: #{eshost}
   --esdebug|-d    show Elasticsearch queries
   --help|-?       display this page
-  --ipv6|-6       IPv6 flows are written to kyn-ipv6-netflow-* index, instead of being ignored completely
+  --ipv6|-6       IPv6 flows are written to e2nw-ipv6-netflow-* index, instead of being ignored completely
 
   EOF
     exit 0
@@ -168,7 +168,7 @@ ARGF.each do |line|
       id = Digest::MD5.hexdigest id
 
       # sending the bulk to elasticsearch
-      elastic_bulk[:body].push({ index: { _index: 'kyn-netflow-' + line_json['@timestamp'][0...10], _type: elastic_type, _id: id } })
+      elastic_bulk[:body].push({ index: { _index: 'e2nw-netflow-' + line_json['@timestamp'][0...10], _type: elastic_type, _id: id } })
       elastic_bulk[:body].push(line_json.clone)
       counter += 1
       if counter == 5000

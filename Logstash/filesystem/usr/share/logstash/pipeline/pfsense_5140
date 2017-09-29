@@ -62,12 +62,12 @@ output {
   if [prog] =~ /^dhcpd$/ {
     elasticsearch { 
     hosts => elasticsearch 
-    index => "kyn-syslog-dhcp-%{+YYYY.MM.dd}" }  
+    index => "e2nw-syslog-dhcp-%{+YYYY.MM.dd}" }  
   }
   else {
     elasticsearch {
     hosts => elasticsearch
-    index => "kyn-syslog-router-%{+YYYY.MM.dd}" }
+    index => "e2nw-syslog-router-%{+YYYY.MM.dd}" }
   }
 }
 

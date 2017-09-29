@@ -41,7 +41,7 @@ my_echo() {
 # Get check answer from mysql server
 #
 mysql_check() {
-    docker exec -t kyn_mysqlpatchtest_1 mysql -e "select 1"
+    docker exec -t e2nw_mysqlpatchtest_1 mysql -e "select 1"
 }
 #
 # Wait for Mysql to start
@@ -164,14 +164,14 @@ fi
 #
 # Setting variables
 #
-IMAGE="kyn/mysqlpatchtest"
+IMAGE="e2nw/mysqlpatchtest"
 #
-CONTAINER_NAME="kyn_mysqlpatchtest_1"
+CONTAINER_NAME="e2nw_mysqlpatchtest_1"
 #
-KYN_NETWORK=$(docker network list --filter name=kyn* --format {{.Name}})
+e2nw_NETWORK=$(docker network list --filter name=e2nw* --format {{.Name}})
 #
-if [ ! -z "$KYN_NETWORK" ]; then
-    NETWORK="--network=$KYN_NETWORK"
+if [ ! -z "$e2nw_NETWORK" ]; then
+    NETWORK="--network=$e2nw_NETWORK"
 fi
 #
 # Create and start container for testing mysql patch

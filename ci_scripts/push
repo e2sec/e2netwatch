@@ -36,14 +36,14 @@ push_module() {
     if [ -d $MODULE ]; then
         MODULE_LOWER=`lowercase $MODULE`
         echo "Pushing Docker image for $MODULE to $URL..."
-        docker tag kyn/$MODULE_LOWER:$TAG $URL/kyn/$MODULE_LOWER:$TAG
-        docker push $URL/kyn/$MODULE_LOWER:$TAG
-        docker rmi $URL/kyn/$MODULE_LOWER:$TAG
+        docker tag e2nw/$MODULE_LOWER:$TAG $URL/e2nw/$MODULE_LOWER:$TAG
+        docker push $URL/e2nw/$MODULE_LOWER:$TAG
+        docker rmi $URL/e2nw/$MODULE_LOWER:$TAG
 
         echo "Adding 'latest' tag for module $MODULE..."
-        docker tag kyn/$MODULE_LOWER:$TAG $URL/kyn/$MODULE_LOWER:latest
-        docker push $URL/kyn/$MODULE_LOWER:latest
-        docker rmi $URL/kyn/$MODULE_LOWER:latest
+        docker tag e2nw/$MODULE_LOWER:$TAG $URL/e2nw/$MODULE_LOWER:latest
+        docker push $URL/e2nw/$MODULE_LOWER:latest
+        docker rmi $URL/e2nw/$MODULE_LOWER:latest
     fi
 }
 

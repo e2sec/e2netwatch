@@ -75,7 +75,7 @@ $json = '{
 
 
 $params = array(
-    'index' => 'kyn-netflow-*',
+    'index' => 'e2nw-netflow-*',
      'body' => $json
 );
 

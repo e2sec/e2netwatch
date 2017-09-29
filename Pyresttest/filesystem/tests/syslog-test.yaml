@@ -10,7 +10,7 @@
 
 - test:
     - name: "Successful login"
-    - url: "/KynKiteWebApp/rest/login"
+    - url: "/e2nwKiteWebApp/rest/login"
     - method: "POST"
     - body: {template: 'username=$username&password=$password'}
     - headers: {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -26,7 +26,7 @@
 #
 - test:
     - name: "Syslog ASA - OK"
-    - url: "/KynKiteWebApp/rest/syslogASA"
+    - url: "/e2nwKiteWebApp/rest/syslogASA"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
@@ -51,7 +51,7 @@
 #
 - test:
     - name: "Syslog ASA - Invalid date time range"
-    - url: "/KynKiteWebApp/rest/syslogASA"
+    - url: "/e2nwKiteWebApp/rest/syslogASA"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
@@ -73,7 +73,7 @@
 #
 - test:
     - name: "Syslog Router - OK"
-    - url: "/KynKiteWebApp/rest/syslogRouter"
+    - url: "/e2nwKiteWebApp/rest/syslogRouter"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
@@ -98,7 +98,7 @@
 #
 - test:
     - name: "Syslog Router - Invalid date time range"
-    - url: "/KynKiteWebApp/rest/syslogRouter"
+    - url: "/e2nwKiteWebApp/rest/syslogRouter"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
@@ -120,7 +120,7 @@
 #
 - test:
     - name: "Syslog Voice - OK"
-    - url: "/KynKiteWebApp/rest/syslogVoice"
+    - url: "/e2nwKiteWebApp/rest/syslogVoice"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
@@ -145,7 +145,7 @@
 #
 - test:
     - name: "Syslog Voice - Invalid date time range"
-    - url: "/KynKiteWebApp/rest/syslogVoice"
+    - url: "/e2nwKiteWebApp/rest/syslogVoice"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
@@ -167,7 +167,7 @@
 #
 - test:
     - name: "Syslog DHCP - OK"
-    - url: "/KynKiteWebApp/rest/syslogDHCP"
+    - url: "/e2nwKiteWebApp/rest/syslogDHCP"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
@@ -192,7 +192,7 @@
 #
 - test:
     - name: "Syslog DHCP - Invalid date time range"
-    - url: "/KynKiteWebApp/rest/syslogDHCP"
+    - url: "/e2nwKiteWebApp/rest/syslogDHCP"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
@@ -214,7 +214,7 @@
 #
 - test:
     - name: "Syslog IPS - OK"
-    - url: "/KynKiteWebApp/rest/syslogIPS"
+    - url: "/e2nwKiteWebApp/rest/syslogIPS"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
@@ -239,7 +239,7 @@
 #
 - test:
     - name: "Syslog IPS - Invalid date time range"
-    - url: "/KynKiteWebApp/rest/syslogIPS"
+    - url: "/e2nwKiteWebApp/rest/syslogIPS"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
@@ -261,7 +261,7 @@
 #
 - test:
     - name: "Syslog Proxy - OK"
-    - url: "/KynKiteWebApp/rest/syslogProxy"
+    - url: "/e2nwKiteWebApp/rest/syslogProxy"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '
@@ -286,7 +286,7 @@
 #
 - test:
     - name: "Syslog Proxy - Invalid date time range"
-    - url: "/KynKiteWebApp/rest/syslogProxy"
+    - url: "/e2nwKiteWebApp/rest/syslogProxy"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - body: '

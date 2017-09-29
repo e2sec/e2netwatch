@@ -1,0 +1,12 @@
+{
+  "order": 1,
+  "template": "e2nw-hostinfo",
+  "mappings": {
+    "_default_": {
+      "properties": {
+        "acl": { "index": "no", "type": "keyword" }
+      }
+    }
+  }
+}
+

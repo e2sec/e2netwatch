@@ -34,7 +34,7 @@ RUN useradd -s /bin/bash -d /home/hadoopuser hadoopuser \
 #
 ADD filesystem /
 #
-RUN chown -R hadoopuser:hadoopuser /var/kyn/scripts \
+RUN chown -R hadoopuser:hadoopuser /var/e2nw/scripts \
 	&& crontab -u hadoopuser /etc/crontab
 #
 ####################################################################################################

@@ -28,7 +28,7 @@ MW_PATH="$(dirname "$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )")"
 # Removing target folder
 #
 log $MODULE "removing target folder..."
-LOG=$(rm -rf "$MW_PATH/KynKite/KynKiteWebApp/target")
+LOG=$(rm -rf "$MW_PATH/e2nwKite/e2nwKiteWebApp/target")
 log_success $? $LOG
 #
 ####################################################################################################

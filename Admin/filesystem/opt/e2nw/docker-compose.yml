@@ -1,0 +1,110 @@
+#
+# docker-compose instructions to deploy the product from images
+#
+
+version: '3'
+
+services:
+  capture:
+    image: e2nw/capture
+    depends_on:
+      - elasticsearch
+    ports:
+      - "${e2nw_NFCAPD_PORT:-2055}:2055/udp"
+    environment:
+      - e2nw_YAF_INTERFACE=${e2nw_YAF_INTERFACE:-eth0}
+    volumes:
+      - CaptureData:/var/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    network_mode: "host"
+  
+  
+  backend:
+    image: e2nw/backend
+    depends_on:
+      - mysql
+      - elasticsearch
+
+      
+  middleware:
+    image: e2nw/middleware
+    depends_on:
+      - mysql
+      - elasticsearch
+    expose:
+      - "8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.proxy
+      - ReportsData:/var/lib/jetty/src/files/reports
+  
+  
+  frontend:
+    image: e2nw/frontend
+    depends_on:
+      - middleware
+    ports:
+      - "80:80"
+    
+    
+  elasticsearch:
+    image: e2nw/elasticsearch
+    ports:
+      - "9200:9200"
+    environment:
+      - ES_JAVA_OPTS=-Xms${e2nw_ES_MEM:-512m} -Xmx${e2nw_ES_MEM:-512m}
+      - cluster.name=eitoe2nw
+      - bootstrap.memory_lock=true
+      - script.inline=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - ElasticData:/usr/share/elasticsearch/data
+  
+  
+  logstash:
+    image: e2nw/logstash
+    depends_on:
+      - elasticsearch
+    ports:
+      - 514:5140
+      - 514:5140/udp
+  
+  
+  kibana:
+    image: e2nw/kibana
+    depends_on:
+      - elasticsearch
+    expose:
+      - "5601"
+  
+  
+  spark:
+    image: e2nw/spark
+    depends_on:
+      - elasticsearch
+
+    
+  mysql:
+    image: e2nw/mysql
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD="yes"
+    expose:
+     - "3306"
+    volumes:
+      - MysqlData:/var/lib/mysql
+      - MysqlBackupData:/backup
+
+
+volumes:
+  ElasticData:
+  CaptureData:
+  MysqlData:
+  MysqlBackupData:
+  ReportsData:

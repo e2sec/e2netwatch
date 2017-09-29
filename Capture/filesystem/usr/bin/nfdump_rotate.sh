@@ -19,7 +19,7 @@
 
 
 
-ESHOST="$(docker inspect --format '{{ .NetworkSettings.Networks.kyn_default.IPAddress }}' kyn_elasticsearch_1)"
+ESHOST="$(docker inspect --format '{{ .NetworkSettings.Networks.e2nw_default.IPAddress }}' e2nw_elasticsearch_1)"
 if [ "$?" -ne "0" ]; then
   echo "Can't find Elasticsearch IP."
   exit 1
@@ -42,7 +42,7 @@ echo $$ > $PIDFILE
 
 
 nfdump2es () {
-  /usr/bin/nfdump -q -B -N -S -o elastic_db -r $file -g kyn-netflow -G http://${ESHOST}:9200/ -P kyn > /dev/null;
+  /usr/bin/nfdump -q -B -N -S -o elastic_db -r $file -g e2nw-netflow -G http://${ESHOST}:9200/ -P e2nw > /dev/null;
 }
 
 

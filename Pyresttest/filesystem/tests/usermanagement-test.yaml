@@ -12,7 +12,7 @@
 
 - test:
     - name: "Successful login"
-    - url: "/KynKiteWebApp/rest/login"
+    - url: "/e2nwKiteWebApp/rest/login"
     - method: "POST"
     - body: {template: 'username=$username&password=$password'}
     - headers: {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -28,7 +28,7 @@
 #
 - test:
     - name: "Get menu for current User"
-    - url: "/KynKiteWebApp/rest/usermanagement/getMenuForCurrentUser"
+    - url: "/e2nwKiteWebApp/rest/usermanagement/getMenuForCurrentUser"
     - method: "GET"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - validators:
@@ -57,13 +57,13 @@
 
 - test:
     - name: "Successful logout"
-    - url: "/KynKiteWebApp/rest/logout"
+    - url: "/e2nwKiteWebApp/rest/logout"
     - method: "POST"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
 
 - test:
     - name: "Successful login"
-    - url: "/KynKiteWebApp/rest/login"
+    - url: "/e2nwKiteWebApp/rest/login"
     - method: "POST"
     - body: {template: 'username=$username_user&password=$password_user'}
     - headers: {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -78,7 +78,7 @@
 #
 - test:
     - name: "Get menu for current User from user group Users"
-    - url: "/KynKiteWebApp/rest/usermanagement/getMenuForCurrentUser"
+    - url: "/e2nwKiteWebApp/rest/usermanagement/getMenuForCurrentUser"
     - method: "GET"
     - headers: { template: {"Cookie" : "${authtoken_cookie}=${authtoken}; ${username_cookie}=${username}", 'Content-Type': 'application/json'}}
     - validators:

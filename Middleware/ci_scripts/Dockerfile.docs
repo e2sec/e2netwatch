@@ -9,7 +9,7 @@ MAINTAINER Steve Chaplin <s.chaplin@e-ito.de>
 # Add the generated site.
 #
 RUN rm -rf /usr/share/nginx/html/*
-COPY  KynKite/KynKiteWebApp/target/site /usr/share/nginx/html
+COPY  e2nwKite/e2nwKiteWebApp/target/site /usr/share/nginx/html
 #
 EXPOSE 80
 #
