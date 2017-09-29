@@ -14,10 +14,12 @@ FROM jetty
 #
 # Add packages
 #
+USER root
 RUN apt-get update \
     && apt-get install -y socat \
                           supervisor \
                           vim
+USER jetty
 #
 # Add the application
 #
