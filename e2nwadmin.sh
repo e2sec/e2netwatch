@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Copyright (C) 2017 e-ito Technology Services GmbH
 # e-mail: info@e-ito.de
