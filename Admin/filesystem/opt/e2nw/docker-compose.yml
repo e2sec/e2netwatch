@@ -10,15 +10,9 @@ services:
     depends_on:
       - elasticsearch
     ports:
-      - "${e2nw_NFCAPD_PORT:-2055}:2055/udp"
-    environment:
-      - e2nw_YAF_INTERFACE=${e2nw_YAF_INTERFACE:-eth0}
-    volumes:
-      - CaptureData:/var/data
-      - /var/run/docker.sock:/var/run/docker.sock
-    network_mode: "host"
-  
-  
+      - "2055:2055/udp"
+
+
   backend:
     image: e2nw/backend
     depends_on:
@@ -52,9 +46,8 @@ services:
       - "9200:9200"
     environment:
       - ES_JAVA_OPTS=-Xms${e2nw_ES_MEM:-512m} -Xmx${e2nw_ES_MEM:-512m}
-      - cluster.name=eitoe2nw
+      - cluster.name=e2nw
       - bootstrap.memory_lock=true
-      - script.inline=true
     ulimits:
       memlock:
         soft: -1
