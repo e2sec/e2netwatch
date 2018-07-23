@@ -83,12 +83,6 @@ services:
       - elasticsearch
     expose:
       - "5601"
-  
-  
-  spark:
-    image: e2nw/spark
-    depends_on:
-      - elasticsearch
 
     
   mysql:
