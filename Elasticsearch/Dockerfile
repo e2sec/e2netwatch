@@ -3,10 +3,10 @@
 #
 ####################################################################################################
 #
-FROM docker.elastic.co/elasticsearch/elasticsearch:5.3.0
+FROM docker.elastic.co/elasticsearch/elasticsearch:6.3.1
 # 
-RUN sed -i 's/^-Xmx2g/#-Xmx2g/g' /usr/share/elasticsearch/config/jvm.options; \
-    sed -i 's/^-Xms2g/#-Xms2g/g' /usr/share/elasticsearch/config/jvm.options
+#RUN sed -i 's/^-Xmx2g/#-Xmx2g/g' /usr/share/elasticsearch/config/jvm.options; \
+#    sed -i 's/^-Xms2g/#-Xms2g/g' /usr/share/elasticsearch/config/jvm.options
 #
 #
 #
