@@ -1,1 +1,0 @@
-0 2 * * * cd /var/e2nw/scripts/; /var/e2nw/scripts/e2nwscore.rb >/dev/null 2>&1
