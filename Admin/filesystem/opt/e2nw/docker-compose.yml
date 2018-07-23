@@ -10,15 +10,9 @@ services:
     depends_on:
       - elasticsearch
     ports:
-      - "${e2nw_NFCAPD_PORT:-2055}:2055/udp"
-    environment:
-      - e2nw_YAF_INTERFACE=${e2nw_YAF_INTERFACE:-eth0}
-    volumes:
-      - CaptureData:/var/data
-      - /var/run/docker.sock:/var/run/docker.sock
-    network_mode: "host"
-  
-  
+      - "2055:2055/udp"
+
+
   backend:
     image: e2nw/backend
     depends_on:
