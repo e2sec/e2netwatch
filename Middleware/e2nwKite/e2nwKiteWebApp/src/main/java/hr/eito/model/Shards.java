@@ -30,6 +30,7 @@ public class Shards {
 	private int total_;
 	private int successful_;
 	private int failed_;
+	private int skipped_;
 
 	/**
 	 * @param total Records the total number of shards accessed during the query.
@@ -50,5 +51,12 @@ public class Shards {
 	 */
 	public void setFailed(final int failed) {
 		failed_ = failed;
+	}
+
+	/**
+	 * @param skipped
+	 */
+	public void setSkipped(final int skipped) {
+		skipped_ = skipped;
 	}
 }
