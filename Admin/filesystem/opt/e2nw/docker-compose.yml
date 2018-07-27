@@ -7,6 +7,7 @@ version: '3'
 services:
   capture:
     image: e2nw/capture
+    container_name: e2nwcapture
     depends_on:
       - elasticsearch
     ports:
@@ -15,6 +16,7 @@ services:
 
   backend:
     image: e2nw/backend
+    container_name: e2nwbackend
     depends_on:
       - mysql
       - elasticsearch
@@ -22,6 +24,7 @@ services:
       
   middleware:
     image: e2nw/middleware
+    container_name: e2nwmiddleware
     depends_on:
       - mysql
       - elasticsearch
@@ -34,6 +37,7 @@ services:
   
   frontend:
     image: e2nw/frontend
+    container_name: e2nwfrontend
     depends_on:
       - middleware
     ports:
@@ -42,6 +46,7 @@ services:
     
   elasticsearch:
     image: e2nw/elasticsearch
+    container_name: e2nwelasticsearch
     ports:
       - "9200:9200"
     environment:
@@ -61,25 +66,30 @@ services:
       - ElasticData:/usr/share/elasticsearch/data
   
   
-  logstash:
-    image: e2nw/logstash
-    depends_on:
-      - elasticsearch
-    ports:
-      - 514:5140
-      - 514:5140/udp
+#  logstash:
+#    image: e2nw/logstash
+#    container_name: e2nwlogstash
+#    depends_on:
+#      - elasticsearch
+#    ports:
+#      - 514:5140
+#      - 514:5140/udp
   
   
   kibana:
     image: e2nw/kibana
+    container_name: e2nwkibana
     depends_on:
       - elasticsearch
     expose:
       - "5601"
+    environment:
+      ELASTICSEARCH_URL: http://e2nwelasticsearch:9200
 
     
   mysql:
     image: e2nw/mysql
+    container_name: e2nwmysql
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD="yes"
     expose:
