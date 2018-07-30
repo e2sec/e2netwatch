@@ -9,9 +9,9 @@
 # Usage: init.sh <actions>
 #
 ################################################################
-ELASTICHOST="elasticsearch"
+ELASTICHOST="e2nwelasticsearch"
 
-MYSQLHOST="mysql"
+MYSQLHOST="e2nwmysq"
 
 DOCKER_SOCKET="/var/run/docker.sock"
 
@@ -178,7 +178,7 @@ do
             install_eslicense
             shift
             ;;
-            
+
         importestemplates)
             import_es_templates
             ;;
@@ -191,7 +191,7 @@ do
             import_es_demodata
             shift
             ;;
-            
+
         up)
             start_e2nw
             ;;
@@ -214,16 +214,16 @@ do
         patchmysqldatabase)
             patch_mysql_database $PASSWORD
             ;;
-            
+
         initmysqldb)
             init_mysql_db $PASSWORD
             ;;
-        
+
         importmysqldata)
             import_mysql_data $PASSWORD
             shift
             ;;
-            
+
         *)
             echo "ERROR: command $1 is unknown"
             exit 1

@@ -14,11 +14,12 @@ RUN apt-get update && \
                        supervisor \
                        tree \
                        vim \
-			ruby-mysql2
+			ruby-mysql2 && \
 #
 # install Ruby libraries
 #
-RUN gem install elasticsearch hashie ruby-graphviz 
+gem install elasticsearch hashie ruby-graphviz && \
+rm -rf /var/lib/apt/lists/*
 #
 #
 ####################################################################################################

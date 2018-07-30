@@ -11,9 +11,8 @@ FROM tmaier/docker-compose
 # * user database model init
 # * check/set vm memory setting for elastic search
 #
-RUN apk update \
-    && apk add curl \
-    && apk add mysql-client
+RUN apk update  \
+    && apk add --no-cache curl  mysql-client
 
 # Add all init scripts
 ADD filesystem  /
