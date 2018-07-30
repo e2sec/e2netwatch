@@ -1,5 +1,5 @@
 #!/bin/sh
-set -x
+#
 # Name: init.sh
 #
 # Author: Tobias Nieberg
