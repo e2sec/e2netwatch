@@ -2,27 +2,39 @@
 # docker-compose instructions to deploy the product from images
 #
 
-version: '3'
+version: '3.6'
 
 services:
   capture:
+    build:
+      context: ./Capture
     image: e2nw/capture
     container_name: e2nwcapture
     depends_on:
       - elasticsearch
     ports:
       - "2055:2055/udp"
+    networks:
+      - e2netwatch-net
 
 
   backend:
+    build: 
+      context: ./Capture
     image: e2nw/backend
     container_name: e2nwbackend
     depends_on:
       - mysql
       - elasticsearch
+    networks:
+      - e2netwatch-net
 
       
   middleware:
+    build:
+      context: ./Middleware
+      args: 
+        - VARIANT=dev
     image: e2nw/middleware
     container_name: e2nwmiddleware
     depends_on:
@@ -33,18 +45,26 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.proxy
       - ReportsData:/var/lib/jetty/src/files/reports
+    networks:
+      - e2netwatch-net
   
   
   frontend:
+    build:
+      context: ./Frontend
     image: e2nw/frontend
     container_name: e2nwfrontend
     depends_on:
       - middleware
     ports:
       - "80:80"
+    networks:
+      - e2netwatch-net
     
     
   elasticsearch:
+    build:
+      context: ./Elasticsearch
     image: e2nw/elasticsearch
     container_name: e2nwelasticsearch
     ports:
@@ -64,9 +84,13 @@ services:
       - IPC_LOCK
     volumes:
       - ElasticData:/usr/share/elasticsearch/data
+    networks:
+      - e2netwatch-net
   
   
   kibana:
+    build:
+      context: ./Kibana
     image: e2nw/kibana
     container_name: e2nwkibana
     depends_on:
@@ -75,9 +99,13 @@ services:
       - "5601"
     environment:
       ELASTICSEARCH_URL: http://e2nwelasticsearch:9200
+    networks:
+      - e2netwatch-net
 
     
   mysql:
+    build:
+      context: ./Mysql
     image: e2nw/mysql
     container_name: e2nwmysql
     environment:
@@ -87,6 +115,8 @@ services:
     volumes:
       - MysqlData:/var/lib/mysql
       - MysqlBackupData:/backup
+    networks:
+      - e2netwatch-net
 
 
 volumes:
@@ -95,3 +125,7 @@ volumes:
   MysqlData:
   MysqlBackupData:
   ReportsData:
+
+networks:
+  e2netwatch-net:
+    name: e2netwatch
