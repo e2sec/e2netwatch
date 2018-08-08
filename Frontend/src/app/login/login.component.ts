@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { LoginModel } from '../models/login-model';
-import { Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'e2nw-login',
@@ -13,9 +13,12 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   submitted = false;
   model: LoginModel;
-  constructor(private authService: AuthService) { }
+  constructor(
+    private titleService: Title,
+    private authService: AuthService) { }
 
   ngOnInit() {
+    this.titleService.setTitle('Login');
     this.createForm();
   }
 

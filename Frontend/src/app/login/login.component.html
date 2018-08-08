@@ -9,7 +9,7 @@
     <div class="form-group">
       <div class="form-label-group">
         <label for="inputUser">Username</label>
-        <input type="text" id="inputUser" class="form-control" formControlName="username" placeholder="Username" required [ngClass]="{'is-invalid': submitted  && loginForm.controls.username.errors}">
+        <input type="text" id="username" name="username" class="form-control" formControlName="username" placeholder="Username" required [ngClass]="{'is-invalid': submitted  && loginForm.controls.username.errors}">
         <div class="invalid-feedback">
           Username is required.
         </div>
@@ -18,7 +18,7 @@
     <div class="form-group">
       <div class="form-label-group">
         <label for="inputPassword">Password</label>
-        <input type="password" id="inputPassword" class="form-control" formControlName="password" placeholder="Password" required
+        <input type="password" id="password" name="password" class="form-control" formControlName="password" placeholder="Password" required
           [ngClass]="{'is-invalid': submitted && loginForm.controls.password.errors}">
         <div class="invalid-feedback">
           Password is required.

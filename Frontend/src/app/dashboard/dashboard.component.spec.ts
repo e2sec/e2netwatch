@@ -1,6 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DashboardComponent } from './dashboard.component';
+import { HeaderComponent } from './components/header/header.component';
+import { SideBarComponent } from './components/side-bar/side-bar.component';
+import { RouterTestingModule } from '../../../node_modules/@angular/router/testing';
+import { ReactiveFormsModule } from '../../../node_modules/@angular/forms';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -8,7 +12,8 @@ describe('DashboardComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DashboardComponent ]
+      imports: [RouterTestingModule],
+      declarations: [ DashboardComponent, HeaderComponent, SideBarComponent ]
     })
     .compileComponents();
   }));
