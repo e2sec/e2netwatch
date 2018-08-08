@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
+import { AuthService } from '../services/auth.service';
+import { LoginModel } from '../models/login-model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'e2nw-login',
@@ -9,7 +12,8 @@ import { FormGroup, Validators, FormControl } from '@angular/forms';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   submitted = false;
-  constructor() { }
+  model: LoginModel;
+  constructor(private authService: AuthService) { }
 
   ngOnInit() {
     this.createForm();
@@ -25,7 +29,8 @@ export class LoginComponent implements OnInit {
   login() {
     this.submitted = true;
     if (this.loginForm.valid) {
-      console.log(this.loginForm.value);
+      this.model = this.loginForm.value;
+      this.authService.login(this.model, '/');
     }
 
   }
