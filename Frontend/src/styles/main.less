@@ -7,6 +7,7 @@
 
 .e2n-nav-item {
     color: @lightBlack;
+    width: 100%;
     min-width: 160px;
     padding: 8px 16px;
     fa-icon {
@@ -16,5 +17,34 @@
         background: @darkBlue;
         color: @lightGray;
         text-decoration: none;
+    }
+}
+
+.e2n-nav-item-no-background {
+    color: @lightBlack;
+    width: 100%;
+    min-width: 160px;
+    padding: 8px 12px;
+    font-weight: 400;
+    fa-icon {
+        margin-right: 12px;
+        font-size: 20px;
+        color: @darkGray;
+    }
+    &:hover {
+        color: @lightBlack;
+        text-decoration: none;
+        fa-icon {
+            color: @lightBlack;
+        }
+    }
+
+    &.active{
+        color: @darkBlue;
+        font-weight: 600;
+        fa-icon {
+            color: @darkBlue;
+            font-weight: 400;
+        }
     }
 }

@@ -10,6 +10,7 @@ import { PopoverModule } from 'ngx-bootstrap/popover';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 library.add(fas);
 
@@ -18,7 +19,8 @@ library.add(fas);
     CommonModule,
     DashboardRoutingModule,
     PopoverModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    TooltipModule,
   ],
   providers: [],
   declarations: [DashboardComponent, SideBarComponent, HeaderComponent, UserProfileIconComponent]
