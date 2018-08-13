@@ -1,17 +1,12 @@
 <div class="profile-holder" [popover]="popTemplate" placement="bottom" [outsideClick]="true">
   <img [src]="profile.avatarUrl" class="thumbnail rounded-circle avatar" alt="avatar" height="40px">
   <div class="username">
-   {{profile.username}}
+    {{profile.username}}
   </div>
 </div>
 
 <ng-template #popTemplate>
-  <ul class="nav flex-column">
-    <li class="nav-item">
-      <a class="nav-link active" href="#"><fa-icon icon="user-alt"></fa-icon> Profile</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Logout</a>
-    </li>
-  </ul>
+  <a class="e2n-nav-item" href="#">
+    <fa-icon icon="user-alt"></fa-icon> Profile</a>
+  <a class="e2n-nav-item" href="#"><fa-icon icon="sign-out-alt"></fa-icon> Logout</a>
 </ng-template>

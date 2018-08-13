@@ -1,6 +1,5 @@
-@import 'variables';
-
-.profile-holder{
+@import 'main';
+.profile-holder {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -8,8 +7,16 @@
     color: #ffffff;
     background: @darkBlue;
     cursor: pointer;
-
-    .avatar{
+    min-width: 180px;
+    .avatar {
         margin: 8px;
+    }
+}
+
+:host {
+    /deep/ .popover-body {
+        padding: .5rem 0;
+        display: flex;
+        flex-direction: column;
     }
 }
