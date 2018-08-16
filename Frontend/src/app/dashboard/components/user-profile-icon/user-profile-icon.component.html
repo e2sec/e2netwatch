@@ -1,4 +1,4 @@
-<div class="profile-holder" [popover]="popTemplate" placement="bottom" [outsideClick]="true">
+<div class="profile-holder" [popover]="popTemplate" placement="bottom" [outsideClick]="true" #pop="bs-popover">
   <img [src]="profile.avatarUrl" class="thumbnail rounded-circle avatar" alt="avatar" height="40px">
   <div class="username">
     {{profile.username}}
@@ -6,7 +6,7 @@
 </div>
 
 <ng-template #popTemplate>
-  <a class="e2n-nav-item" href="#">
+  <a class="e2n-nav-item" routerLink="/user-profile" (click)="pop.hide()">
     <fa-icon icon="user-alt"></fa-icon> Profile</a>
   <a class="e2n-nav-item" routerLink="/login" (click)="logout()"><fa-icon icon="sign-out-alt"></fa-icon> Logout</a>
 </ng-template>

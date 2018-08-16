@@ -5,7 +5,7 @@ import { AuthGuardService } from './services/auth-guard.service';
 
 const routes: Routes = [
   {
-    path: '', loadChildren: '../app/dashboard/dashboard.module#DashboardModule', pathMatch: 'full', canLoad: [AuthGuardService]
+    path: '', loadChildren: '../app/dashboard/dashboard.module#DashboardModule', canLoad: [AuthGuardService]
   },
   { path: 'login', component: LoginComponent },
 ];
