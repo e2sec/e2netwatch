@@ -1,0 +1,57 @@
+<div class="page-section">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card card-fluid">
+        <h6 class="card-header"> Account </h6>
+        <div class="card-body">
+          <form [formGroup]="profileForm" novalidate (ngSubmit)="updateAccount()">
+            <div class="form-row">
+              <div class="col-md-6 mb-3">
+                <label for="firstname">First Name <abbr title="Required">*</abbr></label>
+                <input type="text" class="form-control" id="firstname" formControlName="firstname" [ngClass]="{'is-invalid': profileForm.controls.firstname.errors}">
+                <div class="invalid-feedback" *ngIf="profileForm.controls.firstname.errors">
+                    <div *ngIf="profileForm.controls.firstname.errors.required">
+                      <fa-icon icon="exclamation-circle"></fa-icon>
+                      Firstname is required
+                    </div>
+                  </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="lastname">Last Name <abbr title="Required">*</abbr></label>
+                <input type="text" class="form-control" id="lastname" formControlName="lastname" [ngClass]="{'is-invalid': profileForm.controls.lastname.errors}">
+                <div class="invalid-feedback" *ngIf="profileForm.controls.lastname.errors">
+                  <div *ngIf="profileForm.controls.lastname.errors.required">
+                    <fa-icon icon="exclamation-circle"></fa-icon>
+                    Lastname is required
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" class="form-control" id="email" formControlName="email" [ngClass]="{'is-invalid': profileForm.controls.email.errors}">
+              <div class="invalid-feedback" *ngIf="profileForm.controls.email.errors">
+                <div *ngIf="profileForm.controls.email.errors.email">
+                  <fa-icon icon="exclamation-circle"></fa-icon>
+                  E-mail address is invalid
+                </div>
+                <div *ngIf="profileForm.controls.email.errors.required">
+                  <fa-icon icon="exclamation-circle"></fa-icon>
+                  E-mail address is required
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="newPassword">New Password</label>
+              <input type="password" class="form-control" id="newPassword" formControlName="newPassword"> </div>
+            <hr>
+            <div class="form-actions">
+              <input type="password" class="form-control ml-auto mr-3" id="currentPassword" formControlName="currentPassword" placeholder="Enter Current Password">
+              <button type="submit" class="btn btn-primary" [disabled]="profileForm.controls.currentPassword.errors">Update Account</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

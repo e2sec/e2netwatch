@@ -1,16 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UserProfileComponent } from './user-profile.component';
-import { TabsModule } from '../../../../../node_modules/ngx-bootstrap/tabs';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+import { Component } from '@angular/core';
 
 describe('UserProfileComponent', () => {
   let component: UserProfileComponent;
   let fixture: ComponentFixture<UserProfileComponent>;
+  @Component({ selector: 'e2nw-account-settings', template: '' })
+  class AccountSettingsStubComponent { }
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [TabsModule.forRoot()],
-      declarations: [ UserProfileComponent ]
+      declarations: [ UserProfileComponent, AccountSettingsStubComponent ]
     })
     .compileComponents();
   }));
