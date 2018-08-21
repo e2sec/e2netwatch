@@ -11,7 +11,6 @@ export class AuthGuardService {
 
   canActivate(): boolean {
     if (!this.authService.isAuthenticated()) {
-      this.authService.logout();
       this.router.navigate(['login']);
       return false;
     }
@@ -20,8 +19,7 @@ export class AuthGuardService {
 
   canLoad(): boolean {
     if (!this.authService.isAuthenticated()) {
-      this.authService.logout();
-      this.router.navigate(['login']);
+      this.router.navigateByUrl('/login');
       return false;
     }
     return true;

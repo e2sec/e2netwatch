@@ -14,7 +14,7 @@ export class AuthService {
 
   constructor(private httpClient: HttpClient, private router: Router, private userProfileService: UserProfileService) { }
 
-  login(loginData: LoginModel, route: string): void {
+  login(loginData: LoginModel): Observable<any> {
     // TODO: Make request to BE
     /* this.httpClient.get('/api/login', { params: { username: username, password: password } }).subscribe((res) => {
        const jwt = res;
@@ -23,16 +23,13 @@ export class AuthService {
      }, (err) => {
        console.error(err);
      });*/
-    window.localStorage['token'] = loginData.username + '-' + loginData.password;
-    this.userProfileService.setUserProfile({
+    // window.localStorage['token'] = loginData.username + '-' + loginData.password;
+    /*this.userProfileService.setUserProfile({
       username: 'Nikola',
       avatarUrl: 'https://www.gravatar.com/avatar/78c63138f5a54617819e47926b5977d7'
     });
-    this.router.navigate([route]);
-  }
-
-  logout(): void {
-    window.localStorage.removeItem('token');
+*/
+    return this.httpClient.post<LoginModel>('http://localhost:1337/login', loginData);
   }
 
   isAuthenticated(): boolean {

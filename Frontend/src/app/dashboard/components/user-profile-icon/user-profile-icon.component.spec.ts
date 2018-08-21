@@ -5,6 +5,8 @@ import { PopoverModule } from 'ngx-bootstrap/popover';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
+import { StoreModule } from '@ngrx/store';
+import { reducers } from '../../../store/app.states';
 
 describe('UserProfileIconComponent', () => {
   let component: UserProfileIconComponent;
@@ -17,6 +19,9 @@ describe('UserProfileIconComponent', () => {
         FontAwesomeModule,
         HttpClientModule,
         RouterTestingModule,
+        StoreModule.forRoot(
+          reducers, {}
+        )
       ],
       declarations: [UserProfileIconComponent]
     })

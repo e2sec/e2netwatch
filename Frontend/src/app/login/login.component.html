@@ -28,6 +28,12 @@
     <div class="form-group">
       <button class="btn btn-lg btn-e2n-primary btn-block" (click)="login()">Sign In</button>
     </div>
+    <div *ngIf="errorMessage">
+      <div class="alert alert-danger" role="alert">
+        {{errorMessage}}
+      </div>
+    </div>
   </form>
+
 
 </main>

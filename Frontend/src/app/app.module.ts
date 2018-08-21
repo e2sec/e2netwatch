@@ -11,6 +11,11 @@ import { PopoverModule } from 'ngx-bootstrap/popover';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TabsModule } from 'ngx-bootstrap/tabs';
+import { AuthService } from './services/auth.service';
+import { EffectsModule } from '@ngrx/effects';
+import { AuthEffects } from './store/effects/auth.effects';
+import { StoreModule } from '@ngrx/store';
+import { reducers } from './store/app.states';
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,8 +30,10 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
     PopoverModule.forRoot(),
     TooltipModule.forRoot(),
     TabsModule.forRoot(),
+    StoreModule.forRoot(reducers, {}),
+    EffectsModule.forRoot([AuthEffects]),
   ],
-  providers: [AuthGuardService],
+  providers: [AuthService, AuthGuardService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

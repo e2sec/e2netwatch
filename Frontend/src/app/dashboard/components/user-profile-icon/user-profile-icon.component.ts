@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { UserProfileService } from '../../../services/user-profile.service';
 import { UserProfile } from '../../../models/user-profile';
-import { AuthService } from '../../../services/auth.service';
-import { Router } from '../../../../../node_modules/@angular/router';
+import { AppState, selectAuthState } from '../../../store/app.states';
+import { Store } from '@ngrx/store';
+import { Logout } from '../../../store/actions/auth.actions';
+import { Observable } from 'rxjs';
+import { AuthState } from '../../../store/reducers/auth.reducers';
 
 @Component({
   selector: 'e2nw-user-profile-icon',
@@ -10,18 +12,21 @@ import { Router } from '../../../../../node_modules/@angular/router';
   styleUrls: ['./user-profile-icon.component.less']
 })
 export class UserProfileIconComponent implements OnInit {
-
+  getState: Observable<any>;
   constructor(
-    private userProfileService: UserProfileService,
-    private authService: AuthService,
-    private router: Router) { }
+    private store: Store<AppState>) {
+    this.getState = this.store.select(selectAuthState);
+  }
   profile: UserProfile;
   ngOnInit() {
-    this.userProfileService.currentUserProfile.subscribe(profile => this.profile = profile);
+    this.getState.subscribe((state: AuthState) => {
+      console.log(state);
+      this.profile = state.user;
+    });
   }
 
   logout() {
-    this.authService.logout();
+    this.store.dispatch(new Logout());
   }
 
 }

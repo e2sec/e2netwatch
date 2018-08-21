@@ -1,4 +1,5 @@
 export class UserProfile {
-    username: string;
+    email: string;
     avatarUrl: string;
+    token: string;
 }

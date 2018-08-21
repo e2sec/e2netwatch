@@ -3,6 +3,10 @@ import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { LoginModel } from '../models/login-model';
 import { Title } from '@angular/platform-browser';
+import { AppState, selectAuthState } from '../store/app.states';
+import { Store } from '@ngrx/store';
+import { Login } from '../store/actions/auth.actions';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'e2nw-login',
@@ -12,14 +16,23 @@ import { Title } from '@angular/platform-browser';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   submitted = false;
-  model: LoginModel;
+  model: LoginModel = new LoginModel();
+  errorMessage: string | null;
+  getState: Observable<any>;
+
   constructor(
     private titleService: Title,
-    private authService: AuthService) { }
+    private store: Store<AppState>
+  ) {
+    this.getState = this.store.select(selectAuthState);
+  }
 
   ngOnInit() {
     this.titleService.setTitle('Login');
     this.createForm();
+    this.getState.subscribe((state) => {
+      this.errorMessage = state.errorMessage;
+    });
   }
 
   private createForm() {
@@ -32,8 +45,10 @@ export class LoginComponent implements OnInit {
   login() {
     this.submitted = true;
     if (this.loginForm.valid) {
-      this.model = this.loginForm.value;
-      this.authService.login(this.model, '/');
+      this.model = new LoginModel();
+      this.model.password = this.loginForm.get('password').value;
+      this.model.email = this.loginForm.get('username').value;
+      this.store.dispatch(new Login(this.model));
     }
 
   }
