@@ -11,7 +11,7 @@
     "max_score": null,
     "hits": [
       {
-        "_index": "kyn-syslog-voice-demo",
+        "_index": "e2nw-syslog-voice-demo",
         "_type": "voice_kv",
         "_id": "AVn_KGOVtkxxGeHqys1a",
         "_score": null,
@@ -25,7 +25,7 @@
         ]
       },
       {
-        "_index": "kyn-syslog-voice-demo",
+        "_index": "e2nw-syslog-voice-demo",
         "_type": "voice_kv",
         "_id": "AVn_KGOVtkxxGeHqys1Y",
         "_score": null,

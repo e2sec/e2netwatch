@@ -7,12 +7,12 @@
 
 	<beans profile="test">
 		<context:component-scan base-package="
-			hr.eito.kynkite.rest
-			, hr.eito.kynkite.business.manager
-			, hr.eito.kynkite.business.dao.stub
-			, hr.eito.kynkite.aql.dao.stub
-			, hr.eito.kynkite.usermanagement.helper.stub
-			, hr.eito.kynkite.usermanagement.dao.stub" />
+			de.e2security.e2netwatch.rest
+			, de.e2security.e2netwatch.business.manager
+			, de.e2security.e2netwatch.business.dao.stub
+			, de.e2security.e2netwatch.aql.dao.stub
+			, de.e2security.e2netwatch.usermanagement.helper.stub
+			, de.e2security.e2netwatch.usermanagement.dao.stub" />
 	</beans>
 	
 </beans>

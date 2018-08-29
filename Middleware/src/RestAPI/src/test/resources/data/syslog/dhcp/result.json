@@ -10,7 +10,7 @@
     "total" : 2200,
     "max_score" : null,
     "hits" : [ {
-      "_index" : "kyn-syslog-dhcp-demo",
+      "_index" : "e2nw-syslog-dhcp-demo",
       "_type" : "dhcp",
       "_id" : "AVjUQWNpsYemHJ3OLDG2",
       "_score" : null,
@@ -21,7 +21,7 @@
       },
       "sort" : [ 1467269161970 ]
     }, {
-      "_index" : "kyn-syslog-dhcp-demo",
+      "_index" : "e2nw-syslog-dhcp-demo",
       "_type" : "dhcp",
       "_id" : "AVjUQWNpsYemHJ3OLDG3",
       "_score" : null,
@@ -32,7 +32,7 @@
       },
       "sort" : [ 1467269161970 ]
     }, {
-      "_index" : "kyn-syslog-dhcp-demo",
+      "_index" : "e2nw-syslog-dhcp-demo",
       "_type" : "dhcp",
       "_id" : "AVjUQWNpsYemHJ3OLDG4",
       "_score" : null,
@@ -43,7 +43,7 @@
       },
       "sort" : [ 1467269161970 ]
     }, {
-      "_index" : "kyn-syslog-dhcp-demo",
+      "_index" : "e2nw-syslog-dhcp-demo",
       "_type" : "dhcp",
       "_id" : "AVjUQWNpsYemHJ3OLDG5",
       "_score" : null,
@@ -54,7 +54,7 @@
       },
       "sort" : [ 1467269161970 ]
     }, {
-      "_index" : "kyn-syslog-dhcp-demo",
+      "_index" : "e2nw-syslog-dhcp-demo",
       "_type" : "dhcp",
       "_id" : "AVjUQWNpsYemHJ3OLDG6",
       "_score" : null,
@@ -65,7 +65,7 @@
       },
       "sort" : [ 1467269161970 ]
     }, {
-      "_index" : "kyn-syslog-dhcp-demo",
+      "_index" : "e2nw-syslog-dhcp-demo",
       "_type" : "dhcp",
       "_id" : "AVjUQWNpsYemHJ3OLDG7",
       "_score" : null,
@@ -76,7 +76,7 @@
       },
       "sort" : [ 1467269161970 ]
     }, {
-      "_index" : "kyn-syslog-dhcp-demo",
+      "_index" : "e2nw-syslog-dhcp-demo",
       "_type" : "dhcp",
       "_id" : "AVjUQWNpsYemHJ3OLDG8",
       "_score" : null,
@@ -87,7 +87,7 @@
       },
       "sort" : [ 1467269161970 ]
     }, {
-      "_index" : "kyn-syslog-dhcp-demo",
+      "_index" : "e2nw-syslog-dhcp-demo",
       "_type" : "dhcp",
       "_id" : "AVjUQWNpsYemHJ3OLDG9",
       "_score" : null,
@@ -98,7 +98,7 @@
       },
       "sort" : [ 1467269161970 ]
     }, {
-      "_index" : "kyn-syslog-dhcp-demo",
+      "_index" : "e2nw-syslog-dhcp-demo",
       "_type" : "dhcp",
       "_id" : "AVjUQWNpsYemHJ3OLDG-",
       "_score" : null,
@@ -109,7 +109,7 @@
       },
       "sort" : [ 1467269161970 ]
     }, {
-      "_index" : "kyn-syslog-dhcp-demo",
+      "_index" : "e2nw-syslog-dhcp-demo",
       "_type" : "dhcp",
       "_id" : "AVjUQWNpsYemHJ3OLDG_",
       "_score" : null,

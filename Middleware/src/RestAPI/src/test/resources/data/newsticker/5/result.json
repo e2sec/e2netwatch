@@ -11,7 +11,7 @@
     "max_score": null,
     "hits": [
       {
-        "_index": "kyn-newsticker-2016",
+        "_index": "e2nw-newsticker-2016",
         "_type": "news",
         "_id": "AVn_KGaWtkxxGeHqytsc",
         "_score": null,
@@ -27,7 +27,7 @@
         ]
       },
       {
-        "_index": "kyn-newsticker-2016",
+        "_index": "e2nw-newsticker-2016",
         "_type": "news",
         "_id": "AVn_KGaWtkxxGeHqytsr",
         "_score": null,
@@ -43,7 +43,7 @@
         ]
       },
       {
-        "_index": "kyn-newsticker-2016",
+        "_index": "e2nw-newsticker-2016",
         "_type": "news",
         "_id": "AVn_KGaWtkxxGeHqytsq",
         "_score": null,
@@ -59,7 +59,7 @@
         ]
       },
       {
-        "_index": "kyn-newsticker-2016",
+        "_index": "e2nw-newsticker-2016",
         "_type": "news",
         "_id": "AVn_KGaWtkxxGeHqytsp",
         "_score": null,
@@ -75,7 +75,7 @@
         ]
       },
       {
-        "_index": "kyn-newsticker-2016",
+        "_index": "e2nw-newsticker-2016",
         "_type": "news",
         "_id": "AVn_KGaWtkxxGeHqytso",
         "_score": null,

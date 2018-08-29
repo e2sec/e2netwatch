@@ -11,7 +11,7 @@
     "max_score": null,
     "hits": [
       {
-        "_index": "kyn-syslog-proxy-2016-12-02",
+        "_index": "e2nw-syslog-proxy-2016-12-02",
         "_type": "not_set",
         "_id": "AVi_86PUk4XOh_g1warN",
         "_score": null,
@@ -32,7 +32,7 @@
         ]
       },
       {
-        "_index": "kyn-syslog-proxy-2016-12-02",
+        "_index": "e2nw-syslog-proxy-2016-12-02",
         "_type": "not_set",
         "_id": "AVi_86PUk4XOh_g1warE",
         "_score": null,

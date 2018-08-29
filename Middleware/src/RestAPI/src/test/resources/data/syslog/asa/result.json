@@ -10,7 +10,7 @@
     "total" : 2200,
     "max_score" : null,
     "hits" : [ {
-      "_index" : "kyn-syslog-asa-demo",
+      "_index" : "e2nw-syslog-asa-demo",
       "_type" : "cisco-asa",
       "_id" : "AVjUQXZmsYemHJ3OLEOR",
       "_score" : null,
@@ -21,7 +21,7 @@
       },
       "sort" : [ 1467269111515 ]
     }, {
-      "_index" : "kyn-syslog-asa-demo",
+      "_index" : "e2nw-syslog-asa-demo",
       "_type" : "cisco-asa",
       "_id" : "AVjUQXZmsYemHJ3OLEOS",
       "_score" : null,
@@ -32,7 +32,7 @@
       },
       "sort" : [ 1467269111515 ]
     }, {
-      "_index" : "kyn-syslog-asa-demo",
+      "_index" : "e2nw-syslog-asa-demo",
       "_type" : "cisco-asa",
       "_id" : "AVjUQXZmsYemHJ3OLEOT",
       "_score" : null,
@@ -43,7 +43,7 @@
       },
       "sort" : [ 1467269111515 ]
     }, {
-      "_index" : "kyn-syslog-asa-demo",
+      "_index" : "e2nw-syslog-asa-demo",
       "_type" : "cisco-asa",
       "_id" : "AVkWPv97qFUUybCf4bVD",
       "_score" : null,
@@ -54,7 +54,7 @@
       },
       "sort" : [ 1467269111515 ]
     }, {
-      "_index" : "kyn-syslog-asa-demo",
+      "_index" : "e2nw-syslog-asa-demo",
       "_type" : "cisco-asa",
       "_id" : "AVkWPv97qFUUybCf4bVE",
       "_score" : null,
@@ -65,7 +65,7 @@
       },
       "sort" : [ 1467269111515 ]
     }, {
-      "_index" : "kyn-syslog-asa-demo",
+      "_index" : "e2nw-syslog-asa-demo",
       "_type" : "cisco-asa",
       "_id" : "AVkWPv97qFUUybCf4bVF",
       "_score" : null,
@@ -76,7 +76,7 @@
       },
       "sort" : [ 1467269111515 ]
     }, {
-      "_index" : "kyn-syslog-asa-demo",
+      "_index" : "e2nw-syslog-asa-demo",
       "_type" : "cisco-asa",
       "_id" : "AVjUQXZmsYemHJ3OLEOP",
       "_score" : null,
@@ -87,7 +87,7 @@
       },
       "sort" : [ 1467269111514 ]
     }, {
-      "_index" : "kyn-syslog-asa-demo",
+      "_index" : "e2nw-syslog-asa-demo",
       "_type" : "cisco-asa",
       "_id" : "AVjUQXZmsYemHJ3OLEOQ",
       "_score" : null,
@@ -98,7 +98,7 @@
       },
       "sort" : [ 1467269111514 ]
     }, {
-      "_index" : "kyn-syslog-asa-demo",
+      "_index" : "e2nw-syslog-asa-demo",
       "_type" : "cisco-asa",
       "_id" : "AVkWPv97qFUUybCf4bVB",
       "_score" : null,
@@ -109,7 +109,7 @@
       },
       "sort" : [ 1467269111514 ]
     }, {
-      "_index" : "kyn-syslog-asa-demo",
+      "_index" : "e2nw-syslog-asa-demo",
       "_type" : "cisco-asa",
       "_id" : "AVkWPv97qFUUybCf4bVC",
       "_score" : null,

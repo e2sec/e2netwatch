@@ -11,7 +11,7 @@
     "max_score": null,
     "hits": [
       {
-        "_index": "kyn-syslog-proxy-2016-12-02",
+        "_index": "e2nw-syslog-proxy-2016-12-02",
         "_type": "not_set",
         "_id": "AVi_86PUk4XOh_g1warN",
         "_score": null,
@@ -32,7 +32,7 @@
         ]
       },
       {
-        "_index": "kyn-syslog-proxy-2016-12-02",
+        "_index": "e2nw-syslog-proxy-2016-12-02",
         "_type": "not_set",
         "_id": "AVi_86PUk4XOh_g1warE",
         "_score": null,
@@ -53,7 +53,7 @@
         ]
       },
       {
-        "_index": "kyn-syslog-proxy-2016-12-02",
+        "_index": "e2nw-syslog-proxy-2016-12-02",
         "_type": "not_set",
         "_id": "AVi_86PUk4XOh_g1warF",
         "_score": null,
@@ -74,7 +74,7 @@
         ]
       },
       {
-        "_index": "kyn-syslog-proxy-2016-12-02",
+        "_index": "e2nw-syslog-proxy-2016-12-02",
         "_type": "not_set",
         "_id": "AVi_86PUk4XOh_g1warG",
         "_score": null,
@@ -95,7 +95,7 @@
         ]
       },
       {
-        "_index": "kyn-syslog-proxy-2016-12-02",
+        "_index": "e2nw-syslog-proxy-2016-12-02",
         "_type": "not_set",
         "_id": "AVi_86PUk4XOh_g1warH",
         "_score": null,
@@ -116,7 +116,7 @@
         ]
       },
       {
-        "_index": "kyn-syslog-proxy-2016-12-02",
+        "_index": "e2nw-syslog-proxy-2016-12-02",
         "_type": "not_set",
         "_id": "AVi_86PUk4XOh_g1warI",
         "_score": null,
@@ -137,7 +137,7 @@
         ]
       },
       {
-        "_index": "kyn-syslog-proxy-2016-12-02",
+        "_index": "e2nw-syslog-proxy-2016-12-02",
         "_type": "not_set",
         "_id": "AVi_86PUk4XOh_g1warJ",
         "_score": null,
@@ -158,7 +158,7 @@
         ]
       },
       {
-        "_index": "kyn-syslog-proxy-2016-12-02",
+        "_index": "e2nw-syslog-proxy-2016-12-02",
         "_type": "not_set",
         "_id": "AVi_86PUk4XOh_g1warL",
         "_score": null,
@@ -179,7 +179,7 @@
         ]
       },
       {
-        "_index": "kyn-syslog-proxy-2016-12-02",
+        "_index": "e2nw-syslog-proxy-2016-12-02",
         "_type": "not_set",
         "_id": "AVi_86PUk4XOh_g1warM",
         "_score": null,
@@ -200,7 +200,7 @@
         ]
       },
       {
-        "_index": "kyn-syslog-proxy-2016-12-02",
+        "_index": "e2nw-syslog-proxy-2016-12-02",
         "_type": "not_set",
         "_id": "AVi_86PUk4XOh_g1waq8",
         "_score": null,

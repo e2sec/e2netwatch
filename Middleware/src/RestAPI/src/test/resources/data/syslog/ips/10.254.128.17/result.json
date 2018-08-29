@@ -10,7 +10,7 @@
     "total" : 2200,
     "max_score" : null,
     "hits" : [ {
-      "_index" : "kyn-syslog-ips-demo",
+      "_index" : "e2nw-syslog-ips-demo",
       "_type" : "ipslogs",
       "_id" : "AVjUQXPjsYemHJ3OLD_M",
       "_score" : null,
@@ -24,7 +24,7 @@
       },
       "sort" : [ 1467271904360 ]
     }, {
-      "_index" : "kyn-syslog-ips-demo",
+      "_index" : "e2nw-syslog-ips-demo",
       "_type" : "ipslogs",
       "_id" : "AVjUQXPjsYemHJ3OLD_N",
       "_score" : null,
@@ -38,7 +38,7 @@
       },
       "sort" : [ 1467271904360 ]
     }, {
-      "_index" : "kyn-syslog-ips-demo",
+      "_index" : "e2nw-syslog-ips-demo",
       "_type" : "ipslogs",
       "_id" : "AVjUQXPjsYemHJ3OLD_O",
       "_score" : null,
@@ -52,7 +52,7 @@
       },
       "sort" : [ 1467271904360 ]
     }, {
-      "_index" : "kyn-syslog-ips-demo",
+      "_index" : "e2nw-syslog-ips-demo",
       "_type" : "ipslogs",
       "_id" : "AVjUQXPjsYemHJ3OLD_P",
       "_score" : null,
@@ -66,7 +66,7 @@
       },
       "sort" : [ 1467271904360 ]
     }, {
-      "_index" : "kyn-syslog-ips-demo",
+      "_index" : "e2nw-syslog-ips-demo",
       "_type" : "ipslogs",
       "_id" : "AVjUQXPjsYemHJ3OLD_Q",
       "_score" : null,
@@ -80,7 +80,7 @@
       },
       "sort" : [ 1467271904360 ]
     }, {
-      "_index" : "kyn-syslog-ips-demo",
+      "_index" : "e2nw-syslog-ips-demo",
       "_type" : "ipslogs",
       "_id" : "AVkWPv6tqFUUybCf4bF-",
       "_score" : null,
@@ -94,7 +94,7 @@
       },
       "sort" : [ 1467271904360 ]
     }, {
-      "_index" : "kyn-syslog-ips-demo",
+      "_index" : "e2nw-syslog-ips-demo",
       "_type" : "ipslogs",
       "_id" : "AVkWPv6uqFUUybCf4bF_",
       "_score" : null,
@@ -108,7 +108,7 @@
       },
       "sort" : [ 1467271904360 ]
     }, {
-      "_index" : "kyn-syslog-ips-demo",
+      "_index" : "e2nw-syslog-ips-demo",
       "_type" : "ipslogs",
       "_id" : "AVkWPv6uqFUUybCf4bGA",
       "_score" : null,
@@ -122,7 +122,7 @@
       },
       "sort" : [ 1467271904360 ]
     }, {
-      "_index" : "kyn-syslog-ips-demo",
+      "_index" : "e2nw-syslog-ips-demo",
       "_type" : "ipslogs",
       "_id" : "AVkWPv6uqFUUybCf4bGB",
       "_score" : null,
@@ -136,7 +136,7 @@
       },
       "sort" : [ 1467271904360 ]
     }, {
-      "_index" : "kyn-syslog-ips-demo",
+      "_index" : "e2nw-syslog-ips-demo",
       "_type" : "ipslogs",
       "_id" : "AVkWPv6uqFUUybCf4bGC",
       "_score" : null,
@@ -150,7 +150,7 @@
       },
       "sort" : [ 1467271904360 ]
     }, {
-      "_index" : "kyn-syslog-ips-demo",
+      "_index" : "e2nw-syslog-ips-demo",
       "_type" : "ipslogs",
       "_id" : "AVjUQXPjsYemHJ3OLD_G",
       "_score" : null,
@@ -164,7 +164,7 @@
       },
       "sort" : [ 1467271904359 ]
     }, {
-      "_index" : "kyn-syslog-ips-demo",
+      "_index" : "e2nw-syslog-ips-demo",
       "_type" : "ipslogs",
       "_id" : "AVjUQXPjsYemHJ3OLD_H",
       "_score" : null,
@@ -178,7 +178,7 @@
       },
       "sort" : [ 1467271904359 ]
     }, {
-      "_index" : "kyn-syslog-ips-demo",
+      "_index" : "e2nw-syslog-ips-demo",
       "_type" : "ipslogs",
       "_id" : "AVjUQXPjsYemHJ3OLD_I",
       "_score" : null,
@@ -192,7 +192,7 @@
       },
       "sort" : [ 1467271904359 ]
     }, {
-      "_index" : "kyn-syslog-ips-demo",
+      "_index" : "e2nw-syslog-ips-demo",
       "_type" : "ipslogs",
       "_id" : "AVjUQXPjsYemHJ3OLD_J",
       "_score" : null,
@@ -206,7 +206,7 @@
       },
       "sort" : [ 1467271904359 ]
     }, {
-      "_index" : "kyn-syslog-ips-demo",
+      "_index" : "e2nw-syslog-ips-demo",
       "_type" : "ipslogs",
       "_id" : "AVjUQXPjsYemHJ3OLD_K",
       "_score" : null,
@@ -220,7 +220,7 @@
       },
       "sort" : [ 1467271904359 ]
     }, {
-      "_index" : "kyn-syslog-ips-demo",
+      "_index" : "e2nw-syslog-ips-demo",
       "_type" : "ipslogs",
       "_id" : "AVjUQXPjsYemHJ3OLD_L",
       "_score" : null,
@@ -234,7 +234,7 @@
       },
       "sort" : [ 1467271904359 ]
     }, {
-      "_index" : "kyn-syslog-ips-demo",
+      "_index" : "e2nw-syslog-ips-demo",
       "_type" : "ipslogs",
       "_id" : "AVkWPv6tqFUUybCf4bF4",
       "_score" : null,
@@ -248,7 +248,7 @@
       },
       "sort" : [ 1467271904359 ]
     }, {
-      "_index" : "kyn-syslog-ips-demo",
+      "_index" : "e2nw-syslog-ips-demo",
       "_type" : "ipslogs",
       "_id" : "AVkWPv6tqFUUybCf4bF5",
       "_score" : null,
@@ -262,7 +262,7 @@
       },
       "sort" : [ 1467271904359 ]
     }, {
-      "_index" : "kyn-syslog-ips-demo",
+      "_index" : "e2nw-syslog-ips-demo",
       "_type" : "ipslogs",
       "_id" : "AVkWPv6tqFUUybCf4bF6",
       "_score" : null,
@@ -276,7 +276,7 @@
       },
       "sort" : [ 1467271904359 ]
     }, {
-      "_index" : "kyn-syslog-ips-demo",
+      "_index" : "e2nw-syslog-ips-demo",
       "_type" : "ipslogs",
       "_id" : "AVkWPv6tqFUUybCf4bF7",
       "_score" : null,

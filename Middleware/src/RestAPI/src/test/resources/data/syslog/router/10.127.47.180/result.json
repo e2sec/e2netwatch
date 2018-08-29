@@ -10,7 +10,7 @@
     "total" : 4,
     "max_score" : null,
     "hits" : [ {
-      "_index" : "kyn-syslog-router-demo",
+      "_index" : "e2nw-syslog-router-demo",
       "_type" : "syslog-router",
       "_id" : "AVjUQXFrsYemHJ3OLDsy",
       "_score" : null,
@@ -21,7 +21,7 @@
       },
       "sort" : [ 1467269280768 ]
     }, {
-      "_index" : "kyn-syslog-router-demo",
+      "_index" : "e2nw-syslog-router-demo",
       "_type" : "syslog-router",
       "_id" : "AVkWPv3KqFUUybCf4azk",
       "_score" : null,
@@ -32,7 +32,7 @@
       },
       "sort" : [ 1467269280768 ]
     }, {
-      "_index" : "kyn-syslog-router-demo",
+      "_index" : "e2nw-syslog-router-demo",
       "_type" : "syslog-router",
       "_id" : "AVjUQXFqsYemHJ3OLDq2",
       "_score" : null,
@@ -43,7 +43,7 @@
       },
       "sort" : [ 1467269277245 ]
     }, {
-      "_index" : "kyn-syslog-router-demo",
+      "_index" : "e2nw-syslog-router-demo",
       "_type" : "syslog-router",
       "_id" : "AVkWPv3KqFUUybCf4axo",
       "_score" : null,

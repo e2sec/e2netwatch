@@ -11,7 +11,7 @@
     "max_score": null,
     "hits": [
       {
-        "_index": "kyn-syslog-router-demo",
+        "_index": "e2nw-syslog-router-demo",
         "_type": "syslog-router",
         "_id": "AVn_KGSftkxxGeHqytFV",
         "_score": null,

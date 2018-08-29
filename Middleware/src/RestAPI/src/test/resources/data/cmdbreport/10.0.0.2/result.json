@@ -10,7 +10,7 @@
     "total" : 1,
     "max_score" : 1.0,
     "hits" : [ {
-      "_index" : "kyn-hostinfo",
+      "_index" : "e2nw-hostinfo",
       "_type" : "hostinfo",
       "_id" : "10.0.0.2",
       "_score" : 1.0,

@@ -11,7 +11,7 @@
     "max_score": null,
     "hits": [
       {
-        "_index": "kyn-policy-2017-01-26",
+        "_index": "e2nw-policy-2017-01-26",
         "_type": "policy",
         "_id": "AVnbFYB4ISe-c8hencwK",
         "_score": null,
@@ -25,7 +25,7 @@
         ]
       },
       {
-        "_index": "kyn-policy-2017-01-26",
+        "_index": "e2nw-policy-2017-01-26",
         "_type": "policy",
         "_id": "AVnbFXshISe-c8hencwJ",
         "_score": null,
@@ -39,7 +39,7 @@
         ]
       },
       {
-        "_index": "kyn-policy-2017-01-26",
+        "_index": "e2nw-policy-2017-01-26",
         "_type": "policy",
         "_id": "AVnbFXXoISe-c8hencwI",
         "_score": null,

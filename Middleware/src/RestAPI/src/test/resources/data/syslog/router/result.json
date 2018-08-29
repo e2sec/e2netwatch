@@ -10,7 +10,7 @@
     "total" : 2200,
     "max_score" : null,
     "hits" : [ {
-      "_index" : "kyn-syslog-router-demo",
+      "_index" : "e2nw-syslog-router-demo",
       "_type" : "syslog-router",
       "_id" : "AVjUQXFrsYemHJ3OLDsz",
       "_score" : null,
@@ -21,7 +21,7 @@
       },
       "sort" : [ 1467269280769 ]
     }, {
-      "_index" : "kyn-syslog-router-demo",
+      "_index" : "e2nw-syslog-router-demo",
       "_type" : "syslog-router",
       "_id" : "AVjUQXFrsYemHJ3OLDs0",
       "_score" : null,
@@ -32,7 +32,7 @@
       },
       "sort" : [ 1467269280769 ]
     }, {
-      "_index" : "kyn-syslog-router-demo",
+      "_index" : "e2nw-syslog-router-demo",
       "_type" : "syslog-router",
       "_id" : "AVjUQXFrsYemHJ3OLDs1",
       "_score" : null,
@@ -43,7 +43,7 @@
       },
       "sort" : [ 1467269280769 ]
     }, {
-      "_index" : "kyn-syslog-router-demo",
+      "_index" : "e2nw-syslog-router-demo",
       "_type" : "syslog-router",
       "_id" : "AVjUQXFrsYemHJ3OLDs2",
       "_score" : null,
@@ -54,7 +54,7 @@
       },
       "sort" : [ 1467269280769 ]
     }, {
-      "_index" : "kyn-syslog-router-demo",
+      "_index" : "e2nw-syslog-router-demo",
       "_type" : "syslog-router",
       "_id" : "AVkWPv3KqFUUybCf4azl",
       "_score" : null,
@@ -65,7 +65,7 @@
       },
       "sort" : [ 1467269280769 ]
     }, {
-      "_index" : "kyn-syslog-router-demo",
+      "_index" : "e2nw-syslog-router-demo",
       "_type" : "syslog-router",
       "_id" : "AVkWPv3KqFUUybCf4azm",
       "_score" : null,
@@ -76,7 +76,7 @@
       },
       "sort" : [ 1467269280769 ]
     }, {
-      "_index" : "kyn-syslog-router-demo",
+      "_index" : "e2nw-syslog-router-demo",
       "_type" : "syslog-router",
       "_id" : "AVkWPv3KqFUUybCf4azn",
       "_score" : null,
@@ -87,7 +87,7 @@
       },
       "sort" : [ 1467269280769 ]
     }, {
-      "_index" : "kyn-syslog-router-demo",
+      "_index" : "e2nw-syslog-router-demo",
       "_type" : "syslog-router",
       "_id" : "AVkWPv3KqFUUybCf4azo",
       "_score" : null,
@@ -98,7 +98,7 @@
       },
       "sort" : [ 1467269280769 ]
     }, {
-      "_index" : "kyn-syslog-router-demo",
+      "_index" : "e2nw-syslog-router-demo",
       "_type" : "syslog-router",
       "_id" : "AVjUQXFrsYemHJ3OLDsy",
       "_score" : null,
@@ -109,7 +109,7 @@
       },
       "sort" : [ 1467269280768 ]
     }, {
-      "_index" : "kyn-syslog-router-demo",
+      "_index" : "e2nw-syslog-router-demo",
       "_type" : "syslog-router",
       "_id" : "AVkWPv3KqFUUybCf4azk",
       "_score" : null,

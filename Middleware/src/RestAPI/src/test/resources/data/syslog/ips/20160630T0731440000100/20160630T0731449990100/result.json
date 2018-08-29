@@ -11,7 +11,7 @@
     "max_score": null,
     "hits": [
       {
-        "_index": "kyn-syslog-ips-demo",
+        "_index": "e2nw-syslog-ips-demo",
         "_type": "ipslogs",
         "_id": "AVn_KGUPtkxxGeHqytXv",
         "_score": null,
@@ -28,7 +28,7 @@
         ]
       },
       {
-        "_index": "kyn-syslog-ips-demo",
+        "_index": "e2nw-syslog-ips-demo",
         "_type": "ipslogs",
         "_id": "AVn_KGUPtkxxGeHqytXw",
         "_score": null,
@@ -45,7 +45,7 @@
         ]
       },
       {
-        "_index": "kyn-syslog-ips-demo",
+        "_index": "e2nw-syslog-ips-demo",
         "_type": "ipslogs",
         "_id": "AVn_KGUPtkxxGeHqytXx",
         "_score": null,

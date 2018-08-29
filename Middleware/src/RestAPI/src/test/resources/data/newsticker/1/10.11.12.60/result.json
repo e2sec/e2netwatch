@@ -10,7 +10,7 @@
     "total" : 1,
     "max_score" : 1.0,
     "hits" : [ {
-      "_index" : "kyn-newsticker-2016",
+      "_index" : "e2nw-newsticker-2016",
       "_type" : "news",
       "_id" : "AVi1-kX5eK1FPa4JsIT8",
       "_score" : 1.0,

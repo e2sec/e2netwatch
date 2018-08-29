@@ -27,7 +27,7 @@
     </layout>
   </appender>
 
-  <logger name="hr.eito" level="${KYNKITE_LEVEL}" additivity="false">
+  <logger name="de.e2security.e2netwatch" level="${KYNKITE_LEVEL}" additivity="false">
     <appender-ref ref="consoleAppender" />
     <appender-ref ref="rollingFileAppender" />
   </logger>

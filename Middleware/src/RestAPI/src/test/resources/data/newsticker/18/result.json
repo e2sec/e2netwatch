@@ -10,7 +10,7 @@
     "total" : 18,
     "max_score" : 1.0,
     "hits" : [ {
-      "_index" : "kyn-newsticker-2016",
+      "_index" : "e2nw-newsticker-2016",
       "_type" : "news",
       "_id" : "AVi1-kX5eK1FPa4JsIT8",
       "_score" : 1.0,
@@ -22,7 +22,7 @@
         "eventid" : "0101"
       }
     }, {
-      "_index" : "kyn-newsticker-2016",
+      "_index" : "e2nw-newsticker-2016",
       "_type" : "news",
       "_id" : "AVi1-kX5eK1FPa4JsIT9",
       "_score" : 1.0,
@@ -34,7 +34,7 @@
         "eventid" : "0402"
       }
     }, {
-      "_index" : "kyn-newsticker-2016",
+      "_index" : "e2nw-newsticker-2016",
       "_type" : "news",
       "_id" : "AVi1-kX5eK1FPa4JsIT-",
       "_score" : 1.0,
@@ -46,7 +46,7 @@
         "eventid" : "0101"
       }
     }, {
-      "_index" : "kyn-newsticker-2016",
+      "_index" : "e2nw-newsticker-2016",
       "_type" : "news",
       "_id" : "AVi1-kX5eK1FPa4JsIT_",
       "_score" : 1.0,
@@ -58,7 +58,7 @@
         "eventid" : "0302"
       }
     }, {
-      "_index" : "kyn-newsticker-2016",
+      "_index" : "e2nw-newsticker-2016",
       "_type" : "news",
       "_id" : "AVi1-kX5eK1FPa4JsIUA",
       "_score" : 1.0,
@@ -70,7 +70,7 @@
         "eventid" : "5000"
       }
     }, {
-      "_index" : "kyn-newsticker-2016",
+      "_index" : "e2nw-newsticker-2016",
       "_type" : "news",
       "_id" : "AVi1-kX5eK1FPa4JsIUB",
       "_score" : 1.0,
@@ -82,7 +82,7 @@
         "eventid" : "0108"
       }
     }, {
-      "_index" : "kyn-newsticker-2016",
+      "_index" : "e2nw-newsticker-2016",
       "_type" : "news",
       "_id" : "AVi1-kX5eK1FPa4JsIUC",
       "_score" : 1.0,
@@ -94,7 +94,7 @@
         "eventid" : "0106"
       }
     }, {
-      "_index" : "kyn-newsticker-2016",
+      "_index" : "e2nw-newsticker-2016",
       "_type" : "news",
       "_id" : "AVi1-kX5eK1FPa4JsIUD",
       "_score" : 1.0,
@@ -106,7 +106,7 @@
         "eventid" : "0109"
       }
     }, {
-      "_index" : "kyn-newsticker-2016",
+      "_index" : "e2nw-newsticker-2016",
       "_type" : "news",
       "_id" : "AVi1-kX5eK1FPa4JsIUE",
       "_score" : 1.0,
@@ -118,7 +118,7 @@
         "eventid" : "0101"
       }
     }, {
-      "_index" : "kyn-newsticker-2016",
+      "_index" : "e2nw-newsticker-2016",
       "_type" : "news",
       "_id" : "AVi1-kX5eK1FPa4JsIUF",
       "_score" : 1.0,
@@ -130,7 +130,7 @@
         "eventid" : "0100"
       }
     }, {
-      "_index" : "kyn-newsticker-2016",
+      "_index" : "e2nw-newsticker-2016",
       "_type" : "news",
       "_id" : "AVi1-kX5eK1FPa4JsIUG",
       "_score" : 1.0,
@@ -142,7 +142,7 @@
         "eventid" : "0500"
       }
     }, {
-      "_index" : "kyn-newsticker-2016",
+      "_index" : "e2nw-newsticker-2016",
       "_type" : "news",
       "_id" : "AVi1-kX5eK1FPa4JsIUH",
       "_score" : 1.0,
@@ -154,7 +154,7 @@
         "eventid" : "0201"
       }
     }, {
-      "_index" : "kyn-newsticker-2016",
+      "_index" : "e2nw-newsticker-2016",
       "_type" : "news",
       "_id" : "AVi1-kX5eK1FPa4JsIUI",
       "_score" : 1.0,
@@ -166,7 +166,7 @@
         "eventid" : "0105"
       }
     }, {
-      "_index" : "kyn-newsticker-2016",
+      "_index" : "e2nw-newsticker-2016",
       "_type" : "news",
       "_id" : "AVi1-kX5eK1FPa4JsIUJ",
       "_score" : 1.0,
@@ -178,7 +178,7 @@
         "eventid" : "0102"
       }
     }, {
-      "_index" : "kyn-newsticker-2016",
+      "_index" : "e2nw-newsticker-2016",
       "_type" : "news",
       "_id" : "AVi1-kX5eK1FPa4JsIUK",
       "_score" : 1.0,
@@ -190,7 +190,7 @@
         "eventid" : "0401"
       }
     }, {
-      "_index" : "kyn-newsticker-2016",
+      "_index" : "e2nw-newsticker-2016",
       "_type" : "news",
       "_id" : "AVi1-kX5eK1FPa4JsIUL",
       "_score" : 1.0,
@@ -202,7 +202,7 @@
         "eventid" : "0200"
       }
     }, {
-      "_index" : "kyn-newsticker-2016",
+      "_index" : "e2nw-newsticker-2016",
       "_type" : "news",
       "_id" : "AVi1-kX5eK1FPa4JsIUM",
       "_score" : 1.0,
@@ -214,7 +214,7 @@
         "eventid" : "0001"
       }
     }, {
-      "_index" : "kyn-newsticker-2016",
+      "_index" : "e2nw-newsticker-2016",
       "_type" : "news",
       "_id" : "AVi1-kX5eK1FPa4JsIUN",
       "_score" : 1.0,
