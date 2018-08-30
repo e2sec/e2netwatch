@@ -15,8 +15,7 @@ services:
     ports:
       - "2055:2055/udp"
       - "5000:5000/tcp"
-      - "5001:5001/tcp"
-      - "5001:5001/udp"
+      - "5000:5000/udp"
     networks:
       - e2netwatch-net
     volumes:
