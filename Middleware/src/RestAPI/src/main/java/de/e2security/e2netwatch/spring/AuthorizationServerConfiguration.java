@@ -1,5 +1,7 @@
 package de.e2security.e2netwatch.spring;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +23,8 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
+	
+	private final Logger logger = LoggerFactory.getLogger(AuthorizationServerConfiguration.class);
 
 	@Autowired
     private AuthenticationManager authenticationManager;
@@ -34,6 +38,10 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     private String clientId;
     @Value("${client_secret}")
     private String clientSecret;
+    @Value("${access_token_valid_hours}")
+    private int accessTokenValidHours;
+    @Value("${refresh_token_valid_hours}")
+    private int refreshTokenValidHours;
 
     public AuthorizationServerConfiguration() {
         super();
@@ -71,10 +79,12 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	        .withClient(clientId)
 	        .secret(clientSecret)
 	        .authorizedGrantTypes("password", "refresh_token")
-	        .refreshTokenValiditySeconds(3600 * 24)
+	        .refreshTokenValiditySeconds(60 * 60 * refreshTokenValidHours)
 	        .scopes("read", "write", "trust")     
-	        .accessTokenValiditySeconds(60 * 60 * 2)
+	        .accessTokenValiditySeconds(60 * 60 * accessTokenValidHours)
 	        ;
+        logger.info("Client '" + clientId + "' registered to access token for " + accessTokenValidHours + "h" + 
+	        ", refresh token for " + refreshTokenValidHours + "h");
         // @formatter:on
     }
 

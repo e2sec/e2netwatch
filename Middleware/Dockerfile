@@ -17,8 +17,6 @@ FROM openjdk:10.0.2 as build
 
 ENV MAVEN_VERSION 3.3.9
 
-ARG VARIANT
-
 RUN mkdir -p /usr/share/maven \
   && curl -fsSL http://apache.osuosl.org/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz \
    | tar -xzC /usr/share/maven --strip-components=1 \
@@ -30,11 +28,7 @@ ADD ./src /tmp/middleware/src
 
 WORKDIR /tmp/middleware/src/RestAPI
 
-RUN /usr/bin/mvn -P$VARIANT package 
-
-#
-
-FROM openjdk:10.0.2
+RUN /usr/bin/mvn package 
 
 RUN wget https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/9.4.11.v20180605/jetty-distribution-9.4.11.v20180605.tar.gz \
     && tar xzvf jetty-distribution-9.4.11.v20180605.tar.gz  \

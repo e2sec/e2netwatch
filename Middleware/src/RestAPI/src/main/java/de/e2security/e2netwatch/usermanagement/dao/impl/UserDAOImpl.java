@@ -21,6 +21,7 @@
 package de.e2security.e2netwatch.usermanagement.dao.impl;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -42,8 +43,13 @@ public class UserDAOImpl implements UserDAO {
 		Query query = em.createNativeQuery(
 			    "select * from user where username = :username", User.class)
 			    .setParameter("username", username);
-		User user = (User) query.getSingleResult();
-		return user;
+		try {
+			return (User) query.getSingleResult();
+		} catch (NoResultException exception) {
+			return null;
+		} catch (Exception databaseProblem) {
+			return null;
+		}
 	}
 	
 }

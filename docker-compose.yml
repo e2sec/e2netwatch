@@ -37,8 +37,6 @@ services:
   middleware:
     build:
       context: ./Middleware
-      args: 
-        - VARIANT=dev
     image: e2nw/middleware
     container_name: e2nwmiddleware
     depends_on:
@@ -46,9 +44,8 @@ services:
       - elasticsearch
     expose:
       - "8080"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.proxy
-      - ReportsData:/var/lib/jetty/src/files/reports
+    environment:
+      - envTarget=stage
     networks:
       - e2netwatch-net
   
@@ -116,8 +113,8 @@ services:
     container_name: e2nwmysql
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD="yes"
-    expose:
-     - "3306"
+    ports:
+     - "3306:3306"
     volumes:
       - MysqlData:/var/lib/mysql
       - MysqlBackupData:/backup
@@ -152,7 +149,6 @@ volumes:
   CaptureData:
   MysqlData:
   MysqlBackupData:
-  ReportsData:
 
 networks:
   e2netwatch-net:

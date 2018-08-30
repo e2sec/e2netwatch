@@ -1,12 +1,5 @@
 target
+bin
 .project
 .settings
 .classpath
-.factorypath
-.apt_generated
-.chekstyle
-.springBeans
-.metadata
-# Following line hides Docker work directory.
-KynKiteWebApp/?/
-KynKiteWebApp/d:/
