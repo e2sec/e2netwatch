@@ -11,6 +11,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { DemoGraphComponent } from './components/demo-graph/demo-graph.component';
+import { HttpClientModule } from '@angular/common/http';
 
 library.add(fas);
 
@@ -21,8 +23,9 @@ library.add(fas);
     PopoverModule,
     FontAwesomeModule,
     TooltipModule,
+    HttpClientModule,
   ],
   providers: [],
-  declarations: [DashboardComponent, SideBarComponent, HeaderComponent, UserProfileIconComponent]
+  declarations: [DashboardComponent, SideBarComponent, HeaderComponent, UserProfileIconComponent, DemoGraphComponent]
 })
 export class DashboardModule { }

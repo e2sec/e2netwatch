@@ -5,7 +5,8 @@
       <e2nw-side-bar (sideBarStateChanged)="toggleSidebar($event)"></e2nw-side-bar>
     </div>
     <main role="main" [@slideInOutMain]="sidebarState">
-        <router-outlet></router-outlet>
+      <e2nw-demo-graph></e2nw-demo-graph>
+      <router-outlet></router-outlet>
     </main>
   </div>
 </div>
