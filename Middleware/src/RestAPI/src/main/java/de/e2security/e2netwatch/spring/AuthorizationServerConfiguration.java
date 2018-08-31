@@ -80,7 +80,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	        .secret(clientSecret)
 	        .authorizedGrantTypes("password", "refresh_token")
 	        .refreshTokenValiditySeconds(60 * 60 * refreshTokenValidHours)
-	        .scopes("read", "write", "trust")     
+	        .scopes("middleware")     
 	        .accessTokenValiditySeconds(60 * 60 * accessTokenValidHours)
 	        ;
         logger.info("Client '" + clientId + "' registered to access token for " + accessTokenValidHours + "h" + 
