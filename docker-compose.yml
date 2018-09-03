@@ -133,7 +133,7 @@ services:
     
   kafka:
     build:
-      context: ./kafka-docker
+      context: ./Kafka
     ports:
      - "9092"
     environment:
