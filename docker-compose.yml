@@ -42,10 +42,10 @@ services:
     depends_on:
       - mysql
       - elasticsearch
-    ports:
-      - "8080:8080"
     environment:
       - envTarget=stage
+    ports:
+      - "8080:8080"
     networks:
       - e2netwatch-net
   
