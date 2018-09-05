@@ -29,7 +29,7 @@ export class AuthService {
       avatarUrl: 'https://www.gravatar.com/avatar/78c63138f5a54617819e47926b5977d7'
     });
 */
-    return this.httpClient.post<LoginModel>('http://localhost:1337/login', loginData);
+    return this.httpClient.post<LoginModel>('http://localhost:8080/middleware/api/auth/login', loginData);
   }
 
   isAuthenticated(): boolean {
