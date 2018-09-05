@@ -20,9 +20,9 @@
 
 package de.e2security.e2netwatch.usermanagement.service;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -31,10 +31,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import com.google.common.base.Function;
-import com.google.common.base.Functions;
-import com.google.common.collect.Collections2;
 
 import de.e2security.e2netwatch.usermanagement.dao.UserDAO;
 import de.e2security.e2netwatch.usermanagement.model.Authority;
@@ -59,9 +55,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         for (final UserGroup userGroup : userGroupsOfUser) {
         	authoritiesOfUser.addAll(userGroup.getAuthorities());
         }
-        final Function<Object, String> toStringFunction = Functions.toStringFunction();
-        final Collection<String> rolesToString = Collections2.transform(authoritiesOfUser, toStringFunction);
-        final String[] roleStringsAsArray = rolesToString.toArray(new String[rolesToString.size()]);
+        List<String> listOfAuthorityNames = authoritiesOfUser.stream().map(Authority::getName).collect(Collectors.toList());
+        String[] roleStringsAsArray = listOfAuthorityNames.toArray(new String[0]);
         final List<GrantedAuthority> auths = AuthorityUtils.createAuthorityList(roleStringsAsArray);
 
         return new UmUser(user.getUsername(), user.getPassword(), auths, user.getId());

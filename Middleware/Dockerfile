@@ -13,7 +13,7 @@
 # 
 #######################################################################
 
-FROM openjdk:10.0.2 as build
+FROM openjdk:10.0.2
 
 ENV MAVEN_VERSION 3.3.9
 
@@ -35,7 +35,7 @@ RUN wget https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/9.4
     && rm jetty-distribution-9.4.11.v20180605.tar.gz \
     && mv jetty-distribution-9.4.11.v20180605/ /jetty/
 
-COPY --from=build /tmp/middleware/src/RestAPI/target/middleware.war /jetty/webapps/.
+RUN cp /tmp/middleware/src/RestAPI/target/middleware.war /jetty/webapps/.
 
 WORKDIR /jetty
 

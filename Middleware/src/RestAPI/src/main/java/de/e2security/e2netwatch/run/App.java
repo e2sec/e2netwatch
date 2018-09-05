@@ -7,13 +7,12 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 
 import de.e2security.e2netwatch.spring.AqlJpaConfig;
-import de.e2security.e2netwatch.spring.AuthorizationServerConfiguration;
 import de.e2security.e2netwatch.spring.MvcConfig;
 import de.e2security.e2netwatch.spring.PropertiesConfig;
-import de.e2security.e2netwatch.spring.ResourceServerConfiguration;
 import de.e2security.e2netwatch.spring.ServiceConfig;
 import de.e2security.e2netwatch.spring.ServletConfig;
 import de.e2security.e2netwatch.spring.UserJpaConfig;
+import de.e2security.e2netwatch.spring.WebSecurity;
 import de.e2security.e2netwatch.spring.setup.MyApplicationContextInitializer;
 
 @SpringBootApplication(exclude = {
@@ -28,14 +27,9 @@ public class App extends SpringBootServletInitializer {
 			, MvcConfig.class
 			, PropertiesConfig.class
 			, ServletConfig.class
-			
+			, WebSecurity.class
 			, App.class
-			
-			, ResourceServerConfiguration.class
-			, AuthorizationServerConfiguration.class
     };
-
-    //
 	
 	@Override
     protected SpringApplicationBuilder configure(final SpringApplicationBuilder application) {
