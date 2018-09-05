@@ -1,5 +1,6 @@
 target
-bin
+RestAPI/?/
+RestAPI/bin
 .project
 .settings
 .classpath
