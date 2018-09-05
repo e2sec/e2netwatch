@@ -1,0 +1,6 @@
+target
+RestAPI/?/
+RestAPI/bin
+.project
+.settings
+.classpath

@@ -13,36 +13,31 @@
 # 
 #######################################################################
 
-FROM java:openjdk-8-jdk as build
+FROM openjdk:10.0.2
 
 ENV MAVEN_VERSION 3.3.9
 
-ARG VARIANT
-
 RUN mkdir -p /usr/share/maven \
   && curl -fsSL http://apache.osuosl.org/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz \
-    | tar -xzC /usr/share/maven --strip-components=1 \
+   | tar -xzC /usr/share/maven --strip-components=1 \
   && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
 
 ENV MAVEN_HOME /usr/share/maven
 
-ADD ./e2nwKite /tmp/middleware/e2nwKite
+ADD ./src /tmp/middleware/src
 
-WORKDIR /tmp/middleware/e2nwKite/e2nwKiteWebApp
+WORKDIR /tmp/middleware/src/RestAPI
 
-RUN /usr/bin/mvn -P$VARIANT package 
+RUN /usr/bin/mvn package 
 
+RUN wget https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/9.4.11.v20180605/jetty-distribution-9.4.11.v20180605.tar.gz \
+    && tar xzvf jetty-distribution-9.4.11.v20180605.tar.gz  \
+    && rm jetty-distribution-9.4.11.v20180605.tar.gz \
+    && mv jetty-distribution-9.4.11.v20180605/ /jetty/
 
-FROM jetty:alpine
-USER root
-RUN apk update \
-    && apk add --no-cache socat supervisor \
-    && mkdir -p /var/log/supervisor
+RUN cp /tmp/middleware/src/RestAPI/target/middleware.war /jetty/webapps/.
 
-COPY --from=build /tmp/middleware/e2nwKite/e2nwKiteWebApp/target/e2nwKiteWebApp.war /var/lib/jetty/webapps/.
+WORKDIR /jetty
 
-ADD ./filesystem /
+CMD java --add-modules java.xml.bind -jar start.jar
 
-EXPOSE 8080
-
-ENTRYPOINT ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
