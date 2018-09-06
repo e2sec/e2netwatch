@@ -1,41 +1,39 @@
-import { NgModule }      from '@angular/core';
-import { FormsModule } from "@angular/forms";
-import { BrowserModule } from '@angular/platform-browser';
-import { CollapseModule } from 'ng2-bootstrap/ng2-bootstrap';
-import { Ng2DatetimePickerModule } from 'ng2-datetime-picker';
+import { BrowserModule, Title } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
 
-/* App includes */
-import { AppComponent }  from './app.component';
-import { AppRoutingModule }  from './app.routing';
-import { NewsTickerModule, ReportsModule, HostReportsModule, HostInfoModule, SyslogModule, KibanaModule, GraphsModule, AQLrulesModule, LaraModule }  from './modules/index';
-import { SearchComponent, DashboardComponent, LoginComponent }  from './components/index';
-import { DashboardService, AuthenticationService, NewsTickerService } from './services/index';
-import { AuthGuard } from "./guards/auth.guard";
-
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { LoginComponent } from './login/login.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { AuthGuardService } from './services/auth-guard.service';
+import { PopoverModule } from 'ngx-bootstrap/popover';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+import { AuthService } from './services/auth.service';
+import { EffectsModule } from '@ngrx/effects';
+import { AuthEffects } from './store/effects/auth.effects';
+import { StoreModule } from '@ngrx/store';
+import { reducers } from './store/app.states';
 @NgModule({
-  imports: [
-    BrowserModule,
-    CollapseModule.forRoot(),
-    Ng2DatetimePickerModule,
-    FormsModule,
-    AppRoutingModule,
-    NewsTickerModule,
-    ReportsModule,
-    HostReportsModule,
-    HostInfoModule,
-    SyslogModule,
-    KibanaModule,
-    GraphsModule,
-    AQLrulesModule,
-    LaraModule
-  ],
   declarations: [
     AppComponent,
-    SearchComponent,
-    LoginComponent,
-    DashboardComponent
+    LoginComponent
   ],
-  providers: [ AuthGuard, AuthenticationService, DashboardService, NewsTickerService ],
-  bootstrap: [ AppComponent ]
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    AppRoutingModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    PopoverModule.forRoot(),
+    TooltipModule.forRoot(),
+    TabsModule.forRoot(),
+    StoreModule.forRoot(reducers, {}),
+    EffectsModule.forRoot([AuthEffects]),
+  ],
+  providers: [AuthService, AuthGuardService],
+  bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

@@ -1,0 +1,40 @@
+<main class="login">
+
+  <header class="justify-content-center align-items-center">
+    <div class="logo-holder text-center">
+      <img src="../../../../assets/logo.png" class="logo img-fluid" />
+    </div>
+  </header>
+  <form class="login-form" [formGroup]="loginForm" novalidate>
+    <div class="form-group">
+      <div class="form-label-group">
+        <label for="inputUser">Username</label>
+        <input type="text" id="username" name="username" class="form-control" formControlName="username" placeholder="Username"
+          required [ngClass]="{'is-invalid': submitted  && loginForm.controls.username.errors}">
+        <div class="invalid-feedback">
+          Username is required.
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="form-label-group">
+        <label for="inputPassword">Password</label>
+        <input type="password" id="password" name="password" class="form-control" formControlName="password"
+          placeholder="Password" required [ngClass]="{'is-invalid': submitted && loginForm.controls.password.errors}">
+        <div class="invalid-feedback">
+          Password is required.
+        </div>
+      </div>
+    </div>
+    <div *ngIf="errorMessage">
+      <div class="alert alert-danger" role="alert">
+        {{errorMessage}}
+      </div>
+    </div>
+    <div class="form-group">
+      <button class="btn btn-lg btn-e2n-primary btn-block" (click)="login()">Sign In</button>
+    </div>
+  </form>
+
+
+</main>

@@ -1,14 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-
-declare var $: any;
+import { Component } from '@angular/core';
 
 @Component({
-    moduleId: module.id,
-    selector: 'e2nw-app',
-    template: `<router-outlet></router-outlet>`
-    //templateUrl: 'app.component.html'
+  selector: 'e2nw-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.less']
 })
-export class AppComponent implements OnInit{
-
-    ngOnInit(): void {}
-}
+export class AppComponent {}

@@ -1,26 +1,17 @@
-#
-# Docker file to build the front end environment.
-#
-#######################################################################
-#
-FROM node:7.7-alpine
-#
-# Add the application
-#
+FROM node:8.11.3-alpine AS build
 
-# Create app directory
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Copy Node.js config and install dependencies
-COPY ./package.json /usr/src/app
+COPY package.json /app/
+
 RUN npm install
 
-# Copy all source files and run app
-COPY ./src /usr/src/app/src
-CMD [ "npm", "start" ]
+COPY ./ /app/
 
-#
-EXPOSE 80
-#
-#######################################################################
+RUN npm run build --prod --aot
+
+FROM nginx:1.15-alpine
+
+COPY --from=build /app/dist/e2Netwatch/ /usr/share/nginx/html
+
+COPY  ./nginx/default.conf /etc/nginx/conf.d/default.conf

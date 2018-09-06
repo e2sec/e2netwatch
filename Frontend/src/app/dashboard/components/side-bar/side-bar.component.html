@@ -1,0 +1,20 @@
+<nav class="nav">
+  <a class="e2n-nav-item-no-background" [routerLink]="['/']" routerLinkActive="active" >
+    <fa-icon icon="tachometer-alt" tooltip="Dashboard" placement="right" container="body" [isDisabled]="!collapseSidebar" [fixedWidth]="true"></fa-icon> Dashboard
+  </a>
+  <a class="e2n-nav-item-no-background" href="#">
+    <fa-icon icon="bars" tooltip="Menu item 1" placement="right" container="body" [isDisabled]="!collapseSidebar" [fixedWidth]="true"></fa-icon> Menu item 1
+  </a>
+  <a class="e2n-nav-item-no-background" href="#">
+    <fa-icon icon="bars" tooltip="Menu item 2" placement="right" container="body" [isDisabled]="!collapseSidebar" [fixedWidth]="true"></fa-icon>  Menu item 2
+  </a>
+  <a class="e2n-nav-item-no-background" href="#">
+    <fa-icon icon="bars" tooltip="Menu item 3" placement="right" container="body" [isDisabled]="!collapseSidebar" [fixedWidth]="true"></fa-icon> Menu item 3
+  </a>
+</nav>
+<div class="side-bar-footer">
+  <div class="collapse-icon" (click)="toggleSidebar()">
+    <fa-icon icon="angle-double-left" *ngIf="!collapseSidebar" tooltip="Collapse sidebar" placement="right" container="body" [fixedWidth]="true"></fa-icon>
+    <fa-icon icon="angle-double-right" *ngIf="collapseSidebar" tooltip="Expand sidebar" placement="right" container="body" [fixedWidth]="true"></fa-icon>
+  </div>
+</div>
