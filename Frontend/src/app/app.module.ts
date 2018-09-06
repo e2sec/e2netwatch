@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthGuardService } from './services/auth-guard.service';
 import { PopoverModule } from 'ngx-bootstrap/popover';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
@@ -16,6 +16,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './store/effects/auth.effects';
 import { StoreModule } from '@ngrx/store';
 import { reducers } from './store/app.states';
+import { ErrorInterceptor } from './interceptors/error.interceptor';
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,7 +34,11 @@ import { reducers } from './store/app.states';
     StoreModule.forRoot(reducers, {}),
     EffectsModule.forRoot([AuthEffects]),
   ],
-  providers: [AuthService, AuthGuardService],
+  providers: [
+    AuthService,
+    AuthGuardService,
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
