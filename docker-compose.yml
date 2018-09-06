@@ -20,6 +20,7 @@ services:
       - e2netwatch-net
     volumes:
       - ./Capture/filesystem/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - /etc/localtime:/etc/localtime:ro
 
 
   backend:
@@ -32,6 +33,9 @@ services:
       - elasticsearch
     networks:
       - e2netwatch-net
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+
 
       
   middleware:
@@ -46,6 +50,12 @@ services:
       - envTarget=stage
     ports:
       - "8080:8080"
+    expose:
+      - "8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.proxy
+      - ReportsData:/var/lib/jetty/src/files/reports
+      - /etc/localtime:/etc/localtime:ro
     networks:
       - e2netwatch-net
   
@@ -61,6 +71,9 @@ services:
       - "80:80"
     networks:
       - e2netwatch-net
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+
     
     
   elasticsearch:
@@ -85,6 +98,7 @@ services:
       - IPC_LOCK
     volumes:
       - ElasticData:/usr/share/elasticsearch/data
+      - /etc/localtime:/etc/localtime:ro
     networks:
       - e2netwatch-net
   
@@ -104,6 +118,8 @@ services:
       ELASTICSEARCH_URL: http://e2nwelasticsearch:9200
     networks:
       - e2netwatch-net
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
 
     
   mysql:
@@ -118,6 +134,7 @@ services:
     volumes:
       - MysqlData:/var/lib/mysql
       - MysqlBackupData:/backup
+      - /etc/localtime:/etc/localtime:ro
     networks:
       - e2netwatch-net
 
@@ -130,11 +147,19 @@ services:
       - ALLOW_ANONYMOUS_LOGIN=yes
     networks:
       - e2netwatch-net
+    expose:
+       - "2181"
+    networks:
+      - e2netwatch-net
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
 
+    
+>>>>>>> Added norikra and changed timzone in compose
   kafka:
     build:
       context: ./Kafka
-    ports:
+    expose:
      - "9092"
     environment:
 
@@ -169,9 +194,26 @@ services:
       - NIFI_ELECTION_MAX_WAIT=1 min
     volumes:
       - NiFiconf:/opt/nifi/nifi-current/conf/:rw
+      - /var/run/docker.sock:/var/run/docker.sock:ro  
+      - Norikra:/var/tmp/norikra:rw
+      - /etc/localtime:/etc/localtime:ro
     networks:
       - e2netwatch-net
 
+  norikra:
+    build:
+      context: ./norikra
+    image: e2nw/norikra
+    container_name: e2nwnorikra
+    ports:
+      - "26578:26578"
+      - "26571:26571"
+    volumes:
+      - Norikra:/var/tmp/norikra:rw
+      - /etc/localtime:/etc/localtime:ro
+    command: "norikra start --stats /var/tmp/norikra/stats.json -l /var/tmp/norikra"
+    networks:
+      - e2netwatch-net
 
 volumes:
   ElasticData:
@@ -179,6 +221,8 @@ volumes:
   MysqlData:
   MysqlBackupData:
   NiFiconf:
+  ReportsData:
+  Norikra:
 
 networks:
   e2netwatch-net:
