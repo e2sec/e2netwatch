@@ -20,7 +20,6 @@ export class UserProfileIconComponent implements OnInit {
   profile: UserProfile;
   ngOnInit() {
     this.getState.subscribe((state: AuthState) => {
-      console.log(state);
       this.profile = state.user;
     });
   }

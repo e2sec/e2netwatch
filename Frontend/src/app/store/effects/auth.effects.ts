@@ -24,11 +24,9 @@ export class AuthEffects {
             return this.authService.login(payload)
                 .pipe(map(
                     (user) => {
-                        console.log(user);
-                        return new LoginSuccess({ token: user.token, email: payload.email });
+                        return new LoginSuccess({ token: user.token, email: payload.username });
                     }),
                     catchError((error) => {
-                        console.log(error);
                         return of(new LoginFailure({ error: error }));
                     }));
         }));

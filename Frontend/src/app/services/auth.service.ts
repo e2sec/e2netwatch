@@ -6,6 +6,7 @@ import { Router } from '../../../node_modules/@angular/router';
 import { Observable } from '../../../node_modules/rxjs';
 import { UserProfileService } from './user-profile.service';
 import { UserProfile } from '../models/user-profile';
+import * as jwt_decode from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -15,26 +16,32 @@ export class AuthService {
   constructor(private httpClient: HttpClient, private router: Router, private userProfileService: UserProfileService) { }
 
   login(loginData: LoginModel): Observable<any> {
-    // TODO: Make request to BE
-    /* this.httpClient.get('/api/login', { params: { username: username, password: password } }).subscribe((res) => {
-       const jwt = res;
-       console.log(jwt);
-       window.localStorage['jwtToken'] = res;
-     }, (err) => {
-       console.error(err);
-     });*/
-    // window.localStorage['token'] = loginData.username + '-' + loginData.password;
-    /*this.userProfileService.setUserProfile({
-      username: 'Nikola',
-      avatarUrl: 'https://www.gravatar.com/avatar/78c63138f5a54617819e47926b5977d7'
-    });
-*/
     return this.httpClient.post<LoginModel>('http://localhost:8080/middleware/api/auth/login', loginData);
   }
 
   isAuthenticated(): boolean {
-    // TODO: Check if token has expired
     const token = localStorage.getItem('token');
+    if (this.isTokenExpired(token)) { return false; }
+
     return token ? true : false;
+  }
+
+  getTokenExpirationDate(token: string): Date {
+    const decoded = jwt_decode(token);
+
+    if (decoded.exp === undefined) { return null; }
+
+    const date = new Date(0);
+    date.setUTCSeconds(decoded.exp);
+    return date;
+  }
+
+  isTokenExpired(token?: string): boolean {
+    if (!token) { token = localStorage.getItem('token'); }
+    if (!token) { return true; }
+
+    const date = this.getTokenExpirationDate(token);
+    if (date === undefined) { return false; }
+    return !(date.valueOf() > new Date().valueOf());
   }
 }
