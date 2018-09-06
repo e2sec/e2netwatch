@@ -20,6 +20,10 @@ export class AuthService {
     return this.httpClient.post<LoginModel>(`${environment.restApiUrl}middleware/api/auth/login`, loginData);
   }
 
+  getToken(): string {
+    return localStorage.getItem('token');
+  }
+
   isAuthenticated(): boolean {
     const token = localStorage.getItem('token');
     if (!token) { return false; }
