@@ -42,8 +42,8 @@ services:
     depends_on:
       - mysql
       - elasticsearch
-    expose:
-      - "8080"
+    ports:
+      - "8080:8080"
     environment:
       - envTarget=stage
     networks:
