@@ -128,6 +128,8 @@ services:
       - "2181:2181"
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
+    networks:
+      - e2netwatch-net
 
   kafka:
     build:
@@ -144,6 +146,8 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - e2netwatch-net
 
   nifi:
     image: e2nw/nifi
@@ -165,6 +169,8 @@ services:
       - NIFI_ELECTION_MAX_WAIT=1 min
     volumes:
       - NiFiconf:/opt/nifi/nifi-current/conf/:rw
+    networks:
+      - e2netwatch-net
 
 
 volumes:
