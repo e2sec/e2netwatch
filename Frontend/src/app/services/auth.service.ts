@@ -7,6 +7,7 @@ import { Observable } from '../../../node_modules/rxjs';
 import { UserProfileService } from './user-profile.service';
 import { UserProfile } from '../models/user-profile';
 import * as jwt_decode from 'jwt-decode';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -16,14 +17,15 @@ export class AuthService {
   constructor(private httpClient: HttpClient, private router: Router, private userProfileService: UserProfileService) { }
 
   login(loginData: LoginModel): Observable<any> {
-    return this.httpClient.post<LoginModel>('http://localhost:8080/middleware/api/auth/login', loginData);
+    return this.httpClient.post<LoginModel>(`${environment.restApiUrl}middleware/api/auth/login`, loginData);
   }
 
   isAuthenticated(): boolean {
     const token = localStorage.getItem('token');
+    if (!token) { return false; }
     if (this.isTokenExpired(token)) { return false; }
 
-    return token ? true : false;
+    return true;
   }
 
   getTokenExpirationDate(token: string): Date {
