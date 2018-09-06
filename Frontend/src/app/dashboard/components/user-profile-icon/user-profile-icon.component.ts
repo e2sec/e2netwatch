@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { UserProfile } from '../../../models/user-profile';
-import { AppState, selectAuthState } from '../../../store/app.states';
+import { AppState, selectProfileState } from '../../../store/app.states';
 import { Store } from '@ngrx/store';
 import { Logout } from '../../../store/actions/auth.actions';
 import { Observable } from 'rxjs';
-import { AuthState } from '../../../store/reducers/auth.reducers';
+import { ProfileState } from '../../../store/reducers/profile.reducers';
+import { LoadProfile } from '../../../store/actions/profile.actions';
 
 @Component({
   selector: 'e2nw-user-profile-icon',
@@ -15,12 +16,16 @@ export class UserProfileIconComponent implements OnInit {
   getState: Observable<any>;
   constructor(
     private store: Store<AppState>) {
-    this.getState = this.store.select(selectAuthState);
+    this.getState = this.store.select(selectProfileState);
   }
   profile: UserProfile;
   ngOnInit() {
-    this.getState.subscribe((state: AuthState) => {
-      this.profile = state.user;
+    this.getState.subscribe((state: ProfileState) => {
+      if (!state.profile) {
+        this.store.dispatch(new LoadProfile());
+      } else {
+        this.profile = state.profile;
+      }
     });
   }
 

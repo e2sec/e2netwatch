@@ -14,3 +14,4 @@ export const reducers = {
 };
 
 export const selectAuthState = createFeatureSelector<AppState>('auth');
+export const selectProfileState = createFeatureSelector<AppState>('profile');

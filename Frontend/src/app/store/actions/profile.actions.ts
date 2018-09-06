@@ -11,7 +11,7 @@ export enum UserProfileActionTypes {
 export class LoadProfile implements Action {
     readonly type = UserProfileActionTypes.LOAD_PROFILE;
 
-    constructor(public payload: UserProfile) { }
+    constructor() { }
 }
 
 export class UpdateProfile implements Action {
