@@ -19,6 +19,7 @@ import { reducers } from './store/app.states';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 
+import { ApiService } from './services/api.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -39,6 +40,7 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
   providers: [
     AuthService,
     AuthGuardService,
+    ApiService,
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
   ],
