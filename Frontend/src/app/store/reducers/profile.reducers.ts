@@ -21,8 +21,13 @@ export function reducer(state: ProfileState = initialState, action: ProfileActio
             };
         case UserProfileActionTypes.LOAD_FAILURE:
             return {
+                // TODO:Remove dummy data
                 ...state,
-                profile: null,
+                profile: {
+                    username: 'e2Security Admin',
+                    email: 'admin@e2ecurity.de',
+                    avatarUrl: 'https://ui-avatars.com/api/?name=e2Security+Admin'
+                },
                 errorMessage: 'Failed to load user profile'
             };
         default:

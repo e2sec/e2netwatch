@@ -18,6 +18,7 @@ export class ProfileEffects {
     @Effect()
     LoadProfile: Observable<any> = this.actions.ofType(UserProfileActionTypes.LOAD_PROFILE)
         .pipe(switchMap(() => {
+            // TODO:Fix url when MW makes it avaliable
             return this.apiService.get('profile')
                 .pipe(
                     map((profileData) => {
