@@ -15,11 +15,11 @@ export class ApiService {
   }
 
   post(path: string, body: Object = {}): Observable<any> {
-    return this.http.post(`${environment.restApiUrl}${path}`, JSON.stringify(body), { headers: this.setHeaders() });
+    return this.http.post(`${environment.restApiUrl}${path}`, JSON.stringify(body));
   }
 
   put(path: string, body: Object = {}): Observable<any> {
-    return this.http.put(`${environment.restApiUrl}${path}`, JSON.stringify(body), { headers: this.setHeaders() });
+    return this.http.put(`${environment.restApiUrl}${path}`, JSON.stringify(body));
   }
 
   delete(path: string): Observable<any> {
