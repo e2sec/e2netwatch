@@ -21,7 +21,8 @@
 package de.e2security.e2netwatch.business.manager;
 
 import de.e2security.e2netwatch.model.JsonReturnData;
-import de.e2security.e2netwatch.usermanagement.model.menu.MenuReturnResult;
+import de.e2security.e2netwatch.rest.dto.MenuReturnResult;
+import de.e2security.e2netwatch.rest.dto.UserReturnResultData;
 
 /**
  * UserManagement manager for managing User requests and data
@@ -37,5 +38,12 @@ public interface UserManagementManager {
 	 * @return the Menu JSON data
 	 */
 	JsonReturnData<MenuReturnResult> getMenuForCurrentUser();
+	
+	/**
+	 * Get current user data
+	 *
+	 * @return the current user data
+	 */
+	JsonReturnData<UserReturnResultData> getCurrentUser();
 	
 }

@@ -30,9 +30,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import de.e2security.e2netwatch.rest.dto.MenuReturnResult;
 import de.e2security.e2netwatch.usermanagement.model.MenuComponent;
 import de.e2security.e2netwatch.usermanagement.model.ProfileMenu;
-import de.e2security.e2netwatch.usermanagement.model.menu.MenuReturnResult;
 
 /**
  * Tests the MenuReturnResult.

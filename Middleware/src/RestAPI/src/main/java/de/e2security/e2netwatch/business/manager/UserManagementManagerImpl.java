@@ -21,20 +21,24 @@
 package de.e2security.e2netwatch.business.manager;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import de.e2security.e2netwatch.model.JsonReturnData;
+import de.e2security.e2netwatch.rest.dto.MenuReturnResult;
+import de.e2security.e2netwatch.rest.dto.UserReturnResultData;
 import de.e2security.e2netwatch.usermanagement.dao.ProfileMenuDAO;
 import de.e2security.e2netwatch.usermanagement.dao.ProfilePreferenceDAO;
 import de.e2security.e2netwatch.usermanagement.dao.UserDAO;
 import de.e2security.e2netwatch.usermanagement.helper.RequestMiner;
+import de.e2security.e2netwatch.usermanagement.model.Authority;
 import de.e2security.e2netwatch.usermanagement.model.ProfileMenu;
 import de.e2security.e2netwatch.usermanagement.model.ProfilePreference;
 import de.e2security.e2netwatch.usermanagement.model.User;
 import de.e2security.e2netwatch.usermanagement.model.UserGroup;
-import de.e2security.e2netwatch.usermanagement.model.menu.MenuReturnResult;
 
 
 /**
@@ -122,6 +126,26 @@ public class UserManagementManagerImpl implements UserManagementManager {
 		}
 		
 		return menuReturnResult;
+	}
+
+	@Override
+	public JsonReturnData<UserReturnResultData> getCurrentUser() {
+		// Get current user's username
+		String username = requestMiner.getCurrentUsername();
+		
+		// Getting the User
+		User user = userDAO.getByUsername(username);
+		
+		final Set<Authority> authoritiesOfUser = user.getAuthorities();
+        final Set<UserGroup> userGroupsOfUser = user.getUserGroups();
+        for (final UserGroup userGroup : userGroupsOfUser) {
+        	authoritiesOfUser.addAll(userGroup.getAuthorities());
+        }
+        List<String> listOfAuthorityNames = authoritiesOfUser.stream().map(Authority::getName).collect(Collectors.toList());
+		
+		UserReturnResultData userReturnResultData = new UserReturnResultData(user, listOfAuthorityNames);
+		
+		return new JsonReturnData<UserReturnResultData>(userReturnResultData);
 	}
 
 }
