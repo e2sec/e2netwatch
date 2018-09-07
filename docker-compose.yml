@@ -155,7 +155,6 @@ services:
       - /etc/localtime:/etc/localtime:ro
 
     
->>>>>>> Added norikra and changed timzone in compose
   kafka:
     build:
       context: ./Kafka
@@ -171,6 +170,7 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
     networks:
       - e2netwatch-net
 
@@ -195,7 +195,6 @@ services:
     volumes:
       - NiFiconf:/opt/nifi/nifi-current/conf/:rw
       - /var/run/docker.sock:/var/run/docker.sock:ro  
-      - Norikra:/var/tmp/norikra:rw
       - /etc/localtime:/etc/localtime:ro
     networks:
       - e2netwatch-net
