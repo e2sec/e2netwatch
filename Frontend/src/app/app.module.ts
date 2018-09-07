@@ -19,6 +19,8 @@ import { reducers } from './store/app.states';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 
+import { ApiService } from './services/api.service';
+import { ProfileEffects } from './store/effects/profile.effects';
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,11 +36,12 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
     TooltipModule.forRoot(),
     TabsModule.forRoot(),
     StoreModule.forRoot(reducers, {}),
-    EffectsModule.forRoot([AuthEffects]),
+    EffectsModule.forRoot([AuthEffects, ProfileEffects]),
   ],
   providers: [
     AuthService,
     AuthGuardService,
+    ApiService,
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
   ],
