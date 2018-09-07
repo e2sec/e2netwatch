@@ -27,7 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.e2security.e2netwatch.business.manager.UserManagementManager;
 import de.e2security.e2netwatch.model.JsonReturnData;
-import de.e2security.e2netwatch.usermanagement.model.menu.MenuReturnResult;
+import de.e2security.e2netwatch.rest.dto.MenuReturnResult;
+import de.e2security.e2netwatch.rest.dto.UserReturnResultData;
 import de.e2security.e2netwatch.utils.Mappings;
 
 /**
@@ -37,7 +38,7 @@ import de.e2security.e2netwatch.utils.Mappings;
  *
  */
 @RestController
-@RequestMapping(value = Mappings.USER_MANAGEMENT)
+@RequestMapping(value = Mappings.USERS)
 public class UserManagementController {
 	
 	@Autowired
@@ -52,6 +53,17 @@ public class UserManagementController {
 	public JsonReturnData<MenuReturnResult> getMenuForCurrentUser() {
 		JsonReturnData<MenuReturnResult> menuResult = manager.getMenuForCurrentUser();
 		return menuResult;
+	}
+	
+	/**
+	 * Get current user
+	 * 
+	 * @return current user as JSON
+	 */
+	@RequestMapping(value = "/getCurrent", method = RequestMethod.GET, headers = "Accept=application/json")
+	public JsonReturnData<UserReturnResultData> getCurrentUser() {
+		JsonReturnData<UserReturnResultData> userResult = manager.getCurrentUser();
+		return userResult;
 	}
 	
 }

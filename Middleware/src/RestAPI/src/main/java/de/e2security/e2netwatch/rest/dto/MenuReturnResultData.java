@@ -18,7 +18,7 @@
 */
 
 
-package de.e2security.e2netwatch.usermanagement.model.menu;
+package de.e2security.e2netwatch.rest.dto;
 
 import java.util.ArrayList;
 import java.util.List;

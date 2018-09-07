@@ -32,7 +32,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import de.e2security.e2netwatch.business.manager.UserManagementManager;
 import de.e2security.e2netwatch.model.JsonReturnData;
-import de.e2security.e2netwatch.usermanagement.model.menu.MenuReturnResult;
+import de.e2security.e2netwatch.rest.dto.MenuReturnResult;
 
 /**
  * Tests the UserManagementManager.
