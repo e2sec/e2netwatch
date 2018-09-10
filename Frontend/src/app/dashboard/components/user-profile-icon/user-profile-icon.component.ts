@@ -21,7 +21,7 @@ export class UserProfileIconComponent implements OnInit {
   profile: UserProfile;
   ngOnInit() {
     this.getState.subscribe((state: ProfileState) => {
-      if (!state.profile) {
+      if (!state.profile && !state.errorMessage) {
         this.store.dispatch(new LoadProfile());
       } else {
         this.profile = state.profile;

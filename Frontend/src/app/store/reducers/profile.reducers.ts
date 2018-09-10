@@ -15,19 +15,18 @@ export function reducer(state: ProfileState = initialState, action: ProfileActio
     switch (action.type) {
         case UserProfileActionTypes.LOAD_SUCCESS:
             return {
+                // TODO:Remove fake avatar url
                 ...state,
-                profile: action.payload.profile,
+                profile: {
+                    ...action.payload.profile,
+                    avatarUrl: 'https://ui-avatars.com/api/?name=e2Security+Admin'
+                },
                 errorMessage: null
             };
         case UserProfileActionTypes.LOAD_FAILURE:
             return {
-                // TODO:Remove dummy data
                 ...state,
-                profile: {
-                    username: 'e2Security Admin',
-                    email: 'admin@e2ecurity.de',
-                    avatarUrl: 'https://ui-avatars.com/api/?name=e2Security+Admin'
-                },
+                profile: null,
                 errorMessage: 'Failed to load user profile'
             };
         default:

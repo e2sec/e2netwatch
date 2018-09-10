@@ -18,11 +18,10 @@ export class ProfileEffects {
     @Effect()
     LoadProfile: Observable<any> = this.actions.ofType(UserProfileActionTypes.LOAD_PROFILE)
         .pipe(switchMap(() => {
-            // TODO:Fix url when MW makes it avaliable
-            return this.apiService.get('profile')
+            return this.apiService.get('middleware/api/um/users/getCurrent')
                 .pipe(
-                    map((profileData) => {
-                        return new LoadSuccess({ profile: profileData });
+                    map((response) => {
+                        return new LoadSuccess({ profile: response.content });
                     }),
                     catchError((error) => {
                         return of(new LoadFailure({ error: error }));
