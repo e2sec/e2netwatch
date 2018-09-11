@@ -39,7 +39,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
     StoreModule.forRoot(reducers, {}),
     EffectsModule.forRoot([AuthEffects, ProfileEffects]),
     StoreDevtoolsModule.instrument({
-      maxAge: 5
+      maxAge: 10
     })
   ],
   providers: [
