@@ -1,7 +1,7 @@
 <header class="page-cover">
   <div class="text-center">
-    <img src="https://www.gravatar.com/avatar/78c63138f5a54617819e47926b5977d7" alt="User Avatar">
-    <h2 class="h4 mt-3 mb-0">Nikola Milicic </h2>
+    <img [src]="profile?.avatarUrl" alt="User Avatar" *ngIf="profile?.avatarUrl">
+    <h2 class="h4 mt-3 mb-0">{{profile?.firstName}} {{profile?.lastName}}</h2>
     <p>Administrator</p>
   </div>
 </header>

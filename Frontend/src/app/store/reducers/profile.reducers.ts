@@ -14,12 +14,15 @@ export const initialState: ProfileState = {
 export function reducer(state: ProfileState = initialState, action: ProfileActions) {
     switch (action.type) {
         case UserProfileActionTypes.LOAD_SUCCESS:
+            const avatarUrl = 'https://ui-avatars.com/api/?name=' +
+                action.payload.profile.firstName + '+' +
+                action.payload.profile.lastName;
             return {
                 // TODO:Remove fake avatar url
                 ...state,
                 profile: {
                     ...action.payload.profile,
-                    avatarUrl: 'https://ui-avatars.com/api/?name=e2Security+Admin'
+                    avatarUrl: avatarUrl
                 },
                 errorMessage: null
             };

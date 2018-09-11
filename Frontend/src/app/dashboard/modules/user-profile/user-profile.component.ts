@@ -1,5 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { AppState, selectProfileState } from '../../../store/app.states';
+import { ProfileState } from '../../../store/reducers/profile.reducers';
+import { LoadProfile } from '../../../store/actions/profile.actions';
+import { UserProfile } from '../../../models/user-profile';
 
 @Component({
   selector: 'e2nw-user-profile',
@@ -7,11 +13,22 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./user-profile.component.less']
 })
 export class UserProfileComponent implements OnInit {
-
-  constructor(private title: Title) { }
+  getState: Observable<any>;
+  profile: UserProfile;
+  constructor(private title: Title, private store: Store<AppState>) {
+    this.getState = this.store.select(selectProfileState);
+  }
 
   ngOnInit() {
     this.title.setTitle('Profile');
+    this.getState.subscribe((state: ProfileState) => {
+      if (state.profile === null && state.errorMessage === null) {
+        this.store.dispatch(new LoadProfile());
+      } else {
+        this.profile = state.profile;
+      }
+    });
+
   }
 
 }
