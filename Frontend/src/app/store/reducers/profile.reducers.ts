@@ -30,7 +30,7 @@ export function reducer(state: ProfileState = initialState, action: ProfileActio
             return {
                 ...state,
                 profile: null,
-                errorMessage: 'Failed to load user profile'
+                errorMessage: 'Failed to load user profile.'
             };
         default:
             return state;
