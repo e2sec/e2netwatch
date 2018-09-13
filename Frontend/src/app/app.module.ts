@@ -21,6 +21,7 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
 
 import { ApiService } from './services/api.service';
 import { ProfileEffects } from './store/effects/profile.effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,6 +38,9 @@ import { ProfileEffects } from './store/effects/profile.effects';
     TabsModule.forRoot(),
     StoreModule.forRoot(reducers, {}),
     EffectsModule.forRoot([AuthEffects, ProfileEffects]),
+    StoreDevtoolsModule.instrument({
+      maxAge: 10
+    })
   ],
   providers: [
     AuthService,

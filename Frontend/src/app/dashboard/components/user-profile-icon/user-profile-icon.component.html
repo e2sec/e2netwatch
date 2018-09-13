@@ -1,7 +1,7 @@
 <div class="profile-holder" [popover]="popTemplate" placement="bottom" [outsideClick]="true" #pop="bs-popover">
-  <img [src]="profile?.avatarUrl" class="thumbnail rounded-circle avatar" alt="avatar" height="40px">
+  <img [src]="profile?.avatarUrl" class="thumbnail rounded-circle avatar" alt="avatar" height="40px" *ngIf="profile?.avatarUrl">
   <div class="username">
-    {{profile?.username}}
+    {{profile?.firstName}} {{profile?.lastName}}
   </div>
 </div>
 
