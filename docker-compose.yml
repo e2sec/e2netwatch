@@ -194,7 +194,7 @@ services:
       - NIFI_ZK_CONNECT_STRING=zookeeper:2181
       - NIFI_ELECTION_MAX_WAIT=1 min
     volumes:
-      - NiFiconf:/opt/nifi/nifi-current/conf/:rw
+      - ./nifi/conf:/opt/nifi/nifi-current/conf/:rw
       - /var/run/docker.sock:/var/run/docker.sock:ro  
       - /etc/localtime:/etc/localtime:ro
     networks:
