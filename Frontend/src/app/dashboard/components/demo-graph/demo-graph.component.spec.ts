@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DemoGraphComponent } from './demo-graph.component';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('DemoGraphComponent', () => {
   let component: DemoGraphComponent;
@@ -8,9 +9,12 @@ describe('DemoGraphComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DemoGraphComponent ]
+      imports: [
+        HttpClientModule,
+      ],
+      declarations: [DemoGraphComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
