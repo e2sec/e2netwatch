@@ -2,12 +2,20 @@ import { browser, by, element } from 'protractor';
 
 export class LoginPage {
     private credentials = {
-        username: 'e2nw',
-        password: 'test'
+        username: 'admin',
+        password: 'admin'
     };
 
     navigateTo() {
         return browser.get('/login');
+    }
+
+    getLoginFormClasses() {
+        return element(by.className('login-form')).getAttribute('class');
+    }
+
+    getErrorMessage() {
+        return element(by.id('errorMessage')).getText();
     }
 
     fillCredentials(credentias: any = this.credentials) {

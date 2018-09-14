@@ -3,6 +3,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { UserProfileComponent } from './user-profile.component';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { Component } from '@angular/core';
+import { StoreModule } from '@ngrx/store';
+import { reducers } from '../../../store/app.states';
 
 describe('UserProfileComponent', () => {
   let component: UserProfileComponent;
@@ -12,10 +14,13 @@ describe('UserProfileComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [TabsModule.forRoot()],
-      declarations: [ UserProfileComponent, AccountSettingsStubComponent ]
+      imports: [
+        TabsModule.forRoot(),
+        StoreModule.forRoot(reducers, {}),
+      ],
+      declarations: [UserProfileComponent, AccountSettingsStubComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
