@@ -54,7 +54,6 @@ services:
     expose:
       - "8080"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.proxy
       - ReportsData:/var/lib/jetty/src/files/reports
       - /etc/localtime:/etc/localtime:ro
     networks:
@@ -173,7 +172,6 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_CREATE_TOPICS: "syslog:1:1, netflow:1:1, nf_raw:1:1"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/localtime:/etc/localtime:ro
     networks:
       - e2netwatch-net
@@ -198,7 +196,6 @@ services:
       - NIFI_ELECTION_MAX_WAIT=1 min
     volumes:
       - ./nifi/conf:/opt/nifi/nifi-current/conf/:rw
-      - /var/run/docker.sock:/var/run/docker.sock:ro  
       - /etc/localtime:/etc/localtime:ro
     networks:
       - e2netwatch-net
