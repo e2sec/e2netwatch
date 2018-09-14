@@ -24,21 +24,6 @@ services:
       - /etc/localtime:/etc/localtime:ro
 
 
-  backend:
-    build: 
-      context: ./Capture
-    image: e2nw/backend
-    container_name: e2nwbackend
-    depends_on:
-      - mysql
-      - elasticsearch
-    networks:
-      - e2netwatch-net
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-
-
-      
   middleware:
     build:
       context: ./Middleware
