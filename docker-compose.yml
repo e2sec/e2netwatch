@@ -73,7 +73,6 @@ services:
       - e2netwatch-net
     volumes:
       - /etc/localtime:/etc/localtime:ro
-
     
     
   elasticsearch:
