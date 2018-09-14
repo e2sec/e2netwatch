@@ -5,6 +5,7 @@
 version: '3.6'
 
 services:
+
   capture:
     build:
       context: ./Capture
@@ -122,6 +123,7 @@ services:
     networks:
       - e2netwatch-net
 
+
   zookeeper:
     image: wurstmeister/zookeeper
     container_name: zookeeper
@@ -136,14 +138,13 @@ services:
     networks:
       - e2netwatch-net
 
-    
+
   kafka:
     build:
       context: ./Kafka
     expose:
      - "9092"
     environment:
-
       # Kafka advertised listener MUST be defined in this way 
       # for us to able to skale kafka.
       # TODO: Understand the process more and add more env variables
@@ -157,6 +158,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
     networks:
       - e2netwatch-net
+
 
   nifi:
     image: e2nw/nifi
@@ -182,6 +184,7 @@ services:
     networks:
       - e2netwatch-net
 
+
   norikra:
     build:
       context: ./norikra
@@ -196,6 +199,7 @@ services:
     command: "norikra start --stats /var/tmp/norikra/stats.json -l /var/tmp/norikra"
     networks:
       - e2netwatch-net
+
 
 volumes:
   ElasticData:
