@@ -129,14 +129,12 @@ services:
       - "2181:2181"
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
-    networks:
-      - e2netwatch-net
     expose:
        - "2181"
-    networks:
-      - e2netwatch-net
     volumes:
       - /etc/localtime:/etc/localtime:ro
+    networks:
+      - e2netwatch-net
 
     
   kafka:
