@@ -199,10 +199,8 @@ services:
 
 volumes:
   ElasticData:
-  CaptureData:
   MysqlData:
   MysqlBackupData:
-  NiFiconf:
   ReportsData:
   Norikra:
 
