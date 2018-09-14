@@ -1,0 +1,9 @@
+http.host: "0.0.0.0"
+xpack.monitoring.elasticsearch.url: http://elasticsearch:9200
+xpack.monitoring.enabled: true
+
+# name of the logstash node
+node.name: "e2ingest-01"
+
+config.reload.automatic: true
+config.reload.interval: 15s

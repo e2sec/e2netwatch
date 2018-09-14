@@ -20,6 +20,7 @@ services:
       - e2netwatch-net
     volumes:
       - ./Capture/filesystem/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - ./Capture/filesystem/logstash.yml:/usr/share/logstash/config/logstash.yml
       - /etc/localtime:/etc/localtime:ro
 
 
