@@ -167,7 +167,9 @@ services:
       # for us to able to skale kafka.
       # TODO: Understand the process more and add more env variables
       KAFKA_LISTENERS: PLAINTEXT://:9092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092 
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ADVERTISED_PORT: 9092
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_CREATE_TOPICS: "syslog:1:1, netflow:1:1, nf_raw:1:1"
     volumes:
