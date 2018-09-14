@@ -1,18 +1,34 @@
 import { LoginPage } from './login.po';
-import { DashboardPage } from '../dashboard/dashboard.po';
+import { browser } from 'protractor';
 
-describe('workspace-project App', () => {
+describe('Login page', () => {
   let loginPage: LoginPage;
-  let dashboardPage: DashboardPage;
 
   beforeEach(() => {
     loginPage = new LoginPage();
-    dashboardPage = new DashboardPage();
   });
 
-  it('when login is successful — he should redirect to dashboard page', () => {
+  it('when empty username - form should be invalid', () => {
+    loginPage.navigateTo();
+    loginPage.fillCredentials({ username: '', password: 'password' });
+    expect(loginPage.getLoginFormClasses()).toContain('ng-invalid');
+  });
+
+  it('when empty password - form should be invalid', () => {
+    loginPage.navigateTo();
+    loginPage.fillCredentials({ username: 'admin', password: '' });
+    expect(loginPage.getLoginFormClasses()).toContain('ng-invalid');
+  });
+
+  it('when login failed — should show error message', () => {
+    loginPage.navigateTo();
+    loginPage.fillCredentials({ username: 'wrongUsername', password: 'password' });
+    expect(loginPage.getErrorMessage()).toEqual('Incorect username or password.');
+  });
+
+  it('when login is successful — should redirect to dashboard page', () => {
     loginPage.navigateTo();
     loginPage.fillCredentials();
-    expect(dashboardPage.getTitle()).toEqual('Dashboard');
+    expect(browser.getTitle()).toEqual('Dashboard');
   });
 });
