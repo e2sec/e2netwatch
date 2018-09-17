@@ -8,7 +8,7 @@ RUN npm install
 
 COPY ./ /app/
 
-RUN npm run build --prod --aot
+RUN npm run build:prod
 
 FROM nginx:1.15-alpine
 
