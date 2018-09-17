@@ -66,7 +66,9 @@ To shut down the system, shut down all containers using docker-compose:
 # Usage
 
 After the start of the e2netwatch containers, you are able to access the web frontend of the e2netwatch project. Go to you Browser and type in the IP address of your server. From this interface most of the functions are available.
+
 If you want to access the kibana webinterface, go to your Browser and type in http://<e2netwatch_host>:5601.
+
 To access the NiFi web interface, go to http://<e2netwatch_host>:8090.
 
 
