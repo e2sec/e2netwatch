@@ -5,6 +5,7 @@
 version: '3.6'
 
 services:
+
   capture:
     build:
       context: ./Capture
@@ -20,24 +21,10 @@ services:
       - e2netwatch-net
     volumes:
       - ./Capture/filesystem/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - ./Capture/filesystem/logstash.yml:/usr/share/logstash/config/logstash.yml
       - /etc/localtime:/etc/localtime:ro
 
 
-  backend:
-    build: 
-      context: ./Capture
-    image: e2nw/backend
-    container_name: e2nwbackend
-    depends_on:
-      - mysql
-      - elasticsearch
-    networks:
-      - e2netwatch-net
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-
-
-      
   middleware:
     build:
       context: ./Middleware
@@ -53,7 +40,6 @@ services:
     expose:
       - "8080"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.proxy
       - ReportsData:/var/lib/jetty/src/files/reports
       - /etc/localtime:/etc/localtime:ro
     networks:
@@ -73,7 +59,6 @@ services:
       - e2netwatch-net
     volumes:
       - /etc/localtime:/etc/localtime:ro
-
     
     
   elasticsearch:
@@ -138,6 +123,7 @@ services:
     networks:
       - e2netwatch-net
 
+
   zookeeper:
     image: wurstmeister/zookeeper
     container_name: zookeeper
@@ -145,34 +131,34 @@ services:
       - "2181:2181"
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
-    networks:
-      - e2netwatch-net
     expose:
        - "2181"
-    networks:
-      - e2netwatch-net
     volumes:
       - /etc/localtime:/etc/localtime:ro
+    networks:
+      - e2netwatch-net
 
-    
+
   kafka:
     build:
       context: ./Kafka
     expose:
      - "9092"
     environment:
-
       # Kafka advertised listener MUST be defined in this way 
       # for us to able to skale kafka.
       # TODO: Understand the process more and add more env variables
       KAFKA_LISTENERS: PLAINTEXT://:9092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092 
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ADVERTISED_PORT: 9092
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "syslog:1:1, netflow:1:1, nf_raw:1:1"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/localtime:/etc/localtime:ro
     networks:
       - e2netwatch-net
+
 
   nifi:
     image: e2nw/nifi
@@ -193,11 +179,11 @@ services:
       - NIFI_ZK_CONNECT_STRING=zookeeper:2181
       - NIFI_ELECTION_MAX_WAIT=1 min
     volumes:
-      - NiFiconf:/opt/nifi/nifi-current/conf/:rw
-      - /var/run/docker.sock:/var/run/docker.sock:ro  
+      - ./nifi/conf:/opt/nifi/nifi-current/conf/:rw
       - /etc/localtime:/etc/localtime:ro
     networks:
       - e2netwatch-net
+
 
   norikra:
     build:
@@ -214,12 +200,11 @@ services:
     networks:
       - e2netwatch-net
 
+
 volumes:
   ElasticData:
-  CaptureData:
   MysqlData:
   MysqlBackupData:
-  NiFiconf:
   ReportsData:
   Norikra:
 
