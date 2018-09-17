@@ -1,12 +1,7 @@
 e2netwatch
 =================
 
-<<<<<<< develop
 This is the repository for the e2netwatch project. It contains all files needed to build container images for e2netwatch. To run the system properly you may need some additional data (e.g. an elasticsearch license file) that is not included in this repository, but must be provided from somewhere else.
-
-=======
-This is the repository for the e2netwatch project. It contains all files needed to build container images for e2netwatch. To run the system properly you may need some additional data (i.e. elasticsearch license file) that is not included in this repository, but must be provided from somewhere else.
->>>>>>> HEAD~10
 
 # Description
 
@@ -52,20 +47,28 @@ To shut down the system, shut down all containers using docker-compose:
 
 # Initialisation
 
-tbd.
+Prerequisites: On some linux systems it is needed to adjust virtual memory settings that are needed to run elasticsearch instance properly. You can adjust them by executing script increase_vm_map_count.sh:
+    $ ./increase_vm_map_count.sh
+
+After that start the complete e2netwatch system by executing
+    $ docker-compose up -d      # start all containers in the background
+
+If you are interested in watching all the logs during start time, you can start them in foreground:
+    $ docker-compose up
+
+Same commands can be used to restart or more containers after an image has been changed. Docker knows which images ahve been changes and will resatrt only the changed ones.
+    $ docker-compose up
+
+To shut down the system, shut down all containers using docker-compose:
+    $ docker-compose down
+
 
 # Usage
 
 After the start of the e2netwatch containers, you are able to access the web frontend of the e2netwatch project. Go to you Browser and type in the IP address of your server. From this interface most of the functions are available.
-
 If you want to access the kibana webinterface, go to your Browser and type in http://<e2netwatch_host>:5601.
-
-<<<<<<< develop
 To access the NiFi web interface, go to http://<e2netwatch_host>:8090.
-=======
-After the start of the e2netwatch containers, you are able to access the web frontend of the e2netwatch project. Go to you Browser and type in the IP address of your server. From this interface most of the functions are available.
-If you want to access the kibana webinterface, go to your Browser and type in your <IP address>/app/kibana.
->>>>>>> HEAD~10
+
 
 # Contributing
 
