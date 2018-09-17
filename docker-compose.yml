@@ -10,7 +10,6 @@ services:
     build:
       context: ./Capture
     image: e2nw/capture
-    container_name: e2nwcapture
     depends_on:
       - elasticsearch
     ports:
@@ -29,7 +28,6 @@ services:
     build:
       context: ./Middleware
     image: e2nw/middleware
-    container_name: e2nwmiddleware
     depends_on:
       - mysql
       - elasticsearch
@@ -50,7 +48,6 @@ services:
     build:
       context: ./Frontend
     image: e2nw/frontend
-    container_name: e2nwfrontend
     depends_on:
       - middleware
     ports:
@@ -65,7 +62,6 @@ services:
     build:
       context: ./Elasticsearch
     image: e2nw/elasticsearch
-    container_name: e2nwelasticsearch
     ports:
       - "9200:9200"
     environment:
@@ -92,7 +88,6 @@ services:
     build:
       context: ./Kibana
     image: e2nw/kibana
-    container_name: e2nwkibana
     depends_on:
       - elasticsearch
     expose:
@@ -111,7 +106,6 @@ services:
     build:
       context: ./Mysql
     image: e2nw/mysql
-    container_name: e2nwmysql
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD="yes"
     ports:
@@ -128,7 +122,6 @@ services:
     build:
       context: ./Zookeeper
     image: e2nw/zookeeper
-    container_name: zookeeper
     ports:
       - "2181:2181"
     environment:
@@ -192,7 +185,6 @@ services:
     build:
       context: ./norikra
     image: e2nw/norikra
-    container_name: e2nwnorikra
     ports:
       - "26578:26578"
       - "26571:26571"
