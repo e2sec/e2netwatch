@@ -183,7 +183,7 @@ services:
 
   norikra:
     build:
-      context: ./norikra
+      context: ./Norikra
     image: e2nw/norikra
     ports:
       - "26578:26578"
