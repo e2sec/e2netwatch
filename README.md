@@ -1,8 +1,12 @@
 e2netwatch
 =================
 
+<<<<<<< develop
 This is the repository for the e2netwatch project. It contains all files needed to build container images for e2netwatch. To run the system properly you may need some additional data (e.g. an elasticsearch license file) that is not included in this repository, but must be provided from somewhere else.
 
+=======
+This is the repository for the e2netwatch project. It contains all files needed to build container images for e2netwatch. To run the system properly you may need some additional data (i.e. elasticsearch license file) that is not included in this repository, but must be provided from somewhere else.
+>>>>>>> HEAD~10
 
 # Description
 
@@ -56,7 +60,12 @@ After the start of the e2netwatch containers, you are able to access the web fro
 
 If you want to access the kibana webinterface, go to your Browser and type in http://<e2netwatch_host>:5601.
 
+<<<<<<< develop
 To access the NiFi web interface, go to http://<e2netwatch_host>:8090.
+=======
+After the start of the e2netwatch containers, you are able to access the web frontend of the e2netwatch project. Go to you Browser and type in the IP address of your server. From this interface most of the functions are available.
+If you want to access the kibana webinterface, go to your Browser and type in your <IP address>/app/kibana.
+>>>>>>> HEAD~10
 
 # Contributing
 
