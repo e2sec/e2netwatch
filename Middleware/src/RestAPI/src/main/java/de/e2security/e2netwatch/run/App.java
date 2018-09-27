@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.web.ErrorMvcAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 
-import de.e2security.e2netwatch.spring.AqlJpaConfig;
 import de.e2security.e2netwatch.spring.MvcConfig;
 import de.e2security.e2netwatch.spring.PropertiesConfig;
 import de.e2security.e2netwatch.spring.ServiceConfig;
@@ -22,7 +21,6 @@ public class App extends SpringBootServletInitializer {
 	
 	private final static Object[] CONFIGS = {
 			UserJpaConfig.class
-			, AqlJpaConfig.class
 			, ServiceConfig.class
 			, MvcConfig.class
 			, PropertiesConfig.class

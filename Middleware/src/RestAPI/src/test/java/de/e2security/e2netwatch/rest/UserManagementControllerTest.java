@@ -30,10 +30,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import de.e2security.e2netwatch.model.JsonReturnData;
-import de.e2security.e2netwatch.rest.UserManagementController;
-import de.e2security.e2netwatch.rest.dto.MenuReturnResult;
-
 /**
  * Tests the UserManagementController RestController methods.
  *
@@ -66,17 +62,6 @@ public class UserManagementControllerTest {
 	@Test
 	public void testController() {
 		Assert.assertNotNull(controller);
-	}
-
-	/**
-	 * Test getting Menu API method
-	 */
-	@Test
-	public void testGettingMenuResult() {
-		JsonReturnData<MenuReturnResult> result = controller.getMenuForCurrentUser();
-		
-		Assert.assertNotNull("JsonReturnData with MenuReturnResult should not be null", result);
-		Assert.assertTrue("JsonReturnData with MenuReturnResult should return OK status", result.isOK());
 	}
 	
 }
