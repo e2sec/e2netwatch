@@ -1,4 +1,4 @@
-package de.e2security.e2netwatch.usermanagement.service;
+package de.e2security.e2netwatch.spring.security.um;
 
 import java.util.Collection;
 import java.util.List;

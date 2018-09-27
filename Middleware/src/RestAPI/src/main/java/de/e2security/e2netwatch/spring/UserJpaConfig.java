@@ -2,6 +2,7 @@ package de.e2security.e2netwatch.spring;
 
 import java.util.Properties;
 
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +34,8 @@ public class UserJpaConfig {
         super();
 	}
 	
-	// beans
-
-    @Bean(name="userEntityManager")
-    @Primary
-    public LocalContainerEntityManagerFactoryBean userEntityManager() {
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(userDataSource());
         em.setPackagesToScan(new String[] { "de.e2security.e2netwatch.usermanagement.model" });
@@ -48,7 +46,6 @@ public class UserJpaConfig {
     }
 
     @Bean
-    @Primary
     public DataSource userDataSource() {
         final DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(env.getProperty("jdbc.driver"));
@@ -58,11 +55,10 @@ public class UserJpaConfig {
         return dataSource;
     }
 
-    @Bean(name="userTransactionManager")
-    @Primary
-    public JpaTransactionManager userTransactionManager() {
+    @Bean
+    public JpaTransactionManager userTransactionManager(EntityManagerFactory entityManagerFactory) {
         final JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(userEntityManager().getObject());
+        transactionManager.setEntityManagerFactory(entityManagerFactory);
         return transactionManager;
     }
 

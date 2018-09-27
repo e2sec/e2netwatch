@@ -1,7 +1,9 @@
 package de.e2security.e2netwatch.spring;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -18,11 +20,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import de.e2security.e2netwatch.spring.security.CustomAccessDeniedHandler;
 import de.e2security.e2netwatch.spring.security.JWTAuthenticationFilter;
 import de.e2security.e2netwatch.spring.security.JWTAuthorizationFilter;
+import de.e2security.e2netwatch.spring.security.um.CustomUserDetailsService;
 import de.e2security.e2netwatch.usermanagement.security.encoder.Argon2PasswordEncoder;
-import de.e2security.e2netwatch.usermanagement.service.CustomUserDetailsService;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@ComponentScan(basePackages = { "de.e2security.e2netwatch.spring.security.um" })
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 	
 	@Value("${secret}")
@@ -39,6 +42,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 		PasswordEncoder encoder = new Argon2PasswordEncoder();
 		return encoder;
 	}
+    
+    @Autowired
     private CustomUserDetailsService userDetailsService;
 
     public WebSecurity(CustomUserDetailsService userDetailsService) {

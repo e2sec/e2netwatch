@@ -18,7 +18,7 @@
 */
 
 
-package de.e2security.e2netwatch.usermanagement.service;
+package de.e2security.e2netwatch.spring.security.um;
 
 import java.util.List;
 import java.util.Set;
@@ -32,7 +32,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import de.e2security.e2netwatch.usermanagement.dao.UserDAO;
+import de.e2security.e2netwatch.usermanagement.dao.UserRepository;
 import de.e2security.e2netwatch.usermanagement.model.Authority;
 import de.e2security.e2netwatch.usermanagement.model.User;
 import de.e2security.e2netwatch.usermanagement.model.UserGroup;
@@ -41,11 +41,11 @@ import de.e2security.e2netwatch.usermanagement.model.UserGroup;
 public class CustomUserDetailsService implements UserDetailsService {
 	
     @Autowired
-    private UserDAO userDao;
+    private UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userDao.getByUsername(username);
+        User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException("Username was not found: " + username);
         }

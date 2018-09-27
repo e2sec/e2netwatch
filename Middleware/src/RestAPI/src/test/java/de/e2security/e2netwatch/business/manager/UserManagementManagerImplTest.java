@@ -31,8 +31,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import de.e2security.e2netwatch.business.manager.UserManagementManager;
-import de.e2security.e2netwatch.model.JsonReturnData;
-import de.e2security.e2netwatch.rest.dto.MenuReturnResult;
 
 /**
  * Tests the UserManagementManager.
@@ -66,23 +64,6 @@ public class UserManagementManagerImplTest {
 	@Test
 	public void testLaraManager() {
 		Assert.assertNotNull(manager);
-	}
-	
-	/**
-	 * Test getting menu for current user
-	 */
-	@Test
-	public void testGettingMenuForCurrentUser() {
-		JsonReturnData<MenuReturnResult> result = manager.getMenuForCurrentUser();
-		
-		Assert.assertNotNull("JsonReturnData with MenuReturnResult should not be null", result);
-		Assert.assertEquals("JsonReturnData with MenuReturnResult should return OK status", true, result.isOK());
-		Assert.assertNotNull("JsonReturnData with MenuReturnResult content should not be null", 
-				result.getContent());
-		Assert.assertNotNull("JsonReturnData with MenuReturnResult content data should not be null", 
-				result.getContent().getData());
-		Assert.assertEquals("JsonReturnData with MenuReturnResult content data size not as expected", 
-				2, result.getContent().getData().size());
 	}
 	
 }

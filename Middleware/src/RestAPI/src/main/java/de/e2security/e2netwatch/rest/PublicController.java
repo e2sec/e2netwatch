@@ -18,6 +18,6 @@ public class PublicController {
 	
 	@RequestMapping(value = "/welcome", method = RequestMethod.GET)
 	public String test() {
-		return "{\"message\":\"Welcome to middleware!\"}";
+		return "Hello from Middleware!";
 	}
 }
