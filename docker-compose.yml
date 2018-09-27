@@ -175,7 +175,7 @@ services:
       - NIFI_ZK_CONNECT_STRING=zookeeper:2181
       - NIFI_ELECTION_MAX_WAIT=1 min
     volumes:
-      - ./nifi/conf:/opt/nifi/nifi-current/conf/:rw
+      - ./NiFi/conf:/opt/nifi/nifi-current/conf/:rw
       - /etc/localtime:/etc/localtime:ro
     networks:
       - e2netwatch-net
