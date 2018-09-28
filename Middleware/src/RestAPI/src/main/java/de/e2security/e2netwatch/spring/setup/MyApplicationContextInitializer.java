@@ -2,6 +2,8 @@ package de.e2security.e2netwatch.spring.setup;
 
 import java.io.IOException;
 
+import org.flywaydb.core.Flyway;
+import org.flywaydb.core.internal.exception.FlywaySqlException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContextInitializer;
@@ -43,6 +45,17 @@ public class MyApplicationContextInitializer implements ApplicationContextInitia
                 logger.warn("Didn't find env-" + envTarget + ".properties in classpath so not loading it in the AppContextInitialized", ioEx);
             }
         }
+        
+        // Database migration with Flyway
+        Flyway flyway = new Flyway();
+        try {
+            flyway.setDataSource("jdbc:mysql://localhost:3306?useSSL=false", "root", null);
+            flyway.migrate();
+        } catch (FlywaySqlException e) {
+        	flyway.setDataSource("jdbc:mysql://localhost:3306/user_management_db?useSSL=false", "middleware", "key_m1dd1eware_password");
+        	flyway.migrate();
+        }
+        
     }
 
     /**

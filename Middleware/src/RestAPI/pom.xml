@@ -163,6 +163,13 @@
 		    <artifactId>commons-validator</artifactId>
 		    <version>1.6</version>
 		</dependency>
+		
+		<!-- Flyway DB migration -->
+		<dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>5.1.4</version>
+        </dependency>
 
 	</dependencies>
 

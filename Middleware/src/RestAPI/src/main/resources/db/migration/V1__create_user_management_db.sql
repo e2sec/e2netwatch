@@ -252,4 +252,3 @@ create table profile_menu (
     , constraint fk_prm_mnc foreign key(mnc_id) references menu_component(id) on delete cascade
     , constraint fk_prm_prm foreign key(super_prm_id) references profile_menu(id) on delete cascade
 );
-
