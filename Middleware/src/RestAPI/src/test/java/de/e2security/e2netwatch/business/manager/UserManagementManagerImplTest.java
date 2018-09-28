@@ -62,7 +62,7 @@ public class UserManagementManagerImplTest {
 	 * Check we have a manager.
 	 */
 	@Test
-	public void testLaraManager() {
+	public void testUserManagementManager() {
 		Assert.assertNotNull(manager);
 	}
 	
