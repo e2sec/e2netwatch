@@ -2,8 +2,6 @@ package de.e2security.e2netwatch.spring.setup;
 
 import java.io.IOException;
 
-import org.flywaydb.core.Flyway;
-import org.flywaydb.core.internal.exception.FlywaySqlException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContextInitializer;
@@ -11,19 +9,11 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.io.support.ResourcePropertySource;
 
-import com.google.common.base.Preconditions;
-
 public class MyApplicationContextInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 	
     private final Logger logger = LoggerFactory.getLogger(MyApplicationContextInitializer.class);
-
-    private static final String ENV_TARGET = "envTarget";
-
-    public MyApplicationContextInitializer() {
-        super();
-    }
-
-    //
+    
+    private final HelperInitializer helper = new HelperInitializer();
 
     /**
      * Sets the active profile.
@@ -33,7 +23,7 @@ public class MyApplicationContextInitializer implements ApplicationContextInitia
         final ConfigurableEnvironment environment = applicationContext.getEnvironment();
         String envTarget = null;
         try {
-            envTarget = getEnvTarget(environment);
+            envTarget = helper.getEnvTarget(environment);
             environment.getPropertySources().addFirst(new ResourcePropertySource("classpath:env-" + envTarget + ".properties"));
 
             final String activeProfiles = environment.getProperty("spring.profiles.active");
@@ -45,35 +35,6 @@ public class MyApplicationContextInitializer implements ApplicationContextInitia
                 logger.warn("Didn't find env-" + envTarget + ".properties in classpath so not loading it in the AppContextInitialized", ioEx);
             }
         }
-        
-        // Database migration with Flyway
-        Flyway flyway = new Flyway();
-        try {
-            flyway.setDataSource("jdbc:mysql://localhost:3306?useSSL=false", "root", null);
-            flyway.migrate();
-        } catch (FlywaySqlException e) {
-        	flyway.setDataSource("jdbc:mysql://localhost:3306/user_management_db?useSSL=false", "middleware", "key_m1dd1eware_password");
-        	flyway.migrate();
-        }
-        
-    }
-
-    /**
-     * @param environment
-     * @return The env target variable.
-     */
-    private String getEnvTarget(final ConfigurableEnvironment environment) {
-        String target = environment.getProperty(ENV_TARGET);
-        if (target == null) {
-            logger.warn("Didn't find a value for {} in the current Environment!", ENV_TARGET);
-        }
-
-        if (target == null) {
-            logger.info("Didn't find a value for {} in the current Environment!, using the default `dev`", ENV_TARGET);
-            target = "dev";
-        }
-
-        return Preconditions.checkNotNull(target);
     }
 
 }
