@@ -10,7 +10,6 @@ services:
     build:
       context: ./Capture
     image: e2nw/capture
-    container_name: e2nwcapture
     depends_on:
       - elasticsearch
     ports:
@@ -29,7 +28,6 @@ services:
     build:
       context: ./Middleware
     image: e2nw/middleware
-    container_name: e2nwmiddleware
     depends_on:
       - mysql
       - elasticsearch
@@ -50,7 +48,6 @@ services:
     build:
       context: ./Frontend
     image: e2nw/frontend
-    container_name: e2nwfrontend
     depends_on:
       - middleware
     ports:
@@ -65,7 +62,6 @@ services:
     build:
       context: ./Elasticsearch
     image: e2nw/elasticsearch
-    container_name: e2nwelasticsearch
     ports:
       - "9200:9200"
     environment:
@@ -92,7 +88,6 @@ services:
     build:
       context: ./Kibana
     image: e2nw/kibana
-    container_name: e2nwkibana
     depends_on:
       - elasticsearch
     expose:
@@ -100,7 +95,7 @@ services:
     ports: 
       - "5601:5601"
     environment:
-      ELASTICSEARCH_URL: http://e2nwelasticsearch:9200
+      ELASTICSEARCH_URL: http://elasticsearch:9200
     networks:
       - e2netwatch-net
     volumes:
@@ -111,7 +106,6 @@ services:
     build:
       context: ./Mysql
     image: e2nw/mysql
-    container_name: e2nwmysql
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD="yes"
     ports:
@@ -125,8 +119,9 @@ services:
 
 
   zookeeper:
-    image: wurstmeister/zookeeper
-    container_name: zookeeper
+    build:
+      context: ./Zookeeper
+    image: e2nw/zookeeper
     ports:
       - "2181:2181"
     environment:
@@ -140,6 +135,7 @@ services:
 
 
   kafka:
+    image: e2nw/kafka
     build:
       context: ./Kafka
     expose:
@@ -163,7 +159,7 @@ services:
   nifi:
     image: e2nw/nifi
     build:
-      context: ./nifi
+      context: ./NiFi
       args:
         NIFI_VERSION: '1.7.1'
         NIFI_BINARY: 'http://apache.miloslavbrada.cz/nifi/1.7.1/nifi-1.7.1-bin.zip'
@@ -179,7 +175,7 @@ services:
       - NIFI_ZK_CONNECT_STRING=zookeeper:2181
       - NIFI_ELECTION_MAX_WAIT=1 min
     volumes:
-      - ./nifi/conf:/opt/nifi/nifi-current/conf/:rw
+      - ./NiFi/conf:/opt/nifi/nifi-current/conf/:rw
       - /etc/localtime:/etc/localtime:ro
     networks:
       - e2netwatch-net
@@ -187,9 +183,8 @@ services:
 
   norikra:
     build:
-      context: ./norikra
+      context: ./Norikra
     image: e2nw/norikra
-    container_name: e2nwnorikra
     ports:
       - "26578:26578"
       - "26571:26571"
