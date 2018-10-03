@@ -10,11 +10,6 @@
 #
 ################################################################
 
-# initializing mysql databases - creating databases and setting user access
-init_mysql_db() {
-    echo
-    /mysql_data/init_database.sh
-}
 
 # print command line option onto console
 print_help()
@@ -23,8 +18,6 @@ print_help()
     echo "Syntax:   admin.sh <command> [<command> ...]"
     echo
     echo "Commands:"
-    echo "    initmysqldb"
-    echo "        reset all mysql databases and set user access to mysql databases"
     echo
 }
 
@@ -43,10 +36,6 @@ fi
 while [ $# -ge 1 ]
 do
     case "$1" in
-
-        initmysqldb)
-            init_mysql_db
-            ;;
 
         *)
             echo "ERROR: command $1 is unknown"
