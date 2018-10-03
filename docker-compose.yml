@@ -110,7 +110,6 @@ services:
      - "3306:3306"
     volumes:
       - MysqlData:/var/lib/mysql
-      - MysqlBackupData:/backup
       - /etc/localtime:/etc/localtime:ro
     networks:
       - e2netwatch-net
