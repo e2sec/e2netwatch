@@ -2,6 +2,8 @@ package de.e2security.e2netwatch.spring.security;
 
 import java.io.IOException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 
@@ -9,7 +11,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -19,7 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 	 
     public static final Logger LOG
-      = Logger.getLogger(CustomAccessDeniedHandler.class);
+      = LogManager.getLogger(CustomAccessDeniedHandler.class);
  
     @Override
     public void handle(HttpServletRequest req, HttpServletResponse res, AccessDeniedException accessDeniedException) 
