@@ -1,7 +1,6 @@
 target
 RestAPI/?/
 RestAPI/bin
-RestAPI/logs
 .project
 .settings
 .classpath
