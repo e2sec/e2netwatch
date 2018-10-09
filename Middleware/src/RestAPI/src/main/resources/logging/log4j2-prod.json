@@ -1,0 +1,35 @@
+{
+    "configuration": {
+        "name": "log4j2 production logging",
+        "packages": "de.e2security.e2netwatch",
+        "ThresholdFilter": {
+            "level": "info"
+        },
+        "appenders": {
+            "RollingFile": {
+	            "name":"File",
+	            "fileName":"/opt/middleware/logs/middleware.log",
+	            "filePattern":"/opt/middleware/logs/archive/middleware-backup-%d{MM-dd-yy-HH-mm-ss}-%i.log.gz",
+	            "PatternLayout": {
+	               "pattern":"%d{yyyy-MM-dd HH:mm:ss} [%t] %-5p %c - %m%n"
+	            },
+	            "Policies": {
+	               "SizeBasedTriggeringPolicy": {
+	                  "size":"10 MB"
+	               }
+	            },
+	            "DefaultRolloverStrategy": {
+	               "max":"10"
+	            }
+	         }
+        },
+        "loggers": {
+            "root": {
+                "level": "info",
+            	"AppenderRef": {
+                	"ref": "File"
+            	}
+            }
+        }
+    }
+}
