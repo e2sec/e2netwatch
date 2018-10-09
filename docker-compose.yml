@@ -123,7 +123,7 @@ services:
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
     expose:
-       - "2181"
+      - "2181"
     volumes:
       - /etc/localtime:/etc/localtime:ro
     networks:

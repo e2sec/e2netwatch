@@ -13,13 +13,14 @@ import de.e2security.e2netwatch.spring.ServletConfig;
 import de.e2security.e2netwatch.spring.UserJpaConfig;
 import de.e2security.e2netwatch.spring.WebSecurity;
 import de.e2security.e2netwatch.spring.setup.DataSourceApplicationContextInitializer;
+import de.e2security.e2netwatch.spring.setup.LoggingApplicationContextInitializer;
 import de.e2security.e2netwatch.spring.setup.MyApplicationContextInitializer;
 
 @SpringBootApplication(exclude = {
 		ErrorMvcAutoConfiguration.class
 })
 public class App extends SpringBootServletInitializer {
-	
+		
 	private final static Object[] CONFIGS = {
 			UserJpaConfig.class
 			, ServiceConfig.class
@@ -32,11 +33,16 @@ public class App extends SpringBootServletInitializer {
 	
 	@Override
     protected SpringApplicationBuilder configure(final SpringApplicationBuilder application) {
-        return application.sources(CONFIGS).initializers(new MyApplicationContextInitializer());
+        return application.sources(CONFIGS).initializers(
+        		new LoggingApplicationContextInitializer(),
+        		new MyApplicationContextInitializer(),
+        		new DataSourceApplicationContextInitializer()
+        );
     }
 
     public static void main(final String... args) {
         final SpringApplication springApplication = new SpringApplication(CONFIGS);
+        springApplication.addInitializers(new LoggingApplicationContextInitializer());
         springApplication.addInitializers(new MyApplicationContextInitializer());
         springApplication.addInitializers(new DataSourceApplicationContextInitializer());
         springApplication.run(args);
