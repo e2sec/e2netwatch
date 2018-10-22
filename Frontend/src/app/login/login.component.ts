@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
-import { AuthService } from '../services/auth.service';
 import { LoginModel } from '../models/login-model';
 import { Title } from '@angular/platform-browser';
 import { AppState, selectAuthState } from '../store/app.states';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { Login } from '../store/actions/auth.actions';
 import { Observable } from 'rxjs';
 
@@ -24,7 +23,7 @@ export class LoginComponent implements OnInit {
     private titleService: Title,
     private store: Store<AppState>
   ) {
-    this.getState = this.store.select(selectAuthState);
+    this.getState = this.store.pipe(select(selectAuthState));
   }
 
   ngOnInit() {
