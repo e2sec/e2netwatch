@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AppState, selectProfileState } from '../../../../store/app.states';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { ProfileState } from '../../../../store/reducers/profile.reducers';
 import { LoadProfile } from '../../../../store/actions/profile.actions';
@@ -17,7 +17,7 @@ export class AccountSettingsComponent implements OnInit {
   getState: Observable<any>;
   constructor(
     private store: Store<AppState>) {
-    this.getState = this.store.select(selectProfileState);
+    this.getState = this.store.pipe(select(selectProfileState));
   }
 
   ngOnInit() {

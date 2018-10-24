@@ -19,7 +19,6 @@ describe('AuthReducer', () => {
             const action = new LoginSuccess({});
             const state = reducer(initialState, action);
 
-            expect(state.isAuthenticated).toBeTruthy();
             expect(state.errorMessage).toBeNull();
         });
     });
@@ -29,7 +28,6 @@ describe('AuthReducer', () => {
             const action = new LoginFailure({});
             const state = reducer(initialState, action);
 
-            expect(state.isAuthenticated).toBeFalsy();
             expect(state.errorMessage).toBe('Incorect username or password.');
         });
     });
@@ -40,7 +38,6 @@ describe('AuthReducer', () => {
             const previousState = { ...initialState, isAuthenticated: true };
             const state = reducer(previousState, action);
 
-            expect(state.isAuthenticated).toBeFalsy();
             expect(state.errorMessage).toBeNull();
         });
     });

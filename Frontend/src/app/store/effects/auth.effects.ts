@@ -18,10 +18,11 @@ export class AuthEffects {
     ) { }
 
     @Effect()
-    Login: Observable<any> = this.actions.ofType(AuthActionTypes.LOGIN)
-        .pipe(map((action: Login) => action.payload))
-        .pipe(switchMap(payload => {
-             return this.authService.login(payload)
+    Login: Observable<any> = this.actions.pipe(
+        ofType(AuthActionTypes.LOGIN),
+        map((action: Login) => action.payload),
+        switchMap(payload => {
+            return this.authService.login(payload)
                 .pipe(map(
                     (user) => {
                         return new LoginSuccess({ token: user.token });
