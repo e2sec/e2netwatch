@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>de.e2security</groupId>
+  <artifactId>netflow-flowaggregation</artifactId>
+  <version>1.0-SNAPSHOT</version>
+
+  <name>netflow_flowaggregation</name>
+  <url>http://www.e2security.de</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+
+    <junit.version>4.11</junit.version>
+    <log4j.version>2.11.1</log4j.version>
+    <args4j.version>2.33</args4j.version>
+    <json.version>20180130</json.version>
+    <kafka.version>2.0.0</kafka.version>
+    <esper.version>7.1.0</esper.version>
+    <lang3.version>3.7</lang3.version>
+    <maven-clean-plugin.version>3.0.0</maven-clean-plugin.version>    
+    <maven-resources-plugin.version>3.0.2</maven-resources-plugin.version>    
+    <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>    
+    <maven-surefire-plugin.version>2.20.1</maven-surefire-plugin.version>    
+    <maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>    
+    <maven-install-plugin.version>2.5.2</maven-install-plugin.version>    
+    <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>    
+    <maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>    
+    <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
+    <mainClass>de.e2security.netflow_flowaggregation.App</mainClass>    
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Commons -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${lang3.version}</version>
+    </dependency>
+
+	<!--  Args4J -->
+	<dependency>
+		<groupId>args4j</groupId>
+		<artifactId>args4j</artifactId>
+		<version>${args4j.version}</version>
+	</dependency>
+
+    <!-- JSON -->
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>${json.version}</version>
+    </dependency>
+
+    <!-- Esper -->
+    <dependency>
+      <groupId>com.espertech</groupId>
+      <artifactId>esper</artifactId>
+      <version>${esper.version}</version>
+    </dependency>
+
+    <!-- Kafka -->
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka-clients</artifactId>
+      <version>${kafka.version}</version>
+    </dependency>
+
+    <!-- logging -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
+      <version>${log4j.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>${log4j.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-slf4j-impl</artifactId>
+      <version>${log4j.version}</version>
+    </dependency>
+
+
+  </dependencies>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>${maven-clean-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>${maven-resources-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven-compiler-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${maven-surefire-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>${maven-jar-plugin.version}</version>
+        <configuration>
+          <archive>
+          <manifest>
+            <mainClass>${mainClass}</mainClass>
+          </manifest>
+          </archive>
+        </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>${maven-install-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>${maven-deploy-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>${exec-maven-plugin.version}</version>
+          <configuration>
+            <mainClass>de.e2security.netflow_flowaggregation.App</mainClass>
+            <includePluginDependencies>false</includePluginDependencies>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>${maven-assembly-plugin.version}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+  
+  <profiles>
+    <profile>
+      <id>jar-with-dependencies</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <configuration>
+              <archive>
+                <manifest>
+                  <mainClass>${mainClass}</mainClass>
+                </manifest>
+              </archive>
+              <descriptorRefs>
+                <descriptorRef>jar-with-dependencies</descriptorRef>
+              </descriptorRefs>
+            </configuration>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>
