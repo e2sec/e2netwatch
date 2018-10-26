@@ -10,8 +10,6 @@ services:
     build:
       context: ./Capture
     image: e2nw/capture
-    depends_on:
-      - elasticsearch
     ports:
       - "2055:2055/udp"
       - "5000:5000/tcp"
@@ -118,8 +116,6 @@ services:
     build:
       context: ./Zookeeper
     image: e2nw/zookeeper
-    ports:
-      - "2181:2181"
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
     expose:
@@ -136,6 +132,8 @@ services:
       context: ./Kafka
     expose:
      - "9092"
+    depends_on:
+      - zookeeper
     environment:
       # Kafka advertised listener MUST be defined in this way 
       # for us to able to skale kafka.
@@ -195,8 +193,11 @@ services:
     build:
       context: ./nf-aggregator
     image: e2nw/nf-aggregator
-
+    depends_on:
+      - kafka
     command: 'java -jar netflow-flowaggregation-1.0-SNAPSHOT-jar-with-dependencies.jar'
+    networks:
+      - e2netwatch-net
 
 volumes:
   ElasticData:
