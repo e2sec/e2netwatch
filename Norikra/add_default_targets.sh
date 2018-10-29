@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ### add default targets "netflow" and "syslog" to Norikra for processing these streams ###
 
