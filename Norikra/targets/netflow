@@ -1,0 +1,13 @@
+{
+    "target" : "netflow",
+    "fields" : {
+        "ipv4_dst_addr" : "string",
+        "ipv4_src_addr" : "string",
+        "l4_dst_port" : "integer",
+        "l4_src_port" : "integer",
+        "in_pkts" : "integer",
+        "in_bytes" : "integer",
+        "protocol" : "integer"
+    },
+    "auto_field" : "true"
+}

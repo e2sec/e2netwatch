@@ -1,0 +1,5 @@
+{
+    "query_name" : "count http service",
+    "query_group" : "counter",
+    "expression" : "select last_switched AS timestamp, count(*) AS http_count from netflow.win:time_batch(15 sec) where l4_dst_port=80"
+}

@@ -1,0 +1,14 @@
+{
+    "target" : "syslog",
+    "fields" : {     
+        "timestamp" : "string",
+        "syslog_timestamp" : "string",
+        "src_ip" : "string",
+        "hostname" : "string",
+        "appname" : "string",
+        "loglevel" : "integer",
+        "pid" : "integer",
+        "message" : "string"
+    },
+    "auto_field" : "true"
+}
