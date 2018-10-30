@@ -13,13 +13,13 @@
 # 
 #######################################################################
 
-FROM openjdk:10.0.2
+FROM java:openjdk-8-jdk as build
 
 ENV MAVEN_VERSION 3.3.9
 
 RUN mkdir -p /usr/share/maven \
   && curl -fsSL http://apache.osuosl.org/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz \
-   | tar -xzC /usr/share/maven --strip-components=1 \
+    | tar -xzC /usr/share/maven --strip-components=1 \
   && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
 
 ENV MAVEN_HOME /usr/share/maven
@@ -30,14 +30,7 @@ WORKDIR /tmp/middleware/src/RestAPI
 
 RUN /usr/bin/mvn package 
 
-RUN wget https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/9.4.11.v20180605/jetty-distribution-9.4.11.v20180605.tar.gz \
-    && tar xzvf jetty-distribution-9.4.11.v20180605.tar.gz  \
-    && rm jetty-distribution-9.4.11.v20180605.tar.gz \
-    && mv jetty-distribution-9.4.11.v20180605/ /jetty/
 
-RUN cp /tmp/middleware/src/RestAPI/target/middleware.war /jetty/webapps/.
+FROM jetty:alpine
 
-WORKDIR /jetty
-
-CMD java --add-modules java.xml.bind -jar start.jar
-
+COPY --from=build /tmp/middleware/src/RestAPI/target/middleware.war /var/lib/jetty/webapps/.
