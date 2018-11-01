@@ -2,7 +2,7 @@ package de.e2security.netflow_flowaggregation;
 
 import java.io.Serializable;
 import java.time.Duration;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Properties;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -22,14 +22,14 @@ public class CustomKafkaConsumer<K extends Serializable, V extends Serializable>
 
 	private String clientId;
 	private KafkaConsumer<K, V> consumer;
-	private List<String> topics;
+	private String topic;
 	private EPServiceProvider engine;
 
 	private AtomicBoolean closed = new AtomicBoolean();
 
-	public CustomKafkaConsumer(Properties configs, List<String> topics, EPServiceProvider engine) {
+	public CustomKafkaConsumer(Properties configs, String topic, EPServiceProvider engine) {
 		this.clientId = configs.getProperty(ConsumerConfig.CLIENT_ID_CONFIG);
-		this.topics = topics;
+		this.topic = topic;
 		this.engine = engine;
 		this.consumer = new KafkaConsumer<>(configs);
 	}
@@ -40,11 +40,10 @@ public class CustomKafkaConsumer<K extends Serializable, V extends Serializable>
 		try {
 			LOG.info("Starting the Consumer: {}", clientId);
 			synchronized (consumer) {
-				consumer.subscribe(topics);
+				consumer.subscribe(Arrays.asList(topic)); //implied seek to the last 'commited position'
 			}
-			// consumer.seek(partition, offset); // TODO: set offset
-
-			LOG.info("C: {}, Started to process records for topics : {}", clientId, topics);
+			
+			LOG.info("C: {}, Started to process records for topic : {}", clientId, topic);
 
 			ConsumerRecords<K, V> records;
 			while (!closed.get()) {
@@ -59,20 +58,19 @@ public class CustomKafkaConsumer<K extends Serializable, V extends Serializable>
 						LOG.debug("C: {}, Found no records", clientId);
 						continue;
 					}
-
-					LOG.info("C: {} Total No. of records received: {}", clientId, records.count());
-					for (ConsumerRecord<K, V> record : records) {
-						LOG.debug("C: {}, Record received topic: {}, partition: {}, key: {}, value: {}, offset: {}",
-								clientId, record.topic(), record.partition(), record.key(), record.value(),
-								record.offset());
-						try {
+					try {
+						LOG.info("C: {} Total No. of records received: {}", clientId, records.count());
+						for (ConsumerRecord<K, V> record : records) {
+							LOG.debug("C: {}, Record received topic: {}, partition: {}, key: {}, value: {}, offset: {}",
+									clientId, record.topic(), record.partition(), record.key(), record.value(),
+									record.offset());
 							NetflowEvent netflowEvent = new NetflowEvent(record.value().toString());
 							engine.getEPRuntime().sendEvent(netflowEvent);
-						} catch (NetflowEventException e) {
-							LOG.error("No Esper event created.");
 						}
+						consumer.commitAsync();
+					} catch (NetflowEventException e) {
+						LOG.error("No Esper event created. No commit for the recent ConsumerRecords has been done!");
 					}
-					// TODO: commit offset
 				}
 			}
 		} catch (org.apache.kafka.common.errors.InterruptException e) {
