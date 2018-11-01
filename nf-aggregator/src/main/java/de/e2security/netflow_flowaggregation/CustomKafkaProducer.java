@@ -16,10 +16,15 @@ public class CustomKafkaProducer<K extends Serializable, V extends Serializable>
 	private KafkaProducer<K, V> producer;
 	private String topic;
 
-	public CustomKafkaProducer(Properties configs, String topic) {
-		this.clientId = configs.getProperty(ProducerConfig.CLIENT_ID_CONFIG);
-		this.topic = topic;
-		this.producer = new KafkaProducer<>(configs);
+	public CustomKafkaProducer(Properties config) {
+		Properties configOut = new Properties();
+		configOut.put("bootstrap.servers", config.get("bootstrap.servers"));
+		configOut.put("client.id", config.get("producer.client.id"));
+		configOut.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+		configOut.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+		this.clientId = config.getProperty(ProducerConfig.CLIENT_ID_CONFIG);
+		this.topic = config.getProperty("producer.topic");
+		this.producer = new KafkaProducer<>(config);
 		LOG.info("Starting the Producer: {}", clientId);
 		LOG.info("P: {}, Started to process records for topics : {}", clientId, topic);
 	}
