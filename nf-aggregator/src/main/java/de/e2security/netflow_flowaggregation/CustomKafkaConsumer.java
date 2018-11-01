@@ -27,11 +27,20 @@ public class CustomKafkaConsumer<K extends Serializable, V extends Serializable>
 
 	private AtomicBoolean closed = new AtomicBoolean();
 
-	public CustomKafkaConsumer(Properties configs, String topic, EPServiceProvider engine) {
-		this.clientId = configs.getProperty(ConsumerConfig.CLIENT_ID_CONFIG);
-		this.topic = topic;
+	public CustomKafkaConsumer(Properties config, EPServiceProvider engine) {
+		Properties configIn = new Properties();
+		configIn.put("bootstrap.servers", config.get("bootstrap.servers"));
+		configIn.put("enable.auto.commit", config.get("enable.auto.commit"));
+		configIn.put("auto.commit.interval.ms", config.get("auto.commit.interval.ms"));
+		configIn.put("session.timeout.ms", config.get("session.timeout.ms"));
+		configIn.put("client.id", config.get("consumer.client.id"));
+		configIn.put("group.id", config.get("consumer.group.id"));
+		configIn.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+		configIn.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+		this.clientId = config.getProperty(ConsumerConfig.CLIENT_ID_CONFIG);
+		this.topic = config.getProperty("consumer.topic");
 		this.engine = engine;
-		this.consumer = new KafkaConsumer<>(configs);
+		this.consumer = new KafkaConsumer<>(configIn);
 	}
 
 	@Override
