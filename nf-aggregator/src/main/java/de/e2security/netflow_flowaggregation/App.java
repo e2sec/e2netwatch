@@ -26,19 +26,10 @@ import com.espertech.esper.client.EPServiceProviderManager;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.time.CurrentTimeEvent;
 
+import de.e2security.netflow_flowaggregation.utils.PropertiesUtil;
+
 public class App {
-	private File configFile;
-
-	@Option(name = "-c", usage = "defines additional configuration file")
-	public void setFile(File f) {
-		if (f.exists()) {
-			configFile = f;
-		} else {
-			System.err.println("Cannot read config file '" + f.getName() + "'");
-			System.exit(1);
-		}
-	}
-
+	
 	private static final Logger LOG = LoggerFactory.getLogger(App.class);
 
 	public static void main(String[] args) {
@@ -47,49 +38,14 @@ public class App {
 	}
 
 	public void doMain(String[] args) {
-		/*
-		 * Read default configuration
-		 */
+	
 		LOG.info("VERSION 1.1");
-		Properties configs = new Properties();
-		try {
-			InputStream is = App.class.getClassLoader().getResourceAsStream("application.properties");
-			configs.load(is);
-			is.close();
-		} catch (IOException e) {
-			System.err.println("Cannot load properties!");
-			System.exit(1);
-		}
 
-		/*
-		 * Parse Arguments
-		 */
-		if (args.length > 0) {
-			CmdLineParser parser = new CmdLineParser(this);
-
-			try {
-				parser.parseArgument(args);
-
-				if (configFile != null) {
-					try {
-						/*
-						 * Read additional configuration
-						 */
-						InputStream is = new FileInputStream(configFile);
-						configs.load(is);
-					} catch (IOException e) {
-						System.err.println("Cannot read config file '" + configFile.getName() + "'");
-						System.exit(1);
-					}
-				}
-			} catch (CmdLineException e) {
-				System.err.println(e.getMessage());
-				System.err.println("Available sptions:");
-				parser.printUsage(System.err);
-				System.exit(1);
-			}
-		}
-
+		// Read Default Configuration and Parse Arguments
+		Properties configs = new PropertiesUtil().readInt("application.properties")
+											     .readExt(args, App.class)
+											     .create();
+		
 		/*
 		 * Start KafkaProducer
 		 */
