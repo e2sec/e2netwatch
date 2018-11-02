@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class CustomKafkaProducer<K extends Serializable, V extends Serializable> {
-	private static final Logger LOG = LoggerFactory.getLogger(CustomKafkaConsumer.class);
+	private static final Logger LOG = LoggerFactory.getLogger(CustomKafkaProducer.class);
 
 	private String clientId;
 	private KafkaProducer<K, V> producer;
@@ -22,9 +22,9 @@ public class CustomKafkaProducer<K extends Serializable, V extends Serializable>
 		configOut.put("client.id", config.get("producer.client.id"));
 		configOut.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 		configOut.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-		this.clientId = config.getProperty(ProducerConfig.CLIENT_ID_CONFIG);
+		this.clientId = configOut.getProperty(ProducerConfig.CLIENT_ID_CONFIG);
 		this.topic = config.getProperty("producer.topic");
-		this.producer = new KafkaProducer<>(config);
+		this.producer = new KafkaProducer<>(configOut);
 		LOG.info("Starting the Producer: {}", clientId);
 		LOG.info("P: {}, Started to process records for topics : {}", clientId, topic);
 	}
