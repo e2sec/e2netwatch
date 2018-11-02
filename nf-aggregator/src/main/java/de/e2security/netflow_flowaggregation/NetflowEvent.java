@@ -6,7 +6,7 @@ import java.time.ZonedDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.e2security.netflow_flowaggregation.NetflowEventException;
+import de.e2security.netflow_flowaggregation.netflow.NetflowEventException;
 
 import org.json.JSONObject;
 import org.json.JSONException;
@@ -15,14 +15,14 @@ public class NetflowEvent implements Serializable {
 	private static final long serialVersionUID = 1L;
     private static final Logger LOG = LoggerFactory.getLogger(App.class);
 
-    private ZonedDateTime receivedTimeStamp;
+    private ZonedDateTime receivedTimeStamp; //logstash
     private String host;
     private String ipv4_src_addr;
     private String ipv4_dst_addr;
     private Integer l4_src_port;
     private Integer l4_dst_port;
     private Integer tcp_flags;
-    private Integer protocol;
+    private Integer protocol; //38	prot	IP protocol type (for example, TCP = 6; UDP = 17)
     private Integer version;
     private Integer flow_seq_num;
     private Integer flow_records;

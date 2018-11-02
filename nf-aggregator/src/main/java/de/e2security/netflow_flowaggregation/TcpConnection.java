@@ -3,6 +3,8 @@ package de.e2security.netflow_flowaggregation;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
+import de.e2security.netflow_flowaggregation.exceptions.TcpConnectionException;
+
 public class TcpConnection implements Serializable {
 	private static final long serialVersionUID = 1L;
 	// private static final Logger LOG = LoggerFactory.getLogger(App.class);
