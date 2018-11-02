@@ -50,7 +50,7 @@ public class App {
 		/*
 		 * Read default configuration
 		 */
-		LOG.info("VERSION 1.0");
+		LOG.info("VERSION 1.1");
 		Properties configs = new Properties();
 		try {
 			InputStream is = App.class.getClassLoader().getResourceAsStream("application.properties");
@@ -89,15 +89,6 @@ public class App {
 				System.exit(1);
 			}
 		}
-
-		/*
-		 * Build Kafka Config
-		 */
-		Properties configKafkaIn = getKafkaConfigIn(configs);
-		Properties configKafkaOut = getKafkaConfigOut(configs);
-
-		List<String> topicsIn = Arrays.asList(configs.get("consumer.topics").toString().split(","));
-		String topicOut = configs.get("producer.topic").toString();
 
 		/*
 		 * Start KafkaProducer
@@ -410,11 +401,11 @@ public class App {
 					LOG.info("Exiting...");
 
 					// Stop Producer
-		//			producer.flush();
-		//			producer.close();
+					producer.flush();
+					producer.close();
 
 					// Stop ESPER
-		//			epService.destroy();
+					epService.destroy();
 
 				} catch (ConcurrentModificationException ignore) {
 					/*
@@ -425,28 +416,6 @@ public class App {
 			}
 		}));
 
-	}
-
-	private static Properties getKafkaConfigIn(Properties config) {
-		Properties configIn = new Properties();
-		configIn.put("bootstrap.servers", config.get("bootstrap.servers"));
-		configIn.put("enable.auto.commit", config.get("enable.auto.commit"));
-		configIn.put("auto.commit.interval.ms", config.get("auto.commit.interval.ms"));
-		configIn.put("session.timeout.ms", config.get("session.timeout.ms"));
-		configIn.put("client.id", config.get("consumer.client.id"));
-		configIn.put("group.id", config.get("consumer.group.id.prefix-") + "nf-raw");
-		configIn.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-		configIn.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-		return configIn;
-	}
-
-	private static Properties getKafkaConfigOut(Properties config) {
-		Properties configOut = new Properties();
-		configOut.put("bootstrap.servers", config.get("bootstrap.servers"));
-		configOut.put("client.id", config.get("producer.client.id"));
-		configOut.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-		configOut.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-		return configOut;
 	}
 
 	@SuppressWarnings("unused")
