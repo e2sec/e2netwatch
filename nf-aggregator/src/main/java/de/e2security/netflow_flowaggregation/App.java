@@ -2,7 +2,6 @@ package de.e2security.netflow_flowaggregation;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
-import java.util.ConcurrentModificationException;
 import java.util.Properties;
 import java.util.Set;
 
@@ -19,8 +18,10 @@ import com.espertech.esper.client.time.CurrentTimeEvent;
 
 import de.e2security.netflow_flowaggregation.kafka.CustomKafkaProducer;
 import de.e2security.netflow_flowaggregation.kafka.KafkaConsumerMaster;
+import de.e2security.netflow_flowaggregation.netflow.NetflowEvent;
 import de.e2security.netflow_flowaggregation.netflow.NetflowEventOrdered;
 import de.e2security.netflow_flowaggregation.utils.PropertiesUtil;
+import de.e2security.netflow_flowaggregation.utils.ThreadUtil;
 
 public class App {
 	
@@ -343,48 +344,10 @@ public class App {
 		});
 		
 		KafkaConsumerMaster consumerMaster = new KafkaConsumerMaster(epService).startWorkers(configs);
-	
-		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					LOG.info("Exiting...");
+		
+		ThreadUtil.printThreads();
+		ThreadUtil.manageShutdown(consumerMaster, producer, epService);
 
-					// Stop Producer
-					producer.flush();
-					producer.close();
-
-					// Stop ESPER
-					epService.destroy();
-					
-					//Stop Consumer
-					consumerMaster.getKafkaGroups().forEach(consumerMaster::closeThreads);
-
-				} catch (ConcurrentModificationException ignore) {
-					/*
-					 * KafkaConsumer is not thread safe. As we have only one consumer thread we may
-					 * ignore the exception.
-					 */
-				}
-			}
-		}));
-
-	}
-
-	@SuppressWarnings("unused")
-	private static void printThreads() {
-		System.out.println("");
-		System.out.println("Current threads:");
-
-		Set<Thread> threads = Thread.getAllStackTraces().keySet();
-
-		for (Thread t : threads) {
-			String name = t.getName();
-			Thread.State state = t.getState();
-			int priority = t.getPriority();
-			String type = t.isDaemon() ? "Daemon" : "Normal";
-			System.out.printf("%-20s \t %s \t %d \t %s\n", name, state, priority, type);
-		}
 	}
 
 }
