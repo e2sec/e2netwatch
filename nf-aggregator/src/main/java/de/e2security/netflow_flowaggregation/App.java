@@ -348,7 +348,7 @@ public class App {
 			producer.send(jsonObject.toString());
 		});
 		
-		KafkaConsumerMaster consumerMaster = new KafkaConsumerMaster(configs, epService);
+		KafkaConsumerMaster consumerMaster = new KafkaConsumerMaster(epService).startWorkers(configs);
 	
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 			@Override
@@ -364,7 +364,7 @@ public class App {
 					epService.destroy();
 					
 					//Stop Consumer
-					consumerMaster.getKafkaGroups().forEach(consumerMaster::closeThreadsFor);
+					consumerMaster.getKafkaGroups().forEach(consumerMaster::closeThreads);
 
 				} catch (ConcurrentModificationException ignore) {
 					/*

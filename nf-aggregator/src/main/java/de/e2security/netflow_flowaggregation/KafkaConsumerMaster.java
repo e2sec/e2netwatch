@@ -1,6 +1,5 @@
 package de.e2security.netflow_flowaggregation;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -27,16 +26,20 @@ public class KafkaConsumerMaster {
 	private KafkaConsumer consumerGeneral;
 	private Properties configIn;
 	private Map<String,ExecutorService> groupId_executor;
-	private Map<String,KafkaConsumerCallable<String, String>> topic_consumer;
+	private Map<String,KafkaConsumerCallable> topic_consumer;
 
 	/*
 	 * Per Group: multiple threads of KafkaConsumer for particular topic;
 	 */
-	public KafkaConsumerMaster(Properties config, EPServiceProvider engine) {
+	public KafkaConsumerMaster(EPServiceProvider engine) {
 		this.groupId_executor = new HashMap<>();
 		this.topic_consumer = new HashMap<>();
-		configIn = new Properties();
-		consumerThreads = new ArrayList<>();
+		this.configIn = new Properties();
+		this.consumerThreads = new ArrayList<>();
+		this.engine = engine;
+	}
+	
+	public KafkaConsumerMaster startWorkers(Properties config) {
 		configIn.put("bootstrap.servers", config.get("bootstrap.servers"));
 		configIn.put("enable.auto.commit", config.get("enable.auto.commit"));
 		configIn.put("auto.commit.interval.ms", config.get("auto.commit.interval.ms"));
@@ -44,21 +47,21 @@ public class KafkaConsumerMaster {
 		configIn.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 		configIn.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 		this.topics = new ArrayList<String>(Arrays.asList(config.getProperty("consumer.topics").split(",")));
-		this.engine = engine;
-		for (String topic : topics) {
+		topics.forEach(topic -> {
 			int partitionCount = getPartionsNumber(topic);
 			ExecutorService exec = Executors.newFixedThreadPool(partitionCount);
-			String groupId = config.get("consumer.group.id.prefix") + topic;
+			String groupId = configIn.get("consumer.group.id.prefix") + topic;
 			configIn.put("group.id", groupId);
 			this.groupId_executor.put(groupId, exec);
-			for (int i=1; i<=partitionCount;i++) {
-				configIn.put("client.id", config.get("consumer.client.id") + String.valueOf(i));
-				KafkaConsumerCallable<String, String> consumer = new KafkaConsumerCallable<>(configIn, topic, engine);
+			IntStream.rangeClosed(1, partitionCount).forEach(partitionCounter -> {
+				configIn.put("client.id", config.get("consumer.client.id") + String.valueOf(partitionCounter));
+				KafkaConsumerCallable consumer = new KafkaConsumerCallable<>(configIn, topic, engine);
 				consumerThreads.add(null);
 				topic_consumer.put(topic, null);
 				Future<Integer> future = exec.submit(consumer);
-			}
-		}
+			});
+		});
+		return this;
 	}
 
 	public List<String> getKafkaGroups() {
@@ -78,7 +81,7 @@ public class KafkaConsumerMaster {
 		return count;
 	}
 	
-	public void closeThreadsFor(String groupId) {
+	public void closeThreads(String groupId) {
 		this.groupId_executor.get(groupId).shutdown();
 	}
 
