@@ -11,10 +11,6 @@ import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import org.json.JSONObject;
 import org.kohsuke.args4j.CmdLineException;
@@ -54,6 +50,7 @@ public class App {
 		/*
 		 * Read default configuration
 		 */
+		LOG.info("VERSION 1.0");
 		Properties configs = new Properties();
 		try {
 			InputStream is = App.class.getClassLoader().getResourceAsStream("application.properties");
@@ -99,14 +96,13 @@ public class App {
 		Properties configKafkaIn = getKafkaConfigIn(configs);
 		Properties configKafkaOut = getKafkaConfigOut(configs);
 
-		List<String> topicsIn = Arrays.asList(configs.get("consumer.topic").toString());
+		List<String> topicsIn = Arrays.asList(configs.get("consumer.topics").toString().split(","));
 		String topicOut = configs.get("producer.topic").toString();
 
 		/*
 		 * Start KafkaProducer
 		 */
-		final CustomKafkaProducer<Serializable, Serializable> producer = new CustomKafkaProducer<>(configKafkaOut,
-				topicOut);
+		final CustomKafkaProducer<Serializable, Serializable> producer = new CustomKafkaProducer<>(configs);
 
 		/*
 		 * Get EPL provider and configuration
@@ -404,39 +400,22 @@ public class App {
 			jsonObject.put("out_last_switched", out_last_switched);
 			producer.send(jsonObject.toString());
 		});
-
-		/*
-		 * Prepare KafkaConsumer
-		 */
-		Callable<Integer> consumer = new CustomKafkaConsumer<>(configKafkaIn, topicsIn, epService);
-
-		/*
-		 * Start KafkaConsumer
-		 */
-		ExecutorService exec = Executors.newFixedThreadPool(1);
-		Future<Integer> future = exec.submit(consumer);
-
-		/*
-		 * define shutdown procedure
-		 */
+		
+		KafkaConsumerMaster consumerMaster = new KafkaConsumerMaster(configs, epService);
+	
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try {
 					LOG.info("Exiting...");
 
-					// Stop Consumer
-					future.cancel(true);
-
 					// Stop Producer
-					producer.flush();
-					producer.close();
+		//			producer.flush();
+		//			producer.close();
 
 					// Stop ESPER
-					epService.destroy();
+		//			epService.destroy();
 
-					// Close thread pool
-					exec.shutdown();
 				} catch (ConcurrentModificationException ignore) {
 					/*
 					 * KafkaConsumer is not thread safe. As we have only one consumer thread we may
@@ -446,15 +425,6 @@ public class App {
 			}
 		}));
 
-		/*
-		 * wait for Consumer => endless loop
-		 */
-		try {
-			@SuppressWarnings("unused")
-			int result = future.get();
-		} catch (Exception ignore) {
-			// ending the endless loop
-		}
 	}
 
 	private static Properties getKafkaConfigIn(Properties config) {
@@ -464,7 +434,7 @@ public class App {
 		configIn.put("auto.commit.interval.ms", config.get("auto.commit.interval.ms"));
 		configIn.put("session.timeout.ms", config.get("session.timeout.ms"));
 		configIn.put("client.id", config.get("consumer.client.id"));
-		configIn.put("group.id", config.get("consumer.group.id"));
+		configIn.put("group.id", config.get("consumer.group.id.prefix-") + "nf-raw");
 		configIn.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 		configIn.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 		return configIn;
