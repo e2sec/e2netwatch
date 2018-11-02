@@ -362,6 +362,9 @@ public class App {
 
 					// Stop ESPER
 					epService.destroy();
+					
+					//Stop Consumer
+					consumerMaster.getKafkaGroups().forEach(consumerMaster::closeThreadsFor);
 
 				} catch (ConcurrentModificationException ignore) {
 					/*
