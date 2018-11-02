@@ -1,10 +1,12 @@
-package de.e2security.netflow_flowaggregation;
+package de.e2security.netflow_flowaggregation.netflow;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import de.e2security.netflow_flowaggregation.App;
 
 public class NetflowEventOrdered implements Serializable {
 	private static final long serialVersionUID = 1L;
