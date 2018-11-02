@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.e2security.netflow_flowaggregation.App;
+import de.e2security.netflow_flowaggregation.exceptions.NetflowEventException;
 
 public class NetflowEventOrdered implements Serializable {
 	private static final long serialVersionUID = 1L;

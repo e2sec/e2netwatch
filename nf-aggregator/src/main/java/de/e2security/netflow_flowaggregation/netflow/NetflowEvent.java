@@ -1,4 +1,4 @@
-package de.e2security.netflow_flowaggregation;
+package de.e2security.netflow_flowaggregation.netflow;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
@@ -6,7 +6,8 @@ import java.time.ZonedDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.e2security.netflow_flowaggregation.netflow.NetflowEventException;
+import de.e2security.netflow_flowaggregation.App;
+import de.e2security.netflow_flowaggregation.exceptions.NetflowEventException;
 
 import org.json.JSONObject;
 import org.json.JSONException;

@@ -1,4 +1,4 @@
-package de.e2security.netflow_flowaggregation.netflow;
+package de.e2security.netflow_flowaggregation.exceptions;
 
 public class NetflowEventException extends Exception {
 	private static final long serialVersionUID = 1L;

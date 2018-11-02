@@ -2,6 +2,8 @@ package de.e2security.netflow_flowaggregation.netflow;
 
 import java.time.ZonedDateTime;
 
+import de.e2security.netflow_flowaggregation.exceptions.NetflowEventException;
+
 public class NetflowEventOrderedUdp extends NetflowEventOrdered {
 	private static final long serialVersionUID = 1L;
 
