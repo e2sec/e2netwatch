@@ -1,4 +1,4 @@
-package de.e2security.netflow_flowaggregation;
+package de.e2security.netflow_flowaggregation.kafka;
 
 import java.io.Serializable;
 import java.time.Duration;
@@ -14,6 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.espertech.esper.client.EPServiceProvider;
+
+import de.e2security.netflow_flowaggregation.NetflowEvent;
+import de.e2security.netflow_flowaggregation.netflow.NetflowEventException;
 
 public class KafkaConsumerCallable<K extends Serializable, V extends Serializable> implements Callable<Integer> {
 	private static final Duration duration = Duration.ofSeconds(1L);

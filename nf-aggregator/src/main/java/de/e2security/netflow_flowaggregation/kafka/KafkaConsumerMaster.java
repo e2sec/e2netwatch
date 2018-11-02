@@ -1,4 +1,4 @@
-package de.e2security.netflow_flowaggregation;
+package de.e2security.netflow_flowaggregation.kafka;
 
 import java.util.ArrayList;
 import java.util.Arrays;

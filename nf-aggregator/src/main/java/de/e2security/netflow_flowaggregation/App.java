@@ -1,21 +1,12 @@
 package de.e2security.netflow_flowaggregation;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
-import java.util.Arrays;
 import java.util.ConcurrentModificationException;
-import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
 import org.json.JSONObject;
-import org.kohsuke.args4j.CmdLineException;
-import org.kohsuke.args4j.CmdLineParser;
-import org.kohsuke.args4j.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +17,9 @@ import com.espertech.esper.client.EPServiceProviderManager;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.time.CurrentTimeEvent;
 
+import de.e2security.netflow_flowaggregation.kafka.CustomKafkaProducer;
+import de.e2security.netflow_flowaggregation.kafka.KafkaConsumerMaster;
+import de.e2security.netflow_flowaggregation.netflow.NetflowEventOrdered;
 import de.e2security.netflow_flowaggregation.utils.PropertiesUtil;
 
 public class App {
