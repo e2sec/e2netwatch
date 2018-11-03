@@ -1,4 +1,4 @@
-package de.e2security.netflow_flowaggregation;
+package de.e2security.netflow_flowaggregation.utils;
 
 import java.io.Serializable;
 import java.util.Map;
