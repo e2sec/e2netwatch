@@ -1,351 +1,87 @@
 package de.e2security.netflow_flowaggregation;
 
 import java.io.Serializable;
-import java.time.ZonedDateTime;
 import java.util.Properties;
-import java.util.Set;
 
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.espertech.esper.client.ConfigurationOperations;
 import com.espertech.esper.client.EPServiceProvider;
-import com.espertech.esper.client.EPServiceProviderManager;
-//import com.espertech.esper.client.EPRuntime;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.time.CurrentTimeEvent;
 
+import de.e2security.netflow_flowaggregation.esper.TcpConnectionTrigger;
+import de.e2security.netflow_flowaggregation.esper.TcpEplExpressions;
+import de.e2security.netflow_flowaggregation.esper.TcpFlowMonitorListener;
+import de.e2security.netflow_flowaggregation.esper.UdpConnectionTrigger;
+import de.e2security.netflow_flowaggregation.esper.UdpEplExpressions;
+import de.e2security.netflow_flowaggregation.esper.UdpFlowMonitorListener;
 import de.e2security.netflow_flowaggregation.kafka.CustomKafkaProducer;
 import de.e2security.netflow_flowaggregation.kafka.KafkaConsumerMaster;
 import de.e2security.netflow_flowaggregation.netflow.NetflowEvent;
 import de.e2security.netflow_flowaggregation.netflow.NetflowEventOrdered;
+import de.e2security.netflow_flowaggregation.utils.EsperUtil;
 import de.e2security.netflow_flowaggregation.utils.PropertiesUtil;
 import de.e2security.netflow_flowaggregation.utils.ThreadUtil;
 
 public class App {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(App.class);
-
-	public static void main(String[] args) {
-		// Commandline Parser cannot use static object, so we use this ugly workaround
-		new App().doMain(args);
-	}
-
+	
+	public static void main(String[] args) { new App().doMain(args); } // Commandline Parser cannot use static object, so we use this ugly workaround
 	public void doMain(String[] args) {
 	
-		LOG.info("VERSION 1.1");
+		LOG.info("VERSION 0.0.1"); //just marker to see the right update in the docker container
 
-		// Read Default Configuration and Parse Arguments
+		//read Default Configuration and Parse Arguments
 		Properties configs = new PropertiesUtil().readInt("application.properties")
 											     .readExt(args, App.class)
 											     .create();
-		
-		/*
-		 * Start KafkaProducer
-		 */
+
+		//start KafkaProducer
 		final CustomKafkaProducer<Serializable, Serializable> producer = new CustomKafkaProducer<>(configs);
 
-		/*
-		 * Get EPL provider and configuration
-		 */
-		EPServiceProvider epService = EPServiceProviderManager.getDefaultProvider();
-		// EPRuntime epRuntime = epService.getEPRuntime();
-		ConfigurationOperations epConfiguration = epService.getEPAdministrator().getConfiguration();
+		//register EP events
+		EPServiceProvider epService = EsperUtil.registerEvents(NetflowEvent.class, NetflowEventOrdered.class, TcpConnection.class, CurrentTimeEvent.class);
 
-		/*
-		 * Register events
-		 */
-		epConfiguration.addEventType(NetflowEvent.class);
-		epConfiguration.addEventType(NetflowEventOrdered.class);
-		epConfiguration.addEventType(TcpConnection.class);
-		epConfiguration.addEventType(CurrentTimeEvent.class);
-
-		// @formatter:off
-		/*
-		 * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		 * ! -- CAUTION --
-		 * ! inserted fields need to match constructor arguments
-		 * ! in type and order
-		 * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		 */
-		String UdpFields = ",a.receivedTimeStamp as in_receivedTimeStamp"
-				+ ",b.receivedTimeStamp as out_receivedTimeStamp"
-				+ ",a.host as host"
-				+ ",a.ipv4_src_addr as ipv4_src_addr"
-				+ ",a.ipv4_dst_addr as ipv4_dst_addr"
-				+ ",a.l4_src_port as l4_src_port"
-				+ ",a.l4_dst_port as l4_dst_port"
-				+ ",a.protocol as protocol"
-				+ ",a.flow_seq_num as in_flow_seq_num"	
-				+ ",b.flow_seq_num as out_flow_seq_num"
-				+ ",a.flow_records as in_flow_records"
-				+ ",b.flow_records as out_flow_records"
-				+ ",a.in_bytes as in_bytes"
-				+ ",b.in_bytes as out_bytes"
-				+ ",a.in_pkts as in_pkts"
-				+ ",b.in_pkts as out_pkts"
-				+ ",a.first_switched as in_first_switched"
-				+ ",b.first_switched as out_first_switched"
-				+ ",a.last_switched as in_last_switched"
-				+ ",b.last_switched as out_last_switched";
-		String TcpFields = ",a.receivedTimeStamp as in_receivedTimeStamp"
-				+ ",b.receivedTimeStamp as out_receivedTimeStamp"
-				+ ",a.host as host"
-				+ ",a.ipv4_src_addr as ipv4_src_addr"
-				+ ",a.ipv4_dst_addr as ipv4_dst_addr"
-				+ ",a.l4_src_port as l4_src_port"
-				+ ",a.l4_dst_port as l4_dst_port"
-				+ ",a.tcp_flags as in_tcp_flags"
-				+ ",b.tcp_flags as out_tcp_flags"
-				+ ",a.protocol as protocol"
-				+ ",a.flow_seq_num as in_flow_seq_num"
-				+ ",b.flow_seq_num as out_flow_seq_num"
-				+ ",a.flow_records as in_flow_records"
-				+ ",b.flow_records as out_flow_records"
-				+ ",a.in_bytes as in_bytes"
-				+ ",b.in_bytes as out_bytes"
-				+ ",a.in_pkts as in_pkts"
-				+ ",b.in_pkts as out_pkts"
-				+ ",a.first_switched as in_first_switched"
-				+ ",b.first_switched as out_first_switched"
-				+ ",a.last_switched as in_last_switched"
-				+ ",b.last_switched as out_last_switched";
+		//register TCP EPLs @see description in TcpEplExpressions
+		String rejectedPattern1 = "[every a=NetflowEventOrdered(protocol=6 and (tcp_flags&2)=2 and (tcp_flags&16)=0) -> "
+								+ " b=NetflowEventOrdered(protocol=6 and (tcp_flags&4)=4 and host=a.host ";
+		String rejectedPattern2 = "[every a=NetflowEventOrdered(protocol=6 and (tcp_flags&4)=4) ->"
+							 	+ " b=NetflowEventOrdered(protocol=6 and (tcp_flags&2)=2 and (tcp_flags&16)=0 and host=a.host ";
+		epService.getEPAdministrator().createEPL(TcpEplExpressions.eplSortByLastSwitched());
+		epService.getEPAdministrator().createEPL(TcpEplExpressions.eplFinishedFlows());
+		epService.getEPAdministrator().createEPL(TcpEplExpressions.eplRejectedFlows(rejectedPattern1));
+		epService.getEPAdministrator().createEPL(TcpEplExpressions.eplRejectedFlows(rejectedPattern2));
 		
-		/*
-		 * Get events into correct order
-		 */
-		String eplSortByLastSwitched = "insert rstream into NetflowEventOrdered"
-				+ " select receivedTimeStamp"
-				+ ",host"
-				+ ",ipv4_src_addr"
-				+ ",ipv4_dst_addr"
-				+ ",l4_src_port"
-				+ ",l4_dst_port"
-				+ ",tcp_flags"
-				+ ",protocol"
-				+ ",version"
-				+ ",flow_seq_num"
-				+ ",flow_records"
-				+ ",in_bytes"
-				+ ",in_pkts"
-				+ ",first_switched"
-				+ ",last_switched"
-				+ " from NetflowEvent.ext:time_order(last_switched.toMilliSec(), 60 sec)";
-		epService.getEPAdministrator().createEPL(eplSortByLastSwitched);
-		
-		/*
-		 * Finished TCP Flow
-		 * FIN flag (1) set on both flows
-		 */
-		String eplFinishedTCPFlows = "insert into TcpConnection select"
-				+ " 'Finished TCP' as description"
-				+ TcpFields
-				+ " from pattern [every a=NetflowEventOrdered(protocol=6 and (tcp_flags&1)=1) ->"
-				+ " b=NetflowEventOrdered(protocol=6 and (tcp_flags%2)=1 and host=a.host "
-				+ " and ipv4_src_addr = a.ipv4_dst_addr"
-				+ " and l4_src_port   = a.l4_dst_port"
-				+ " and ipv4_dst_addr = a.ipv4_src_addr"
-				+ " and l4_dst_port   = a.l4_src_port)"
-				+ " where timer:within(60 sec)]";
-		epService.getEPAdministrator().createEPL(eplFinishedTCPFlows);
+		//register UDP EPLs @see description in UdpEplExpressions
+		epService.getEPAdministrator().createEPL(UdpEplExpressions.eplFinishedUDPFlows());
 
-		/*
-		 * Rejected TCP connection
-		 * first flow: SYN (2) set, but ACK (16) not set
-		 * second flow: RST (4) set
-		 * As we cannot rely on the correct order of netflow data,
-		 * so we define two EPL statements 
-		 */
-		String eplRejectedTCPFlows1 = "insert into TcpConnection select"
-				+ " 'Rejected TCP' as description"
-				+ TcpFields
-				+ " from pattern [every a=NetflowEventOrdered(protocol=6 and (tcp_flags&2)=2 and (tcp_flags&16)=0) ->"
-				+ " b=NetflowEventOrdered(protocol=6 and (tcp_flags&4)=4 and host=a.host "
-				+ " and ipv4_src_addr = a.ipv4_dst_addr"
-				+ " and l4_src_port   = a.l4_dst_port"
-				+ " and ipv4_dst_addr = a.ipv4_src_addr"
-				+ " and l4_dst_port   = a.l4_src_port)"
-				+ " where timer:within(60 sec)]";
-		String eplRejectedTCPFlows2 = "insert into TcpConnection select"
-				+ " 'Rejected TCP' as description"
-				+ TcpFields
-				+ " from pattern [every a=NetflowEventOrdered(protocol=6 and (tcp_flags&4)=4) ->"
-				+ " b=NetflowEventOrdered(protocol=6 and (tcp_flags&2)=2 and (tcp_flags&16)=0 and host=a.host "
-				+ " and ipv4_src_addr = a.ipv4_dst_addr"
-				+ " and l4_src_port   = a.l4_dst_port"
-				+ " and ipv4_dst_addr = a.ipv4_src_addr"
-				+ " and l4_dst_port   = a.l4_src_port)"
-				+ " where timer:within(60 sec)]";
-		epService.getEPAdministrator().createEPL(eplRejectedTCPFlows1);
-		epService.getEPAdministrator().createEPL(eplRejectedTCPFlows2);
-
-		/*
-		 * Finished UDP connection
-		 * no further packets in both directions after 2 minutes
-		 */
-		String eplFinishedUDPFlows = "insert into UdpConnection select"
-				+ " 'Finished UDP' as description"
-				+ UdpFields
-				+ " from pattern [every a=NetflowEventOrdered(protocol=17) ->"
-				+ " b=NetflowEventOrdered(protocol=17 and host=a.host "
-				+ " and ipv4_src_addr = a.ipv4_dst_addr"
-				+ " and l4_src_port   = a.l4_dst_port"
-				+ " and ipv4_dst_addr = a.ipv4_src_addr"
-				+ " and l4_dst_port   = a.l4_src_port)"
-				+ " -> "
-				+ "(timer:interval(120 sec)"
-				+ " and not d=NetflowEventOrdered(protocol=17"
-				+ " and host=a.host"
-				+ " and ipv4_src_addr = a.ipv4_dst_addr"
-				+ " and l4_src_port   = a.l4_dst_port"
-				+ " and ipv4_dst_addr = a.ipv4_src_addr"
-				+ " and l4_dst_port   = a.l4_src_port)"
-				+ " and not "
-				+ " e=NetflowEventOrdered(protocol=17 and host=a.host "
-				+ " and ipv4_src_addr = a.ipv4_dst_addr"
-				+ " and l4_src_port   = a.l4_dst_port"
-				+ " and ipv4_dst_addr = a.ipv4_src_addr"
-				+ " and l4_dst_port   = a.l4_src_port)"
-				+ ")]";
-		epService.getEPAdministrator().createEPL(eplFinishedUDPFlows);
-		// @formatter:on
-
-		/*
-		 * Monitor incoming tcp flows for debugging
-		 */
+		//monitor incoming tcp flows for debugging
 		String eplGetTCPFlowsMonitor = "select host, ipv4_src_addr, l4_src_port, ipv4_dst_addr, l4_dst_port, in_bytes, first_switched from NetflowEvent(protocol=6)";
 		EPStatement statementGetTCPFlowsMonitor = epService.getEPAdministrator().createEPL(eplGetTCPFlowsMonitor);
-		statementGetTCPFlowsMonitor.addListener((newData, oldData) -> {
-			Integer in_bytes = (Integer) newData[0].get("in_bytes");
-			String srcaddr = (String) newData[0].get("ipv4_src_addr");
-			Integer srcport = (Integer) newData[0].get("l4_src_port");
-			String dstaddr = (String) newData[0].get("ipv4_dst_addr");
-			Integer dstport = (Integer) newData[0].get("l4_dst_port");
-			ZonedDateTime first_switched = (ZonedDateTime) newData[0].get("first_switched");
-			LOG.info(String.format("TCP %s:%d -> %s:%d (%d Bytes) %s", srcaddr, srcport, dstaddr, dstport, in_bytes,
-					first_switched.toString()));
-		});
+		statementGetTCPFlowsMonitor.addListener(new TcpFlowMonitorListener());
 
-		/*
-		 * Monitor incoming udp flows for debugging
-		 */
+		//monitor incoming udp flows for debugging
 		String eplGetUDPFlowsMonitor = "select host, ipv4_src_addr, l4_src_port, ipv4_dst_addr, l4_dst_port, in_bytes, first_switched from NetflowEvent(protocol=17)";
 		EPStatement statementGetUDPFlowsMonitor = epService.getEPAdministrator().createEPL(eplGetUDPFlowsMonitor);
-		statementGetUDPFlowsMonitor.addListener((newData, oldData) -> {
-			Integer in_bytes = (Integer) newData[0].get("in_bytes");
-			String srcaddr = (String) newData[0].get("ipv4_src_addr");
-			Integer srcport = (Integer) newData[0].get("l4_src_port");
-			String dstaddr = (String) newData[0].get("ipv4_dst_addr");
-			Integer dstport = (Integer) newData[0].get("l4_dst_port");
-			ZonedDateTime first_switched = (ZonedDateTime) newData[0].get("first_switched");
-			LOG.info(String.format("UDP %s:%d -> %s:%d (%d Bytes) %s", srcaddr, srcport, dstaddr, dstport, in_bytes,
-					first_switched.toString()));
-		});
+		statementGetUDPFlowsMonitor.addListener(new UdpFlowMonitorListener());
 
+		//send processed output to kafka
 		String eplTcpConnectionTrigger = "select * from TcpConnection";
 		EPStatement statementTcpConnectionTrigger = epService.getEPAdministrator().createEPL(eplTcpConnectionTrigger);
-		statementTcpConnectionTrigger.addListener((newData, oldData) -> {
-			String description = (String) newData[0].get("description");
-			String host = (String) newData[0].get("host");
-			String srcaddr = (String) newData[0].get("ipv4_src_addr");
-			Integer srcport = (Integer) newData[0].get("l4_src_port");
-			String dstaddr = (String) newData[0].get("ipv4_dst_addr");
-			Integer dstport = (Integer) newData[0].get("l4_dst_port");
-			Integer protocol = (Integer) newData[0].get("protocol");
-			Integer in_flow_seq_num = (Integer) newData[0].get("in_flow_seq_num");
-			Integer in_flow_records = (Integer) newData[0].get("in_flow_records");
-			Integer out_flow_seq_num = (Integer) newData[0].get("out_flow_seq_num");
-			Integer out_flow_records = (Integer) newData[0].get("out_flow_records");
-			Integer in_bytes = (Integer) newData[0].get("in_bytes");
-			Integer out_bytes = (Integer) newData[0].get("out_bytes");
-			Integer in_pkts = (Integer) newData[0].get("in_pkts");
-			Integer out_pkts = (Integer) newData[0].get("out_pkts");
-			Integer in_tcp_flags = (Integer) newData[0].get("in_tcp_flags");
-			Integer out_tcp_flags = (Integer) newData[0].get("out_tcp_flags");
-			ZonedDateTime in_first_switched = (ZonedDateTime) newData[0].get("in_first_switched");
-			ZonedDateTime out_first_switched = (ZonedDateTime) newData[0].get("out_first_switched");
-			ZonedDateTime in_last_switched = (ZonedDateTime) newData[0].get("in_last_switched");
-			ZonedDateTime out_last_switched = (ZonedDateTime) newData[0].get("out_last_switched");
-			LOG.info(String.format("%s Connection %s:%d -> %s:%d (%d/%d Bytes)", description, srcaddr, srcport, dstaddr,
-					dstport,
-					in_bytes, out_bytes));
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("description", description);
-			jsonObject.put("host", host);
-			jsonObject.put("ipv4_src_addr", srcaddr);
-			jsonObject.put("l4_src_port", srcport);
-			jsonObject.put("ipv4_dst_addr", dstaddr);
-			jsonObject.put("l4_dst_port", dstport);
-			jsonObject.put("protocol", protocol);
-			jsonObject.put("in_flow_seq_num", in_flow_seq_num);
-			jsonObject.put("in_flow_records", in_flow_records);
-			jsonObject.put("out_flow_seq_num", out_flow_seq_num);
-			jsonObject.put("out_flow_records", out_flow_records);
-			jsonObject.put("in_bytes", in_bytes);
-			jsonObject.put("out_bytes", out_bytes);
-			jsonObject.put("in_pkts", in_pkts);
-			jsonObject.put("out_pkts", out_pkts);
-			jsonObject.put("in_tcp_flags", in_tcp_flags);
-			jsonObject.put("out_tcp_flags", out_tcp_flags);
-			jsonObject.put("in_first_switched", in_first_switched);
-			jsonObject.put("out_first_switched", out_first_switched);
-			jsonObject.put("in_last_switched", in_last_switched);
-			jsonObject.put("out_last_switched", out_last_switched);
-			producer.send(jsonObject.toString());
-		});
-
+		statementTcpConnectionTrigger.addListener(new TcpConnectionTrigger(producer));
+		
 		String eplUdpConnectionTrigger = "select * from UdpConnection";
 		EPStatement statementUdpConnectionTrigger = epService.getEPAdministrator().createEPL(eplUdpConnectionTrigger);
-		statementUdpConnectionTrigger.addListener((newData, oldData) -> {
-			String description = (String) newData[0].get("description");
-			String host = (String) newData[0].get("host");
-			String srcaddr = (String) newData[0].get("ipv4_src_addr");
-			Integer srcport = (Integer) newData[0].get("l4_src_port");
-			String dstaddr = (String) newData[0].get("ipv4_dst_addr");
-			Integer dstport = (Integer) newData[0].get("l4_dst_port");
-			Integer protocol = (Integer) newData[0].get("protocol");
-			Integer in_flow_seq_num = (Integer) newData[0].get("in_flow_seq_num");
-			Integer in_flow_records = (Integer) newData[0].get("in_flow_records");
-			Integer out_flow_seq_num = (Integer) newData[0].get("out_flow_seq_num");
-			Integer out_flow_records = (Integer) newData[0].get("out_flow_records");
-			Integer in_bytes = (Integer) newData[0].get("in_bytes");
-			Integer out_bytes = (Integer) newData[0].get("out_bytes");
-			Integer in_pkts = (Integer) newData[0].get("in_pkts");
-			Integer out_pkts = (Integer) newData[0].get("out_pkts");
-			ZonedDateTime in_first_switched = (ZonedDateTime) newData[0].get("in_first_switched");
-			ZonedDateTime out_first_switched = (ZonedDateTime) newData[0].get("out_first_switched");
-			ZonedDateTime in_last_switched = (ZonedDateTime) newData[0].get("in_last_switched");
-			ZonedDateTime out_last_switched = (ZonedDateTime) newData[0].get("out_last_switched");
-			LOG.info(String.format("%s Connection %s:%d -> %s:%d (%d/%d Bytes)", description, srcaddr, srcport, dstaddr,
-					dstport,
-					in_bytes, out_bytes));
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("description", description);
-			jsonObject.put("host", host);
-			jsonObject.put("ipv4_src_addr", srcaddr);
-			jsonObject.put("l4_src_port", srcport);
-			jsonObject.put("ipv4_dst_addr", dstaddr);
-			jsonObject.put("l4_dst_port", dstport);
-			jsonObject.put("protocol", protocol);
-			jsonObject.put("in_flow_seq_num", in_flow_seq_num);
-			jsonObject.put("in_flow_records", in_flow_records);
-			jsonObject.put("out_flow_seq_num", out_flow_seq_num);
-			jsonObject.put("out_flow_records", out_flow_records);
-			jsonObject.put("in_bytes", in_bytes);
-			jsonObject.put("out_bytes", out_bytes);
-			jsonObject.put("in_pkts", in_pkts);
-			jsonObject.put("out_pkts", out_pkts);
-			jsonObject.put("in_first_switched", in_first_switched);
-			jsonObject.put("out_first_switched", out_first_switched);
-			jsonObject.put("in_last_switched", in_last_switched);
-			jsonObject.put("out_last_switched", out_last_switched);
-			producer.send(jsonObject.toString());
-		});
+		statementUdpConnectionTrigger.addListener(new UdpConnectionTrigger(producer));
 		
+		//start KafkaConsumer with prepared EPService 
 		KafkaConsumerMaster consumerMaster = new KafkaConsumerMaster(epService).startWorkers(configs);
 		
+		//give overview about started threads
 		ThreadUtil.printThreads();
+		//manage graceful threads shutdown
 		ThreadUtil.manageShutdown(consumerMaster, producer, epService);
 
 	}
