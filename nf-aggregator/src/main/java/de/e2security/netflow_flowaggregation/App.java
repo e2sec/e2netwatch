@@ -10,6 +10,7 @@ import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.time.CurrentTimeEvent;
 
+import de.e2security.netflow_flowaggregation.esper.TcpConnection;
 import de.e2security.netflow_flowaggregation.esper.TcpConnectionTrigger;
 import de.e2security.netflow_flowaggregation.esper.TcpEplExpressions;
 import de.e2security.netflow_flowaggregation.esper.TcpFlowMonitorListener;
@@ -31,7 +32,7 @@ public class App {
 	public static void main(String[] args) { new App().doMain(args); } // Commandline Parser cannot use static object, so we use this ugly workaround
 	public void doMain(String[] args) {
 	
-		LOG.info("VERSION 0.0.1"); //just marker to see the right update in the docker container
+		LOG.info("VERSION 0.0.2"); //just marker to see the right update in the docker container
 
 		//read Default Configuration and Parse Arguments
 		Properties configs = new PropertiesUtil().readInt("application.properties")
