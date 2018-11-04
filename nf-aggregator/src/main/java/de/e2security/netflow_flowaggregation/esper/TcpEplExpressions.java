@@ -36,7 +36,10 @@ public final class TcpEplExpressions implements EplExpression {
 				+ ",b.last_switched as out_last_switched";
 	}
 	
-	//Get events into correct order
+	/**
+	 * Get events into correct order
+	 * @see http://esper.espertech.com/release-5.5.0/esper-reference/html/epl-views.html#view-time-order
+	 */
 	public static String eplSortByLastSwitched() {
 		return "insert rstream into NetflowEventOrdered"
 				+ " select receivedTimeStamp"
