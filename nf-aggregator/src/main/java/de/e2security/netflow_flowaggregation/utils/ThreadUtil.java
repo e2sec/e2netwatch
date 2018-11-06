@@ -1,7 +1,6 @@
 package de.e2security.netflow_flowaggregation.utils;
 
 import java.util.ConcurrentModificationException;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -52,7 +51,7 @@ public final class ThreadUtil {
 		});
 	}
 	
-	@SuppressWarnings("unused")
+	
 	public static void printThreads() {
 		System.out.println("");
 		System.out.println("Current threads:");
