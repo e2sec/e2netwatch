@@ -16,9 +16,9 @@ import de.e2security.netflow_flowaggregation.netflow.NetflowEvent;
 import de.e2security.netflow_flowaggregation.netflow.NetflowEventOrdered;
 import de.e2security.netflow_flowaggregation.utils.EsperUtil;
 import de.e2security.netflow_flowaggregation.utils.TestUtil;
-import junit.framework.Assert;
+import org.junit.Assert;
 
-@SuppressWarnings("deprecation")
+
 public class EplExpressionTest {
 
 	EPServiceProvider engine;
@@ -48,7 +48,13 @@ public class EplExpressionTest {
 			ZonedDateTime theMostLatestDate = dates.poll(); // polling from the head: the most recent/latest data due to FIFO and ascending order
 			ZonedDateTime dateBeforeTheMostLatestDate = dates.peek();
 			if (dateBeforeTheMostLatestDate.compareTo(theMostLatestDate) <= 0) //compareTo results: negative int if this < that; 0 if this == that; positive int if this > that
+			{
 				assertions.add(true);
+			}
+			else
+			{
+				assertions.add(false);
+			}
 		}
 		Assert.assertEquals(nfGenSampleDataFromKafka.size() - 3, assertions.size()); 
 	}
