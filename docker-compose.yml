@@ -145,7 +145,7 @@ services:
       KAFKA_ADVERTISED_HOST_NAME: kafka
       KAFKA_ADVERTISED_PORT: 9092
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_CREATE_TOPICS: "syslog:1:1, netflow:1:1, nf_raw:1:1"
+      KAFKA_CREATE_TOPICS: "syslog:1:1, netflow:1:1, nf_raw:1:1, nifi-debug:1:1, nifi-error:1:1"
     volumes:
       - /etc/localtime:/etc/localtime:ro
     networks:

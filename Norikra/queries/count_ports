@@ -1,0 +1,5 @@
+{
+    "query_name" : "count ports",
+    "query_group" : "counter",
+    "expression" : "select last_switched AS timestamp,  count(*, l4_dst_port=80) AS http_count,  count(*, l4_dst_port=21) AS ftp_count,  count(*, l4_dst_port=445) AS smbtcp_count,  count(*, l4_dst_port=53) AS dns_count  from netflow.win:time_batch(30 sec)"
+}

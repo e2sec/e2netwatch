@@ -1,0 +1,5 @@
+{
+    "query_name" : "count netflow",
+    "query_group" : "counter",
+    "expression" : "select last_switched AS timestamp, count(*) AS count from netflow.win:time_batch(30 sec)"
+}

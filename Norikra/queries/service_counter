@@ -1,0 +1,5 @@
+{
+    "query_name" : "service counter",
+    "query_group" : "counter",
+    "expression" : "select timestamp, count(*, appname=\"ftp\") as ftp_count,  count(*, appname=\"samba\") as samba_count,  count(*, appname=\"nginx\") as nginx_count  from syslog.win:time_batch(15 sec)"    
+}
