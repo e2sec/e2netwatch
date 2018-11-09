@@ -37,7 +37,7 @@ public final class TcpEplExpressions implements EplExpression {
 	}
 	
 	/**
-	 * Get events into correct order
+	 * Get events into correct order as we cannot rely on the correct order of netflow data,
 	 * @see http://esper.espertech.com/release-5.5.0/esper-reference/html/epl-views.html#view-time-order
 	 */
 	public static String eplSortByLastSwitched() {
@@ -62,7 +62,6 @@ public final class TcpEplExpressions implements EplExpression {
 	
 	/**
 	 * Finished TCP Flow: FIN flag (1) set on both flows 
-	 * @param protocolFields can be either Tcp or Udp fields
 	 * @return EPL Expression 
 	 */
 	public static String eplFinishedFlows() {
@@ -70,7 +69,7 @@ public final class TcpEplExpressions implements EplExpression {
 				+ " 'Finished TCP' as description"
 				+ tcpFields()
 				+ " from pattern [every a=NetflowEventOrdered(protocol=6 and (tcp_flags&1)=1) ->"
-				+ " b=NetflowEventOrdered(protocol=6 and (tcp_flags%2)=1 and host=a.host "
+				+ " b=NetflowEventOrdered(protocol=6 and (tcp_flags&1)=1 and host=a.host "
 				+ " and ipv4_src_addr = a.ipv4_dst_addr"
 				+ " and l4_src_port   = a.l4_dst_port"
 				+ " and ipv4_dst_addr = a.ipv4_src_addr"
@@ -82,9 +81,7 @@ public final class TcpEplExpressions implements EplExpression {
 	 * Rejected TCP connection
 	 * first flow: SYN (2) set, but ACK (16) not set
 	 * second flow: RST (4) set
-	 * As we cannot rely on the correct order of netflow data,
-	 * so we define two EPL statements 
-	 * @param protocolFields can be either Tcp or Udp fields
+	 * @param pattern pattern to be used
 	 * @return EPL Expression
 	 */
 	public static String eplRejectedFlows(String pattern) {

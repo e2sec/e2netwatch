@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Queue;
 
+import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,12 +23,12 @@ import com.espertech.esper.client.time.CurrentTimeSpanEvent;
 import de.e2security.netflow_flowaggregation.netflow.NetflowEvent;
 import de.e2security.netflow_flowaggregation.netflow.NetflowEventOrdered;
 import de.e2security.netflow_flowaggregation.utils.TestUtil;
-import org.junit.Assert;
 
 
 public class EplExpressionTest {
 
-	private EPServiceProvider engine;
+	EPServiceProvider engine;
+	static NetflowEventsCorrectOrderTestListener listener = new NetflowEventsCorrectOrderTestListener(false); //static in order to use over the tests
 	
 	@Before public void init() {
 		Configuration config = new Configuration();
@@ -36,9 +38,12 @@ public class EplExpressionTest {
 		engine = EPServiceProviderManager.getDefaultProvider(config);
 	}
 	
-	@Test public void test() throws ParseException {
-		List<NetflowEvent> events = EsperTestUtil.getHistoricalEvents(TestUtil.readSampleDataFile("nf_gen.output.sample"), 100);
-		NetflowEventsCorrectOrderTestListener listener = new NetflowEventsCorrectOrderTestListener(true);
+	@After public void destroy() {
+		engine.destroy();
+	}
+	
+	@Test public void eplFinishedFlowsTest() throws ParseException {
+		List<NetflowEvent> events = EsperTestUtil.getHistoricalEvents(TestUtil.readSampleDataFile("nf_gen.tcp.sample"), 100);
 		DateTimeFormatter formater = DateTimeFormatter.ISO_INSTANT;
 		ZonedDateTime initial = events.get(0).getLast_switched();
 		Date startTime = Date.from(Instant.from(formater.parse(initial.toString()))); //get initial time point for window
@@ -64,6 +69,10 @@ public class EplExpressionTest {
 			}
 		}
 		Assert.assertEquals(events.size() - 1, correctOrder);
+	}
+	
+	@Test public void testFinishedTcpConnections() {
+		Assert.assertEquals(100,listener.getNetflowsOrdered().size());
 	}
 	
 }
