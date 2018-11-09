@@ -1,0 +1,9 @@
+version: '3.2'
+
+services:
+  nf-aggregation:
+    build:
+      context: ./
+    image: e2nw/nf_aggregation
+
+    command: 'java -jar netflow-flowaggregation-1.0-SNAPSHOT-jar-with-dependencies.jar'
