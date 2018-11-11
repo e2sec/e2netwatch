@@ -52,7 +52,7 @@ public class TestEplExpressionsWithManualEventsInjection {
 		Pair<Long,Long> timer = EsperTestUtil.getTimeFrameForCurrentTimer(eventsList);
 		int window = 100;
 		EPStatement filterStmt = admin.createEPL(TcpEplExpressions.eplFinishedFlows());
-		EPStatement selectStmt = admin.createEPL(TcpEplExpressionsTest.selectFinishedTcpConnections());
+		EPStatement selectStmt = admin.createEPL(TcpEplExpressionsTest.selectTcpConnections());
 		selectStmt.addListener(listener);
 		runtime.sendEvent(new CurrentTimeEvent(timer.getKey()));
 		/*

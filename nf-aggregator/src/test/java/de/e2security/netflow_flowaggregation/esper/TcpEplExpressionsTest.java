@@ -6,7 +6,7 @@ public final class TcpEplExpressionsTest {
 		return "select * from NetflowEventOrdered";
 	}
 	
-	public static String selectFinishedTcpConnections() {
+	public static String selectTcpConnections() {
 		return "select * from TcpConnection";
 	}
 }

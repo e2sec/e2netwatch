@@ -13,6 +13,8 @@ import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.espertech.esper.client.Configuration;
 import com.espertech.esper.client.EPAdministrator;
@@ -24,6 +26,7 @@ import com.espertech.esper.client.scopetest.SupportUpdateListener;
 import com.espertech.esper.client.time.CurrentTimeEvent;
 import com.espertech.esper.client.time.CurrentTimeSpanEvent;
 
+import de.e2security.netflow_flowaggregation.App;
 import de.e2security.netflow_flowaggregation.model.protocols.NetflowEvent;
 import de.e2security.netflow_flowaggregation.model.protocols.NetflowEventOrdered;
 import de.e2security.netflow_flowaggregation.model.protocols.TcpConnection;
@@ -32,6 +35,8 @@ import de.e2security.netflow_flowaggregation.utils.TestUtil;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestEplExpressionsWithEngineEventsFlow {
 	
+	private static final Logger LOG = LoggerFactory.getLogger(TestEplExpressionsWithEngineEventsFlow.class);
+
 	/*
 	 * in this test class we're trying to test the natural flow of events within esper engine regarding the ep statements order;
 	 * for this reason the listener has been defined globally and marked as static;
@@ -101,10 +106,10 @@ public class TestEplExpressionsWithEngineEventsFlow {
 		int window = 100;
 		SupportUpdateListener supportListener = new SupportUpdateListener();
 		NetflowEventsFinishedTcpConnectionsListener localListener = new NetflowEventsFinishedTcpConnectionsListener(false);
-		ArrayDeque<NetflowEventOrdered> netflowsOrdered = (ArrayDeque<NetflowEventOrdered>) listener.getNetflowsOrdered();
-		Pair<Long,Long> timer = EsperTestUtil.getTimeFrameForCurrentTimer(netflowsOrdered);
+		Queue<NetflowEventOrdered> netflowsOrdered = listener.getNetflowsOrdered();
+		Pair<Long,Long> timer = EsperTestUtil.getTimeFrameForCurrentTimer((ArrayDeque<NetflowEventOrdered>)netflowsOrdered);
 		EPStatement detectFinished = admin.createEPL(TcpEplExpressions.eplFinishedFlows());
-		EPStatement selectFinished = admin.createEPL(TcpEplExpressionsTest.selectFinishedTcpConnections());
+		EPStatement selectFinished = admin.createEPL(TcpEplExpressionsTest.selectTcpConnections());
 		selectFinished.addListener(localListener);
 		selectFinished.addListener(supportListener);
 		runtime.sendEvent(new CurrentTimeEvent(timer.getKey()));
@@ -114,19 +119,32 @@ public class TestEplExpressionsWithEngineEventsFlow {
 		 * during assertion:
 		 * 	compare the result of native Esper's EPstatement with manual boolean checker in NetflowEventsFinishedTcpConnectionsListener
 		 */
+		LOG.info("# FINISHED CONNECTIONS FOUND: " + supportListener.getNewDataList().size());
 		Assert.assertEquals(supportListener.getNewDataList().size(), localListener.getFinishedConns().size());
 	}
 
 	@Test public void rejectedTcpConnectionsWithInFlagsSynAndAckAndOutFlagsRstTest() {
-		String rejectedPattern1 = "[every a=NetflowEventOrdered(protocol=6 and (tcp_flags&2)=2 and (tcp_flags&16)=0) -> "
+		SupportUpdateListener supportListener = new SupportUpdateListener();
+		NetflowEventsRejectedTcpConnectionsListener rejectedListener = new NetflowEventsRejectedTcpConnectionsListener(true);
+		String rejectedPattern = "[every a=NetflowEventOrdered(protocol=6 and (tcp_flags&2)=2 and (tcp_flags&16)=0) -> "
 				+ " b=NetflowEventOrdered(protocol=6 and (tcp_flags&4)=4 and host=a.host ";
-
-		Assert.assertFalse(true);
+		EPStatement detectRejected = admin.createEPL(TcpEplExpressions.eplRejectedFlows(rejectedPattern));
+		EPStatement selectRejected = admin.createEPL(TcpEplExpressionsTest.selectTcpConnections());
+		selectRejected.addListener(rejectedListener);
+		selectRejected.addListener(supportListener);
+		Queue<NetflowEventOrdered> netflowsOrdered = listener.getNetflowsOrdered();
+		Pair<Long,Long> timer = EsperTestUtil.getTimeFrameForCurrentTimer((ArrayDeque<NetflowEventOrdered>) netflowsOrdered);
+		runtime.sendEvent(new CurrentTimeEvent(timer.getKey()));
+		netflowsOrdered.forEach(runtime::sendEvent);
+		runtime.sendEvent(new CurrentTimeSpanEvent(timer.getRight(), 100));
+		LOG.info("# REJECTED CONNECTIONS FOUND: " + supportListener.getNewDataList().size());
+		Assert.assertEquals(supportListener.getNewDataList().size(), rejectedListener.getRejectedList().size());
 	}
 
 	@Test public void rejectedTcpConnectionsWithInFlagsRstAndOutFlagsSynAndAckTest() {
-		String rejectedPattern2 = "[every a=NetflowEventOrdered(protocol=6 and (tcp_flags&4)=4) ->"
+		String rejectedPattern = "[every a=NetflowEventOrdered(protocol=6 and (tcp_flags&4)=4) ->"
 				+ " b=NetflowEventOrdered(protocol=6 and (tcp_flags&2)=2 and (tcp_flags&16)=0 and host=a.host ";
+		
 		Assert.assertFalse(true);
 	}
 }
