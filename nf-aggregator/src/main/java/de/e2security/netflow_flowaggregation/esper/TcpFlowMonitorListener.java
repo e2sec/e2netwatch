@@ -14,6 +14,7 @@ public class TcpFlowMonitorListener implements UpdateListener {
 	
 	@Override
 	public void update(EventBean[] newData, EventBean[] oldEvents) {
+		//TODO: not really clear which underlying object it is (can be checked over statement), but also too error-prone: -> should be reimplemented with underlying class and its methods 
 		Integer in_bytes = (Integer) newData[0].get("in_bytes");
 		String srcaddr = (String) newData[0].get("ipv4_src_addr");
 		Integer srcport = (Integer) newData[0].get("l4_src_port");
