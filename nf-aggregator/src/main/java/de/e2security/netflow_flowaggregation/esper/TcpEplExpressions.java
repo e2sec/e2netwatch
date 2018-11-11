@@ -103,4 +103,14 @@ public final class TcpEplExpressions {
 				+ connectionXReferenceChecker()
 				+ " where timer:within(60 sec)]";
 	}
+	
+	public static String eplRejectedPatternSyn2Ack16() {
+		return "[every a=NetflowEventOrdered(protocol=6 and (tcp_flags&2)=2 and (tcp_flags&16)=0) -> "
+			+ " b=NetflowEventOrdered(protocol=6 and (tcp_flags&4)=4 and host=a.host ";
+	}
+	
+	public static String eplRejectedPatternRst4() {
+		return "[every a=NetflowEventOrdered(protocol=6 and (tcp_flags&4)=4) ->"
+		 	+ " b=NetflowEventOrdered(protocol=6 and (tcp_flags&2)=2 and (tcp_flags&16)=0 and host=a.host ";
+	}
 }

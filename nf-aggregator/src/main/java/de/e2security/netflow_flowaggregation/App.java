@@ -46,14 +46,10 @@ public class App {
 		EPServiceProvider epService = EsperUtil.registerEvents(NetflowEvent.class, NetflowEventOrdered.class, TcpConnection.class, CurrentTimeEvent.class);
 
 		//register TCP EPLs @see description in TcpEplExpressions
-		String rejectedPattern1 = "[every a=NetflowEventOrdered(protocol=6 and (tcp_flags&2)=2 and (tcp_flags&16)=0) -> "
-								+ " b=NetflowEventOrdered(protocol=6 and (tcp_flags&4)=4 and host=a.host ";
-		String rejectedPattern2 = "[every a=NetflowEventOrdered(protocol=6 and (tcp_flags&4)=4) ->"
-							 	+ " b=NetflowEventOrdered(protocol=6 and (tcp_flags&2)=2 and (tcp_flags&16)=0 and host=a.host ";
 		epService.getEPAdministrator().createEPL(TcpEplExpressions.eplSortByLastSwitched());
 		epService.getEPAdministrator().createEPL(TcpEplExpressions.eplFinishedFlows());
-		epService.getEPAdministrator().createEPL(TcpEplExpressions.eplRejectedFlows(rejectedPattern1));
-		epService.getEPAdministrator().createEPL(TcpEplExpressions.eplRejectedFlows(rejectedPattern2));
+		epService.getEPAdministrator().createEPL(TcpEplExpressions.eplRejectedFlows(TcpEplExpressions.eplRejectedPatternSyn2Ack16()));
+		epService.getEPAdministrator().createEPL(TcpEplExpressions.eplRejectedFlows(TcpEplExpressions.eplRejectedPatternRst4()));
 		
 		//register UDP EPLs @see description in UdpEplExpressions
 		epService.getEPAdministrator().createEPL(UdpEplExpressions.eplFinishedUDPFlows());

@@ -6,6 +6,7 @@ import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.After;
 import org.junit.Assert;
@@ -26,7 +27,6 @@ import com.espertech.esper.client.scopetest.SupportUpdateListener;
 import com.espertech.esper.client.time.CurrentTimeEvent;
 import com.espertech.esper.client.time.CurrentTimeSpanEvent;
 
-import de.e2security.netflow_flowaggregation.App;
 import de.e2security.netflow_flowaggregation.model.protocols.NetflowEvent;
 import de.e2security.netflow_flowaggregation.model.protocols.NetflowEventOrdered;
 import de.e2security.netflow_flowaggregation.model.protocols.TcpConnection;
@@ -123,12 +123,23 @@ public class TestEplExpressionsWithEngineEventsFlow {
 		Assert.assertEquals(supportListener.getNewDataList().size(), localListener.getFinishedConns().size());
 	}
 
+	
 	@Test public void rejectedTcpConnectionsWithInFlagsSynAndAckAndOutFlagsRstTest() {
+		Pair<Integer,Integer> expecting_actual = testingRejectedTcpConnections(TcpEplExpressions.eplRejectedPatternSyn2Ack16());
+		LOG.info("# REJECTED CONNECTIONS FOUND: " + expecting_actual.getRight());
+		Assert.assertEquals(expecting_actual.getLeft(), expecting_actual.getRight());
+	}
+
+	@Test public void rejectedTcpConnectionsWithInFlagsRstAndOutFlagsSynAndAckTest() {
+		Pair<Integer,Integer> expecting_actual = testingRejectedTcpConnections(TcpEplExpressions.eplRejectedPatternRst4());
+		LOG.info("# REJECTED CONNECTIONS FOUND: " + expecting_actual.getRight());
+		Assert.assertEquals(expecting_actual.getLeft(), expecting_actual.getRight());
+	}
+	
+	private Pair<Integer,Integer> testingRejectedTcpConnections(String pattern) {
 		SupportUpdateListener supportListener = new SupportUpdateListener();
-		NetflowEventsRejectedTcpConnectionsListener rejectedListener = new NetflowEventsRejectedTcpConnectionsListener(true);
-		String rejectedPattern = "[every a=NetflowEventOrdered(protocol=6 and (tcp_flags&2)=2 and (tcp_flags&16)=0) -> "
-				+ " b=NetflowEventOrdered(protocol=6 and (tcp_flags&4)=4 and host=a.host ";
-		EPStatement detectRejected = admin.createEPL(TcpEplExpressions.eplRejectedFlows(rejectedPattern));
+		NetflowEventsRejectedTcpConnectionsListener rejectedListener = new NetflowEventsRejectedTcpConnectionsListener(false, pattern);
+		EPStatement detectRejected = admin.createEPL(TcpEplExpressions.eplRejectedFlows(pattern));
 		EPStatement selectRejected = admin.createEPL(TcpEplExpressionsTest.selectTcpConnections());
 		selectRejected.addListener(rejectedListener);
 		selectRejected.addListener(supportListener);
@@ -137,14 +148,8 @@ public class TestEplExpressionsWithEngineEventsFlow {
 		runtime.sendEvent(new CurrentTimeEvent(timer.getKey()));
 		netflowsOrdered.forEach(runtime::sendEvent);
 		runtime.sendEvent(new CurrentTimeSpanEvent(timer.getRight(), 100));
-		LOG.info("# REJECTED CONNECTIONS FOUND: " + supportListener.getNewDataList().size());
-		Assert.assertEquals(supportListener.getNewDataList().size(), rejectedListener.getRejectedList().size());
-	}
-
-	@Test public void rejectedTcpConnectionsWithInFlagsRstAndOutFlagsSynAndAckTest() {
-		String rejectedPattern = "[every a=NetflowEventOrdered(protocol=6 and (tcp_flags&4)=4) ->"
-				+ " b=NetflowEventOrdered(protocol=6 and (tcp_flags&2)=2 and (tcp_flags&16)=0 and host=a.host ";
-		
-		Assert.assertFalse(true);
+		Pair<Integer,Integer> expected_actual = new ImmutablePair<Integer, Integer>(supportListener.getNewDataList().size(), 
+				rejectedListener.getRejectedList().size());
+		return expected_actual;
 	}
 }
