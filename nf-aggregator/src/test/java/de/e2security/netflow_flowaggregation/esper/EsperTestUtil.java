@@ -1,12 +1,18 @@
 package de.e2security.netflow_flowaggregation.esper;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.time.CurrentTimeEvent;
 
 import de.e2security.netflow_flowaggregation.model.protocols.NetflowEvent;
+import de.e2security.netflow_flowaggregation.model.protocols.NetflowEventOrdered;
+import de.e2security.netflow_flowaggregation.utils.TestUtil;
 
 public final class EsperTestUtil {
 
@@ -36,6 +42,22 @@ public final class EsperTestUtil {
 				counter++;
 		}
 		return testEvents;
+	}
+	
+	public static Pair<Long, Long> getTimeFrameForCurrentTimer(List<NetflowEvent> events) {
+		long currentEventTime = TestUtil.getCurrentTimeEvent(events.get(0).getLast_switched()); 
+		long lastEventTime = TestUtil.getCurrentTimeEvent(events.get(events.size() - 1).getLast_switched());
+		long delta = lastEventTime - currentEventTime;
+		Pair<Long, Long> pair = new ImmutablePair<>(currentEventTime, lastEventTime + delta);
+		return pair;
+	}
+	
+	public static Pair<Long, Long> getTimeFrameForCurrentTimer(ArrayDeque<NetflowEventOrdered> events) {
+		long currentEventTime = TestUtil.getCurrentTimeEvent(events.getFirst().getLast_switched()); 
+		long lastEventTime = TestUtil.getCurrentTimeEvent(events.getLast().getLast_switched());
+		long delta = lastEventTime - currentEventTime;
+		Pair<Long, Long> pair = new ImmutablePair<>(currentEventTime, lastEventTime + delta);
+		return pair;
 	}
 	
 }
