@@ -4,13 +4,18 @@ import java.time.ZonedDateTime;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.UpdateListener;
 
 import de.e2security.netflow_flowaggregation.model.protocols.NetflowEventOrdered;
 
 public class NetflowEventsCorrectOrderTestListener implements UpdateListener {
-	
+
+	private static final Logger LOG = LoggerFactory.getLogger(NetflowEventsCorrectOrderTestListener.class);
+
 	private boolean stdout = false;
 	
 	NetflowEventsCorrectOrderTestListener(boolean stdout) {
@@ -24,7 +29,7 @@ public class NetflowEventsCorrectOrderTestListener implements UpdateListener {
 	public void update(EventBean[] newEvents, EventBean[] oldEvents) {
 		NetflowEventOrdered event = (NetflowEventOrdered) newEvents[0].getUnderlying();
 		ZonedDateTime last_switched = (ZonedDateTime) event.getLast_switched();
-		if (stdout) System.out.println(last_switched.toString());
+		if (stdout) LOG.info(last_switched.toString());
 		dates.add(last_switched);
 		netflowsOrdered.add(event);
 	}

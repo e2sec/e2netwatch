@@ -50,7 +50,7 @@ public class TestEplExpressionsWithEngineEventsFlow {
 	EPServiceProvider engine;
 	EPAdministrator admin;
 	EPRuntime runtime;
-	static NetflowEventsCorrectOrderTestListener listener = new NetflowEventsCorrectOrderTestListener(false); //static in order to use over the tests
+	static NetflowEventsCorrectOrderTestListener listener = new NetflowEventsCorrectOrderTestListener(true); //static in order to use over the tests
 
 	@Before public void init() {
 		Configuration config = new Configuration();
@@ -105,7 +105,7 @@ public class TestEplExpressionsWithEngineEventsFlow {
 	@Test public void finishedTcpConnectionsTest() {
 		int window = 100;
 		SupportUpdateListener supportListener = new SupportUpdateListener();
-		NetflowEventsFinishedTcpConnectionsListener localListener = new NetflowEventsFinishedTcpConnectionsListener(false);
+		NetflowEventsFinishedTcpConnectionsListener localListener = new NetflowEventsFinishedTcpConnectionsListener(true);
 		Queue<NetflowEventOrdered> netflowsOrdered = listener.getNetflowsOrdered();
 		Pair<Long,Long> timer = EsperTestUtil.getTimeFrameForCurrentTimer((ArrayDeque<NetflowEventOrdered>)netflowsOrdered);
 		EPStatement detectFinished = admin.createEPL(TcpEplExpressions.eplFinishedFlows());
@@ -138,7 +138,7 @@ public class TestEplExpressionsWithEngineEventsFlow {
 	
 	private Pair<Integer,Integer> testingRejectedTcpConnections(String pattern) {
 		SupportUpdateListener supportListener = new SupportUpdateListener();
-		NetflowEventsRejectedTcpConnectionsListener rejectedListener = new NetflowEventsRejectedTcpConnectionsListener(false, pattern);
+		NetflowEventsRejectedTcpConnectionsListener rejectedListener = new NetflowEventsRejectedTcpConnectionsListener(true, pattern);
 		EPStatement detectRejected = admin.createEPL(TcpEplExpressions.eplRejectedFlows(pattern));
 		EPStatement selectRejected = admin.createEPL(TcpEplExpressionsTest.selectTcpConnections());
 		selectRejected.addListener(rejectedListener);

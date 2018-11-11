@@ -3,13 +3,18 @@ package de.e2security.netflow_flowaggregation.esper;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.UpdateListener;
 
 import de.e2security.netflow_flowaggregation.model.protocols.TcpConnection;
 
 public class NetflowEventsRejectedTcpConnectionsListener implements UpdateListener {
-	
+
+	private static final Logger LOG = LoggerFactory.getLogger(NetflowEventsRejectedTcpConnectionsListener.class);
+
 	boolean stdout = false;
 	String pattern = "";
 	
@@ -23,6 +28,7 @@ public class NetflowEventsRejectedTcpConnectionsListener implements UpdateListen
 	@Override
 	public void update(EventBean[] newEvents, EventBean[] oldEvents) {
 		TcpConnection event = (TcpConnection) newEvents[0].getUnderlying();
+		if (stdout) LOG.info(event.toString());
 		if (isConnectionRejected(event, pattern)) 
 			connRejected.add(event);
 	}
