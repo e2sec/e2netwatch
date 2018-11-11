@@ -64,6 +64,13 @@ public final class TcpEplExpressions {
 				+ " from NetflowEvent.ext:time_order(last_switched.toMilliSec(), 60 sec)";
 	}
 	
+	private static String connectionXReferenceChecker() {
+		return    " and ipv4_src_addr = a.ipv4_dst_addr"
+				+ " and l4_src_port   = a.l4_dst_port"
+				+ " and ipv4_dst_addr = a.ipv4_src_addr"
+				+ " and l4_dst_port   = a.l4_src_port)";
+	}
+	
 	/**
 	 * Finished TCP Flow: FIN flag (1) set on both flows 
 	 * @param protocolFields can be either Tcp or Udp fields
@@ -75,10 +82,7 @@ public final class TcpEplExpressions {
 				+ tcpFields()
 				+ " from pattern [every a=NetflowEventOrdered(protocol=6 and (tcp_flags&1)=1) ->"
 				+ " b=NetflowEventOrdered(protocol=6 and (tcp_flags&1)=1 and host=a.host "
-				+ " and ipv4_src_addr = a.ipv4_dst_addr"
-				+ " and l4_src_port   = a.l4_dst_port"
-				+ " and ipv4_dst_addr = a.ipv4_src_addr"
-				+ " and l4_dst_port   = a.l4_src_port)"
+				+ connectionXReferenceChecker()
 				+ " where timer:within(60 sec)]";
 	}
 	
@@ -96,10 +100,7 @@ public final class TcpEplExpressions {
 				+ " 'Rejected TCP' as description"
 				+ tcpFields()
 				+ " from pattern " + pattern
-				+ " and ipv4_src_addr = a.ipv4_dst_addr"
-				+ " and l4_src_port   = a.l4_dst_port"
-				+ " and ipv4_dst_addr = a.ipv4_src_addr"
-				+ " and l4_dst_port   = a.l4_src_port)"
+				+ connectionXReferenceChecker()
 				+ " where timer:within(60 sec)]";
 	}
 }
