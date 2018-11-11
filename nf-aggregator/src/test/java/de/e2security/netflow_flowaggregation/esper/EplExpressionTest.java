@@ -48,7 +48,7 @@ public class EplExpressionTest {
 		engine.destroy();
 	}
 	
-	@Test public void eplFinishedFlowsTest() throws ParseException {
+	@Test public void eplSortByLastSwitchedTest() throws ParseException {
 		/*
 		 * while extending the number of lines to be read from sample data -> windowSpanTime should be also adjusted
 		 */
@@ -80,14 +80,10 @@ public class EplExpressionTest {
 		Assert.assertEquals(events.size() - 1, correctOrder);
 	}
 	
-	//test code during manual injection of finished connections
-	@Test public void testFinishedTcpConnectionIsolated() {
-	}
-	
-	//test code using data generated during eplFinishedFlowsTest()
+	//test code using data generated during eplSortByLastSwitched()
 	@Test public void finishedTcpConnectionsTest() {
 		SupportUpdateListener supportListener = new SupportUpdateListener();
-		NetflowEventsFinishedTcpConnectionsListener localListener = new NetflowEventsFinishedTcpConnectionsListener(true);
+		NetflowEventsFinishedTcpConnectionsListener localListener = new NetflowEventsFinishedTcpConnectionsListener(false);
 		Queue<NetflowEventOrdered> netflowsOrdered = listener.getNetflowsOrdered();
 		ZonedDateTime start = netflowsOrdered.peek().getLast_switched();
 		long currentEventTime = TestUtil.getCurrentTimeEvent(start);
@@ -103,6 +99,36 @@ public class EplExpressionTest {
 		 * 	compare the result of native Esper's EPstatement with manual boolean checker in NetflowEventsFinishedTcpConnectionsListener
 		 */
 		Assert.assertEquals(supportListener.getNewDataList().size(), localListener.getFinishedConns().size());
+	}
+	
+	//test code during manual injection of finished connections
+	@Test public void testFinishedTcpConnectionIsolated() {
+		SupportUpdateListener listener = new SupportUpdateListener();
+		int numberOfEvents = 2;
+		List<NetflowEvent> eventsList = EsperTestUtil.getHistoricalEvents(TestUtil.readSampleDataFile("netflow_ordered_finished.sample"), numberOfEvents);
+		long currentEventTime = TestUtil.getCurrentTimeEvent(eventsList.get(0).getLast_switched());
+		long lastEventTime = TestUtil.getCurrentTimeEvent(eventsList.get(numberOfEvents - 2).getLast_switched());
+		long delta = currentEventTime - lastEventTime;
+		int window = 100;
+		EPStatement filterStmt = admin.createEPL(TcpEplExpressions.eplFinishedFlows());
+		EPStatement selectStmt = admin.createEPL(TcpEplExpressionsTest.selectFinishedTcpConnections());
+		selectStmt.addListener(listener);
+		runtime.sendEvent(new CurrentTimeEvent(currentEventTime));
+		eventsList.forEach(event -> {
+			try {
+				NetflowEventOrdered orderedEvent = event.convertToOrderedType();
+				runtime.sendEvent(orderedEvent);
+			} catch (Exception e) {	e.printStackTrace(); }
+		});
+		runtime.sendEvent(new CurrentTimeSpanEvent(currentEventTime + delta * window, window));
+		/*
+		 * divide through 2 cause finished tcp connections are saved in TcpConnection instances contained of two events (in_/out_)
+		 */
+		Assert.assertEquals(numberOfEvents / 2, listener.getNewDataList().size());
+	}
+	
+	@Test public void rejectedTcpConnectionsTest() {
+		
 	}
 	
 }

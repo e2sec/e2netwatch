@@ -3,14 +3,13 @@ package de.e2security.netflow_flowaggregation.model.protocols;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.e2security.netflow_flowaggregation.App;
 import de.e2security.netflow_flowaggregation.exceptions.NetflowEventException;
-
-import org.json.JSONObject;
-import org.json.JSONException;
 
 public class NetflowEvent implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -31,6 +30,26 @@ public class NetflowEvent implements Serializable {
     private Integer in_pkts;
     private ZonedDateTime first_switched;
     private ZonedDateTime last_switched;
+    
+	//factory method to create ordered instances from NetflowEvent (e.g. when the messages saved in ordered sequence)
+	public NetflowEventOrdered convertToOrderedType() throws NetflowEventException {
+		return new NetflowEventOrdered(
+				this.receivedTimeStamp,
+				this.host, 
+				this.ipv4_src_addr, 
+				this.ipv4_dst_addr, 
+				this.l4_src_port, 
+				this.l4_dst_port, 
+				this.tcp_flags, 
+				this.protocol, 
+				this.version, 
+				this.flow_seq_num,
+				this.flow_records,
+				this.in_bytes, 
+				this.in_pkts, 
+				this.first_switched, 
+				this.last_switched);
+	}
 
 	public NetflowEvent(String jsonString) throws NetflowEventException {
         JSONObject jsonObject;

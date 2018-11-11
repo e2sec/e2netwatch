@@ -1,10 +1,6 @@
 package de.e2security.netflow_flowaggregation.esper;
 
-import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.espertech.esper.client.EPServiceProvider;
