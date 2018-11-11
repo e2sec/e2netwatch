@@ -1,4 +1,4 @@
-package de.e2security.netflow_flowaggregation.netflow;
+package de.e2security.netflow_flowaggregation.model.protocols;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;

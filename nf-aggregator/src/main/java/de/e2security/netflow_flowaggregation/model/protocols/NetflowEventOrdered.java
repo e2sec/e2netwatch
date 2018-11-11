@@ -1,7 +1,12 @@
-package de.e2security.netflow_flowaggregation.netflow;
+package de.e2security.netflow_flowaggregation.model.protocols;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+
+import org.json.JSONObject;
 
 import de.e2security.netflow_flowaggregation.exceptions.NetflowEventException;
 
@@ -116,4 +121,11 @@ public class NetflowEventOrdered implements Serializable {
 	public ZonedDateTime getLast_switched() {
 		return last_switched;
 	}
+	
+	@Override
+	public String toString() {
+		JSONObject jo = new JSONObject(this); 
+		return jo.toString();
+	}
+
 }

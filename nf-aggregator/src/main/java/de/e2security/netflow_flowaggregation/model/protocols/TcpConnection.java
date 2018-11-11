@@ -1,4 +1,4 @@
-package de.e2security.netflow_flowaggregation.esper;
+package de.e2security.netflow_flowaggregation.model.protocols;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
@@ -13,8 +13,10 @@ public class TcpConnection implements Serializable {
 	private ZonedDateTime in_receivedTimeStamp;
 	private ZonedDateTime out_receivedTimeStamp;
 	private String host;
-	private String ipv4_src_addr;
-	private String ipv4_dst_addr;
+	private String in_ipv4_src_addr;
+	private String in_ipv4_dst_addr;
+	private String out_ipv4_src_addr;
+	private String out_ipv4_dst_addr;
 	private Integer l4_src_port;
 	private Integer l4_dst_port;
 	private Integer in_tcp_flags;
@@ -37,10 +39,14 @@ public class TcpConnection implements Serializable {
 			ZonedDateTime in_receivedTimeStamp,
 			ZonedDateTime out_receivedTimeStamp,
 			String host,
-			String ipv4_src_addr,
-			String ipv4_dst_addr,
-			Integer l4_src_port,
-			Integer l4_dst_port,
+			String in_ipv4_src_addr,
+			String in_ipv4_dst_addr,
+			String out_ipv4_src_addr,
+			String out_ipv4_dst_addr,
+			Integer in_l4_src_port,
+			Integer in_l4_dst_port,
+			Integer out_14_src_port,
+			Integer out_14_dst_port,
 			Integer in_tcp_flags,
 			Integer out_tcp_flags,
 			Integer protocol,
@@ -60,8 +66,10 @@ public class TcpConnection implements Serializable {
 		this.in_receivedTimeStamp = in_receivedTimeStamp;
 		this.out_receivedTimeStamp = out_receivedTimeStamp;
 		this.host = host;
-		this.ipv4_src_addr = ipv4_src_addr;
-		this.ipv4_dst_addr = ipv4_dst_addr;
+		this.in_ipv4_src_addr = in_ipv4_src_addr;
+		this.in_ipv4_dst_addr = in_ipv4_dst_addr;
+		this.out_ipv4_dst_addr = out_ipv4_dst_addr;
+		this.out_ipv4_src_addr = out_ipv4_src_addr;
 		this.l4_src_port = l4_src_port;
 		this.l4_dst_port = l4_dst_port;
 		this.in_tcp_flags = in_tcp_flags;
@@ -97,14 +105,35 @@ public class TcpConnection implements Serializable {
 		return host;
 	}
 
-	public String getIpv4_src_addr() {
-		return ipv4_src_addr;
-	}
 
-	public String getIpv4_dst_addr() {
-		return ipv4_dst_addr;
+	public String getIn_ipv4_src_addr() {
+		return in_ipv4_src_addr;
 	}
+	
 
+	public void setIn_ipv4_src_addr(String in_ipv4_src_addr) {
+		this.in_ipv4_src_addr = in_ipv4_src_addr;
+	}
+	
+
+	public String getIn_ipv4_dst_addr() {
+		return in_ipv4_dst_addr;
+	}
+	
+
+	public void setIn_ipv4_dst_addr(String in_ipv4_dst_addr) {
+		this.in_ipv4_dst_addr = in_ipv4_dst_addr;
+	}
+	
+
+	public String getOut_ipv4_src_addr() {
+		return out_ipv4_src_addr;
+	}
+	
+	public String getOut_ipv4_dst_addr() {
+		return out_ipv4_dst_addr;
+	}
+	
 	public Integer getL4_src_port() {
 		return l4_src_port;
 	}
