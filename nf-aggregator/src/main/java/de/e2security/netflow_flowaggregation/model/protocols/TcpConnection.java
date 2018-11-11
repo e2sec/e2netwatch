@@ -17,8 +17,10 @@ public class TcpConnection implements Serializable {
 	private String in_ipv4_dst_addr;
 	private String out_ipv4_src_addr;
 	private String out_ipv4_dst_addr;
-	private Integer l4_src_port;
-	private Integer l4_dst_port;
+	private Integer in_l4_src_port;
+	private Integer in_l4_dst_port;
+	private Integer out_14_src_port;
+	private Integer out_14_dst_port;
 	private Integer in_tcp_flags;
 	private Integer out_tcp_flags;
 	private Integer protocol;
@@ -68,10 +70,12 @@ public class TcpConnection implements Serializable {
 		this.host = host;
 		this.in_ipv4_src_addr = in_ipv4_src_addr;
 		this.in_ipv4_dst_addr = in_ipv4_dst_addr;
-		this.out_ipv4_dst_addr = out_ipv4_dst_addr;
 		this.out_ipv4_src_addr = out_ipv4_src_addr;
-		this.l4_src_port = l4_src_port;
-		this.l4_dst_port = l4_dst_port;
+		this.out_ipv4_dst_addr = out_ipv4_dst_addr;
+		this.in_l4_src_port = in_l4_src_port;
+		this.in_l4_dst_port = in_l4_dst_port;
+		this.out_14_src_port = out_14_src_port;
+		this.out_14_dst_port = out_14_dst_port;
 		this.in_tcp_flags = in_tcp_flags;
 		this.out_tcp_flags = out_tcp_flags;
 		this.protocol = protocol;
@@ -105,41 +109,36 @@ public class TcpConnection implements Serializable {
 		return host;
 	}
 
-
 	public String getIn_ipv4_src_addr() {
 		return in_ipv4_src_addr;
 	}
-	
-
-	public void setIn_ipv4_src_addr(String in_ipv4_src_addr) {
-		this.in_ipv4_src_addr = in_ipv4_src_addr;
-	}
-	
 
 	public String getIn_ipv4_dst_addr() {
 		return in_ipv4_dst_addr;
 	}
 	
-
-	public void setIn_ipv4_dst_addr(String in_ipv4_dst_addr) {
-		this.in_ipv4_dst_addr = in_ipv4_dst_addr;
-	}
-	
-
 	public String getOut_ipv4_src_addr() {
 		return out_ipv4_src_addr;
 	}
-	
+
 	public String getOut_ipv4_dst_addr() {
 		return out_ipv4_dst_addr;
 	}
-	
-	public Integer getL4_src_port() {
-		return l4_src_port;
+
+	public Integer getIn_l4_src_port() {
+		return in_l4_src_port;
 	}
 
-	public Integer getL4_dst_port() {
-		return l4_dst_port;
+	public Integer getIn_l4_dst_port() {
+		return in_l4_dst_port;
+	}
+	
+	public Integer getOut_14_src_port() {
+		return out_14_src_port;
+	}
+	
+	public Integer getOut_14_dst_port() {
+		return out_14_dst_port;
 	}
 
 	public Integer getIn_tcp_flags() {
@@ -201,4 +200,18 @@ public class TcpConnection implements Serializable {
 	public ZonedDateTime getOut_last_switched() {
 		return out_last_switched;
 	}
+
+	@Override
+	public String toString() {
+		return description + ":\n" 
+				+ "in_ipv4_src_addr=" + in_ipv4_src_addr + " - " + in_ipv4_dst_addr + "=in_ipv4_dst_addr \n"
+				+ "out_ipv4_src_addr=" + out_ipv4_src_addr + " - " + out_ipv4_dst_addr + "=out_ipv4_dst_addr \n"  
+				+ "in_l4_src_port=" + in_l4_src_port + " - " + in_l4_dst_port + "=in_l4_dst_port \n" 
+				+ "out_14_src_port=" + out_14_src_port + " - " + out_14_dst_port + "=out_14_dst_port \n"  
+				+ "in_tcp_flags=" + in_tcp_flags + " - " + out_tcp_flags + "=out_tcp_flags \n" 
+				+ "out_first_switched=" + out_first_switched + " - " + out_last_switched + "=out_last_switched \n";
+	}
+
+	
+	
 }

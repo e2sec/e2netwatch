@@ -7,7 +7,7 @@ import java.util.Queue;
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.UpdateListener;
 
-import de.e2security.netflow_flowaggregation.netflow.NetflowEventOrdered;
+import de.e2security.netflow_flowaggregation.model.protocols.NetflowEventOrdered;
 
 public class NetflowEventsCorrectOrderTestListener implements UpdateListener {
 	

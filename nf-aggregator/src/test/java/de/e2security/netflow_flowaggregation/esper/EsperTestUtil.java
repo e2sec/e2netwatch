@@ -1,12 +1,16 @@
 package de.e2security.netflow_flowaggregation.esper;
 
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.time.CurrentTimeEvent;
 
-import de.e2security.netflow_flowaggregation.netflow.NetflowEvent;
+import de.e2security.netflow_flowaggregation.model.protocols.NetflowEvent;
 
 public final class EsperTestUtil {
 
@@ -37,5 +41,5 @@ public final class EsperTestUtil {
 		}
 		return testEvents;
 	}
-
+	
 }

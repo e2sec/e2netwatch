@@ -1,10 +1,7 @@
 package de.e2security.netflow_flowaggregation.model.protocols;
 
 import java.io.Serializable;
-import java.time.Instant;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 import org.json.JSONObject;
 

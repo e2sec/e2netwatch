@@ -1,6 +1,6 @@
 package de.e2security.netflow_flowaggregation.esper;
 
-public final class TcpEplExpressions implements EplExpression {
+public final class TcpEplExpressions {
 	
 	// @formatter:off
 	/*
@@ -15,10 +15,14 @@ public final class TcpEplExpressions implements EplExpression {
 		return ",a.receivedTimeStamp as in_receivedTimeStamp"
 				+ ",b.receivedTimeStamp as out_receivedTimeStamp"
 				+ ",a.host as host"
-				+ ",a.ipv4_src_addr as ipv4_src_addr"
-				+ ",a.ipv4_dst_addr as ipv4_dst_addr"
-				+ ",a.l4_src_port as l4_src_port"
-				+ ",a.l4_dst_port as l4_dst_port"
+				+ ",a.ipv4_src_addr as in_ipv4_src_addr"
+				+ ",a.ipv4_dst_addr as in_ipv4_dst_addr"
+				+ ",b.ipv4_src_addr as out_ipv4_src_addr"
+				+ ",b.ipv4_dst_addr as out_ipv4_dst_addr"
+				+ ",a.l4_src_port as in_l4_src_port"
+				+ ",a.l4_dst_port as in_l4_dst_port"
+				+ ",b.l4_src_port as out_l4_src_port"
+				+ ",b.l4_dst_port as out_l4_dst_port"
 				+ ",a.tcp_flags as in_tcp_flags"
 				+ ",b.tcp_flags as out_tcp_flags"
 				+ ",a.protocol as protocol"
@@ -37,7 +41,7 @@ public final class TcpEplExpressions implements EplExpression {
 	}
 	
 	/**
-	 * Get events into correct order as we cannot rely on the correct order of netflow data,
+	 * Get events into correct order
 	 * @see http://esper.espertech.com/release-5.5.0/esper-reference/html/epl-views.html#view-time-order
 	 */
 	public static String eplSortByLastSwitched() {
@@ -62,6 +66,7 @@ public final class TcpEplExpressions implements EplExpression {
 	
 	/**
 	 * Finished TCP Flow: FIN flag (1) set on both flows 
+	 * @param protocolFields can be either Tcp or Udp fields
 	 * @return EPL Expression 
 	 */
 	public static String eplFinishedFlows() {
@@ -81,7 +86,9 @@ public final class TcpEplExpressions implements EplExpression {
 	 * Rejected TCP connection
 	 * first flow: SYN (2) set, but ACK (16) not set
 	 * second flow: RST (4) set
-	 * @param pattern pattern to be used
+	 * As we cannot rely on the correct order of netflow data,
+	 * so we define two EPL statements 
+	 * @param protocolFields can be either Tcp or Udp fields
 	 * @return EPL Expression
 	 */
 	public static String eplRejectedFlows(String pattern) {
