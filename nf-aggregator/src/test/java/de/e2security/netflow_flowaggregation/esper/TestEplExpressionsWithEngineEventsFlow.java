@@ -8,20 +8,13 @@ import java.util.Queue;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.espertech.esper.client.Configuration;
-import com.espertech.esper.client.EPAdministrator;
-import com.espertech.esper.client.EPRuntime;
-import com.espertech.esper.client.EPServiceProvider;
-import com.espertech.esper.client.EPServiceProviderManager;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.scopetest.SupportUpdateListener;
 import com.espertech.esper.client.time.CurrentTimeEvent;
@@ -29,11 +22,12 @@ import com.espertech.esper.client.time.CurrentTimeSpanEvent;
 
 import de.e2security.netflow_flowaggregation.model.protocols.NetflowEvent;
 import de.e2security.netflow_flowaggregation.model.protocols.NetflowEventOrdered;
-import de.e2security.netflow_flowaggregation.model.protocols.TcpConnection;
 import de.e2security.netflow_flowaggregation.utils.TestUtil;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class TestEplExpressionsWithEngineEventsFlow {
+public class TestEplExpressionsWithEngineEventsFlow extends EplTestSupporter {
+	
+	static NetflowEventsCorrectOrderTestListener listener = new NetflowEventsCorrectOrderTestListener(true); //static in order to use over the tests
 	
 	private static final Logger LOG = LoggerFactory.getLogger(TestEplExpressionsWithEngineEventsFlow.class);
 
@@ -46,26 +40,6 @@ public class TestEplExpressionsWithEngineEventsFlow {
 	 * 
 	 * for testing the injection of data manually in order to test the epl statements independently please use EplExpressionTestWithManualEventsInjection class
 	 */
-
-	EPServiceProvider engine;
-	EPAdministrator admin;
-	EPRuntime runtime;
-	static NetflowEventsCorrectOrderTestListener listener = new NetflowEventsCorrectOrderTestListener(true); //static in order to use over the tests
-
-	@Before public void init() {
-		Configuration config = new Configuration();
-		config.addEventType(NetflowEvent.class);
-		config.addEventType(NetflowEventOrdered.class);
-		config.addEventType(TcpConnection.class);
-		config.getEngineDefaults().getThreading().setInternalTimerEnabled(false);
-		engine = EPServiceProviderManager.getDefaultProvider(config);
-		runtime = engine.getEPRuntime();
-		admin = engine.getEPAdministrator();
-	}
-
-	@After public void destroy() {
-		engine.destroy();
-	}
 
 	/*
 	 * should be implementes as first test -> cause marked with A; 
@@ -83,8 +57,8 @@ public class TestEplExpressionsWithEngineEventsFlow {
 		 * setting listener on the second statement;
 		 * however, through adding rstream into the first statement after keyword 'select' the same result can be achieved w/o the second one;
 		 */
-		EPStatement statement1 = admin.createEPL(TcpEplExpressions.eplSortByLastSwitched());
-		EPStatement statement2 = admin.createEPL(TcpEplExpressionsTest.selectNetStreamOrdered());
+		EPStatement statement1 = admin.createEPL(NetflowEventEplExpressions.eplSortByLastSwitched());
+		EPStatement statement2 = admin.createEPL(EplExpressionTestSupporter.selectNetStreamOrdered());
 		statement2.addListener(listener);
 		engine.getEPRuntime().sendEvent(new CurrentTimeEvent(timer.getKey())); // set initial start window for the historical data (external timer)
 		events.forEach(runtime::sendEvent);
@@ -109,7 +83,7 @@ public class TestEplExpressionsWithEngineEventsFlow {
 		Queue<NetflowEventOrdered> netflowsOrdered = listener.getNetflowsOrdered();
 		Pair<Long,Long> timer = EsperTestUtil.getTimeFrameForCurrentTimer((ArrayDeque<NetflowEventOrdered>)netflowsOrdered);
 		EPStatement detectFinished = admin.createEPL(TcpEplExpressions.eplFinishedFlows());
-		EPStatement selectFinished = admin.createEPL(TcpEplExpressionsTest.selectTcpConnections());
+		EPStatement selectFinished = admin.createEPL(EplExpressionTestSupporter.selectTcpConnections());
 		selectFinished.addListener(localListener);
 		selectFinished.addListener(supportListener);
 		runtime.sendEvent(new CurrentTimeEvent(timer.getKey()));
@@ -140,7 +114,7 @@ public class TestEplExpressionsWithEngineEventsFlow {
 		SupportUpdateListener supportListener = new SupportUpdateListener();
 		NetflowEventsRejectedTcpConnectionsListener rejectedListener = new NetflowEventsRejectedTcpConnectionsListener(true, pattern);
 		EPStatement detectRejected = admin.createEPL(TcpEplExpressions.eplRejectedFlows(pattern));
-		EPStatement selectRejected = admin.createEPL(TcpEplExpressionsTest.selectTcpConnections());
+		EPStatement selectRejected = admin.createEPL(EplExpressionTestSupporter.selectTcpConnections());
 		selectRejected.addListener(rejectedListener);
 		selectRejected.addListener(supportListener);
 		Queue<NetflowEventOrdered> netflowsOrdered = listener.getNetflowsOrdered();

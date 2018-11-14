@@ -1,5 +1,6 @@
 package de.e2security.netflow_flowaggregation.utils;
 
+import java.io.Serializable;
 import java.util.ConcurrentModificationException;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -16,6 +17,7 @@ public final class ThreadUtil {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ThreadUtil.class);
 
+	@SuppressWarnings("unchecked")
 	public static void manageShutdown(Object... objectToBeStoppedGracefully) {
 
 		Stream.of(objectToBeStoppedGracefully).forEach(object -> {
@@ -24,17 +26,18 @@ public final class ThreadUtil {
 				try {
 					LOG.info("Exiting...");
 
-					// Stop ESPER
+						// Stop ESPER
 					if (object instanceof EPServiceProvider ) {
 						LOG.info("stopping ESPER...");
 						((EPServiceProvider) object).destroy();
-						//Stop Consumer
+						
 						// Stop Producer
 					} else if (object instanceof CustomKafkaProducer) {
 						LOG.info("stopping KafkaProducer...");
-						((CustomKafkaProducer) object).flush();
-						((CustomKafkaProducer) object).close();
-
+						((CustomKafkaProducer<Serializable,Serializable>) object).flush();
+						((CustomKafkaProducer<Serializable,Serializable>) object).close();
+						
+						//Stop Consumer
 					} else if (object instanceof KafkaConsumerMaster ) {
 						LOG.info("stopping KafkaConsumer...");
 						KafkaConsumerMaster consumer = (KafkaConsumerMaster) object;
@@ -53,7 +56,6 @@ public final class ThreadUtil {
 	
 	
 	public static void printThreads() {
-		System.out.println("");
 		System.out.println("Current threads:");
 
 		Set<Thread> threads = Thread.getAllStackTraces().keySet();

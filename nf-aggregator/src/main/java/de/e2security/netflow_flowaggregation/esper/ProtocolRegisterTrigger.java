@@ -11,37 +11,38 @@ import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.UpdateListener;
 
 import de.e2security.netflow_flowaggregation.kafka.CustomKafkaProducer;
+import de.e2security.netflow_flowaggregation.model.protocols.ProtocolRegister;
 
-public class UdpConnectionTrigger implements UpdateListener {
-
-	private static final Logger LOG = LoggerFactory.getLogger(UdpConnectionTrigger.class);
+public class ProtocolRegisterTrigger implements UpdateListener {
+	private static final Logger LOG = LoggerFactory.getLogger(ProtocolRegisterTrigger.class);
 	private final CustomKafkaProducer<Serializable, Serializable> producer;
 	
-	public UdpConnectionTrigger(CustomKafkaProducer<Serializable, Serializable> producer) {
+	public ProtocolRegisterTrigger(CustomKafkaProducer<Serializable, Serializable> producer) {
 		this.producer = producer;
 	}
 	
 	@Override
 	public void update(EventBean[] newData, EventBean[] oldEvents) {
-		String description = (String) newData[0].get("description");
-		String host = (String) newData[0].get("host");
-		String srcaddr = (String) newData[0].get("ipv4_src_addr");
-		Integer srcport = (Integer) newData[0].get("l4_src_port");
-		String dstaddr = (String) newData[0].get("ipv4_dst_addr");
-		Integer dstport = (Integer) newData[0].get("l4_dst_port");
-		Integer protocol = (Integer) newData[0].get("protocol");
-		Integer in_flow_seq_num = (Integer) newData[0].get("in_flow_seq_num");
-		Integer in_flow_records = (Integer) newData[0].get("in_flow_records");
-		Integer out_flow_seq_num = (Integer) newData[0].get("out_flow_seq_num");
-		Integer out_flow_records = (Integer) newData[0].get("out_flow_records");
-		Integer in_bytes = (Integer) newData[0].get("in_bytes");
-		Integer out_bytes = (Integer) newData[0].get("out_bytes");
-		Integer in_pkts = (Integer) newData[0].get("in_pkts");
-		Integer out_pkts = (Integer) newData[0].get("out_pkts");
-		ZonedDateTime in_first_switched = (ZonedDateTime) newData[0].get("in_first_switched");
-		ZonedDateTime out_first_switched = (ZonedDateTime) newData[0].get("out_first_switched");
-		ZonedDateTime in_last_switched = (ZonedDateTime) newData[0].get("in_last_switched");
-		ZonedDateTime out_last_switched = (ZonedDateTime) newData[0].get("out_last_switched");
+		ProtocolRegister proto = (ProtocolRegister) newData[0].getUnderlying();
+		String description = proto.getDescription();
+		String host = proto.getHost();
+		String srcaddr = proto.getIn_ipv4_dst_addr();
+		Integer srcport = proto.getIn_l4_src_port();
+		String dstaddr = proto.getIn_ipv4_dst_addr();
+		Integer dstport = proto.getIn_l4_dst_port();
+		Integer protocol = proto.getProtocol();
+		Integer in_flow_seq_num = proto.getIn_flow_seq_num();
+		Integer in_flow_records = proto.getIn_flow_records();
+		Integer out_flow_seq_num = proto.getOut_flow_seq_num();
+		Integer out_flow_records = proto.getOut_flow_records();
+		Integer in_bytes = proto.getIn_bytes();
+		Integer out_bytes = proto.getOut_bytes();
+		Integer in_pkts = proto.getIn_pkts();
+		Integer out_pkts = proto.getOut_pkts();
+		ZonedDateTime in_first_switched = proto.getIn_first_switched();
+		ZonedDateTime out_first_switched = proto.getOut_first_switched();
+		ZonedDateTime in_last_switched = proto.getIn_last_switched();
+		ZonedDateTime out_last_switched = proto.getOut_last_switched();
 		LOG.info(String.format("%s Connection %s:%d -> %s:%d (%d/%d Bytes)", description, srcaddr, srcport, dstaddr,
 				dstport,
 				in_bytes, out_bytes));
