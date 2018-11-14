@@ -60,7 +60,7 @@ public class KafkaConsumerCallable<K extends Serializable, V extends Serializabl
 						}
 						consumer.commitAsync();
 					} catch (NetflowEventException e) {
-						LOG.error("No Esper event created. No commit for the recent ConsumerRecords has been done!");
+						LOG.error(e.getMessage());
 					}
 				}
 			}

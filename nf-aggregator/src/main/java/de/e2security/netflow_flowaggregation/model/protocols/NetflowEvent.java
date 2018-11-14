@@ -15,15 +15,15 @@ public class NetflowEvent implements Serializable {
 	private static final long serialVersionUID = 1L;
     private static final Logger LOG = LoggerFactory.getLogger(App.class);
 
-    private ZonedDateTime receivedTimeStamp; //logstash
+    private ZonedDateTime receivedTimeStamp; // logstash-generated
     private String host;
     private String ipv4_src_addr;
     private String ipv4_dst_addr;
     private Integer l4_src_port;
     private Integer l4_dst_port;
     private Integer tcp_flags;
-    private Integer protocol; //38	prot	IP protocol type (for example, TCP = 6; UDP = 17)
-    private Integer version;
+    private Integer protocol; //38 :IP protocol type (TCP = 6; UDP = 17)
+    private Integer version;  // logstash-generated
     private Integer flow_seq_num;
     private Integer flow_records;
     private Integer in_bytes;
