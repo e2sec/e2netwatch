@@ -120,6 +120,8 @@ services:
       - ALLOW_ANONYMOUS_LOGIN=yes
     expose:
       - "2181"
+    ports:
+      - "2181:2181"
     volumes:
       - /etc/localtime:/etc/localtime:ro
     networks:
@@ -131,17 +133,22 @@ services:
     build:
       context: ./Kafka
     expose:
-     - "9092"
+      - "9092"
+    ports:
+      - "29092:29092"
     depends_on:
       - zookeeper
     environment:
       # Kafka advertised listener MUST be defined in this way 
-      # for us to able to skale kafka.
-      # TODO: Understand the process more and add more env variables
-      KAFKA_LISTENERS: PLAINTEXT://:9092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092
-      KAFKA_ADVERTISED_HOST_NAME: kafka
-      KAFKA_ADVERTISED_PORT: 9092
+      # for us to able to scale kafka.
+      # 2 listeners for internal and external connections
+      KAFKA_LISTENERS: LISTEN_INTERNAL://:9092, LISTEN_EXTERNAL://:29092
+      # map correct protocols to listeners
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTEN_INTERNAL:PLAINTEXT, LISTEN_EXTERNAL:PLAINTEXT      
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTEN_INTERNAL
+      # advertise both listeners
+      KAFKA_ADVERTISED_LISTENERS: LISTEN_INTERNAL://kafka:9092, LISTEN_EXTERNAL://localhost:29092
+      # zookeeper to connect to
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_CREATE_TOPICS: "syslog:1:1, netflow:1:1, nf_raw:1:1, nifi-debug:1:1, nifi-error:1:1, connection_raw:1:1"
     volumes:
