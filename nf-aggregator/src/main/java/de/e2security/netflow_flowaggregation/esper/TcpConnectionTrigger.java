@@ -23,12 +23,13 @@ public class TcpConnectionTrigger implements UpdateListener {
 	
 	@Override
 	public void update(EventBean[] newData, EventBean[] oldEvents) {
+		//TODO: too error-prone approach -> should be reimplemented with underlying class and its methods
 		String description = (String) newData[0].get("description");
 		String host = (String) newData[0].get("host");
-		String srcaddr = (String) newData[0].get("ipv4_src_addr");
-		Integer srcport = (Integer) newData[0].get("l4_src_port");
-		String dstaddr = (String) newData[0].get("ipv4_dst_addr");
-		Integer dstport = (Integer) newData[0].get("l4_dst_port");
+		String srcaddr = (String) newData[0].get("in_ipv4_src_addr");
+		Integer srcport = (Integer) newData[0].get("in_l4_src_port");
+		String dstaddr = (String) newData[0].get("in_ipv4_dst_addr");
+		Integer dstport = (Integer) newData[0].get("in_l4_dst_port");
 		Integer protocol = (Integer) newData[0].get("protocol");
 		Integer in_flow_seq_num = (Integer) newData[0].get("in_flow_seq_num");
 		Integer in_flow_records = (Integer) newData[0].get("in_flow_records");

@@ -1,6 +1,6 @@
 package de.e2security.netflow_flowaggregation.esper;
 
-public final class TcpEplExpressions implements EplExpression {
+public final class TcpEplExpressions {
 	
 	// @formatter:off
 	/*
@@ -15,10 +15,14 @@ public final class TcpEplExpressions implements EplExpression {
 		return ",a.receivedTimeStamp as in_receivedTimeStamp"
 				+ ",b.receivedTimeStamp as out_receivedTimeStamp"
 				+ ",a.host as host"
-				+ ",a.ipv4_src_addr as ipv4_src_addr"
-				+ ",a.ipv4_dst_addr as ipv4_dst_addr"
-				+ ",a.l4_src_port as l4_src_port"
-				+ ",a.l4_dst_port as l4_dst_port"
+				+ ",a.ipv4_src_addr as in_ipv4_src_addr"
+				+ ",a.ipv4_dst_addr as in_ipv4_dst_addr"
+				+ ",b.ipv4_src_addr as out_ipv4_src_addr"
+				+ ",b.ipv4_dst_addr as out_ipv4_dst_addr"
+				+ ",a.l4_src_port as in_l4_src_port"
+				+ ",a.l4_dst_port as in_l4_dst_port"
+				+ ",b.l4_src_port as out_l4_src_port"
+				+ ",b.l4_dst_port as out_l4_dst_port"
 				+ ",a.tcp_flags as in_tcp_flags"
 				+ ",b.tcp_flags as out_tcp_flags"
 				+ ",a.protocol as protocol"
@@ -60,6 +64,13 @@ public final class TcpEplExpressions implements EplExpression {
 				+ " from NetflowEvent.ext:time_order(last_switched.toMilliSec(), 60 sec)";
 	}
 	
+	private static String connectionXReferenceChecker() {
+		return    " and ipv4_src_addr = a.ipv4_dst_addr"
+				+ " and l4_src_port   = a.l4_dst_port"
+				+ " and ipv4_dst_addr = a.ipv4_src_addr"
+				+ " and l4_dst_port   = a.l4_src_port)";
+	}
+	
 	/**
 	 * Finished TCP Flow: FIN flag (1) set on both flows 
 	 * @param protocolFields can be either Tcp or Udp fields
@@ -70,11 +81,8 @@ public final class TcpEplExpressions implements EplExpression {
 				+ " 'Finished TCP' as description"
 				+ tcpFields()
 				+ " from pattern [every a=NetflowEventOrdered(protocol=6 and (tcp_flags&1)=1) ->"
-				+ " b=NetflowEventOrdered(protocol=6 and (tcp_flags%2)=1 and host=a.host "
-				+ " and ipv4_src_addr = a.ipv4_dst_addr"
-				+ " and l4_src_port   = a.l4_dst_port"
-				+ " and ipv4_dst_addr = a.ipv4_src_addr"
-				+ " and l4_dst_port   = a.l4_src_port)"
+				+ " b=NetflowEventOrdered(protocol=6 and (tcp_flags&1)=1 and host=a.host "
+				+ connectionXReferenceChecker()
 				+ " where timer:within(60 sec)]";
 	}
 	
@@ -92,10 +100,17 @@ public final class TcpEplExpressions implements EplExpression {
 				+ " 'Rejected TCP' as description"
 				+ tcpFields()
 				+ " from pattern " + pattern
-				+ " and ipv4_src_addr = a.ipv4_dst_addr"
-				+ " and l4_src_port   = a.l4_dst_port"
-				+ " and ipv4_dst_addr = a.ipv4_src_addr"
-				+ " and l4_dst_port   = a.l4_src_port)"
+				+ connectionXReferenceChecker()
 				+ " where timer:within(60 sec)]";
+	}
+	
+	public static String eplRejectedPatternSyn2Ack16() {
+		return "[every a=NetflowEventOrdered(protocol=6 and (tcp_flags&2)=2 and (tcp_flags&16)=0) -> "
+			+ " b=NetflowEventOrdered(protocol=6 and (tcp_flags&4)=4 and host=a.host ";
+	}
+	
+	public static String eplRejectedPatternRst4() {
+		return "[every a=NetflowEventOrdered(protocol=6 and (tcp_flags&4)=4) ->"
+		 	+ " b=NetflowEventOrdered(protocol=6 and (tcp_flags&2)=2 and (tcp_flags&16)=0 and host=a.host ";
 	}
 }

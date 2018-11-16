@@ -1,6 +1,6 @@
 package de.e2security.netflow_flowaggregation.esper;
 
-public final class UdpEplExpressions implements EplExpression {
+public final class UdpEplExpressions {
 	
 	private static String udpFields() {
 		return ",a.receivedTimeStamp as in_receivedTimeStamp"
