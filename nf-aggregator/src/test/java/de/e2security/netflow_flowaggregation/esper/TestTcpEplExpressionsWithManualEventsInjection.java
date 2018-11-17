@@ -11,11 +11,13 @@ import com.espertech.esper.client.scopetest.SupportUpdateListener;
 import com.espertech.esper.client.time.CurrentTimeEvent;
 import com.espertech.esper.client.time.CurrentTimeSpanEvent;
 
+import de.e2security.netflow_flowaggregation.esper.utils.EplExpressionTestSupporter;
+import de.e2security.netflow_flowaggregation.esper.utils.EsperTestSupporter;
 import de.e2security.netflow_flowaggregation.model.protocols.NetflowEvent;
 import de.e2security.netflow_flowaggregation.model.protocols.NetflowEventOrdered;
 import de.e2security.netflow_flowaggregation.utils.TestUtil;
 
-public class TestEplExpressionsWithManualEventsInjection extends EplTestSupporter {
+public class TestTcpEplExpressionsWithManualEventsInjection extends EsperTestSupporter {
 	
 	static NetflowEventsCorrectOrderTestListener listener = new NetflowEventsCorrectOrderTestListener(true); //static in order to use over the tests
 
@@ -23,8 +25,8 @@ public class TestEplExpressionsWithManualEventsInjection extends EplTestSupporte
 	@Test public void finishedTcpConnectionIsolatedTest() {
 		SupportUpdateListener supportListener = new SupportUpdateListener();
 		int numberOfEvents = 2;
-		List<NetflowEvent> eventsList = EsperTestUtil.getHistoricalEvents(TestUtil.readSampleDataFile("netflow_ordered_finished.sample"), numberOfEvents);
-		Pair<Long,Long> timer = EsperTestUtil.getTimeFrameForCurrentTimer(eventsList);
+		List<NetflowEvent> eventsList = getHistoricalEvents(TestUtil.readSampleDataFile("netflow_ordered_finished.sample"), numberOfEvents);
+		Pair<Long,Long> timer = getTimeFrameForCurrentTimer(eventsList);
 		int window = 100;
 		EPStatement filterStmt = admin.createEPL(TcpEplExpressions.eplFinishedFlows());
 		EPStatement selectStmt = admin.createEPL(EplExpressionTestSupporter.selectTcpConnections());
