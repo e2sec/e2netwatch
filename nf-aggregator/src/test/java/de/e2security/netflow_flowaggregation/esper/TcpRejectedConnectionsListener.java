@@ -9,33 +9,34 @@ import org.slf4j.LoggerFactory;
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.UpdateListener;
 
-import de.e2security.netflow_flowaggregation.model.protocols.TcpConnection;
+import de.e2security.netflow_flowaggregation.esper.utils.EplExpressionTestSupporter;
+import de.e2security.netflow_flowaggregation.model.protocols.ProtocolRegister;
 
-public class NetflowEventsRejectedTcpConnectionsListener implements UpdateListener {
+public class TcpRejectedConnectionsListener implements UpdateListener {
 
-	private static final Logger LOG = LoggerFactory.getLogger(NetflowEventsRejectedTcpConnectionsListener.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TcpRejectedConnectionsListener.class);
 
 	boolean stdout = false;
 	String pattern = "";
 	
-	public NetflowEventsRejectedTcpConnectionsListener(boolean stdout, String pattern) {
+	public TcpRejectedConnectionsListener(boolean stdout, String pattern) {
 		this.stdout = stdout;
 		this.pattern = pattern;
 	}
 	
-	private List<TcpConnection> connRejected = new ArrayList<>();
+	private List<ProtocolRegister> connRejected = new ArrayList<>();
 
 	@Override
 	public void update(EventBean[] newEvents, EventBean[] oldEvents) {
-		TcpConnection event = (TcpConnection) newEvents[0].getUnderlying();
+		ProtocolRegister event = (ProtocolRegister) newEvents[0].getUnderlying();
 		if (stdout) LOG.info(event.toString());
 		if (isConnectionRejected(event, pattern)) 
 			connRejected.add(event);
 	}
 	
-	private boolean isConnectionRejected(TcpConnection conn, String pattern) {
+	private boolean isConnectionRejected(ProtocolRegister conn, String pattern) {
 		boolean res = false;
-		if (EsperTestUtil.hasTcpEventsCrossReference(conn))  {
+		if (EplExpressionTestSupporter.hasTcpEventsCrossReference(conn, 60))  {
 			if (pattern.equals(TcpEplExpressions.eplRejectedPatternSyn2Ack16())) {
 				res = (( (conn.getIn_tcp_flags() & 2) == 2) && ( (conn.getIn_tcp_flags() & 16) == 0))
 						&& (conn.getOut_tcp_flags() & 4) == 4; 
@@ -49,7 +50,7 @@ public class NetflowEventsRejectedTcpConnectionsListener implements UpdateListen
 		return res;
 	}
 	
-	public List<TcpConnection> getRejectedList() {
+	public List<ProtocolRegister> getRejectedList() {
 		return connRejected;
 	}
 	

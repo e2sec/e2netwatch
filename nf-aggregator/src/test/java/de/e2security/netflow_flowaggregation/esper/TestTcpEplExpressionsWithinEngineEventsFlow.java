@@ -20,16 +20,18 @@ import com.espertech.esper.client.scopetest.SupportUpdateListener;
 import com.espertech.esper.client.time.CurrentTimeEvent;
 import com.espertech.esper.client.time.CurrentTimeSpanEvent;
 
+import de.e2security.netflow_flowaggregation.esper.utils.EplExpressionTestSupporter;
+import de.e2security.netflow_flowaggregation.esper.utils.EsperTestSupporter;
 import de.e2security.netflow_flowaggregation.model.protocols.NetflowEvent;
 import de.e2security.netflow_flowaggregation.model.protocols.NetflowEventOrdered;
 import de.e2security.netflow_flowaggregation.utils.TestUtil;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class TestEplExpressionsWithEngineEventsFlow extends EplTestSupporter {
+public class TestTcpEplExpressionsWithinEngineEventsFlow extends EsperTestSupporter {
 	
 	static NetflowEventsCorrectOrderTestListener listener = new NetflowEventsCorrectOrderTestListener(true); //static in order to use over the tests
 	
-	private static final Logger LOG = LoggerFactory.getLogger(TestEplExpressionsWithEngineEventsFlow.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TestTcpEplExpressionsWithinEngineEventsFlow.class);
 
 	/*
 	 * in this test class we're trying to test the natural flow of events within esper engine regarding the ep statements order;
@@ -46,12 +48,9 @@ public class TestEplExpressionsWithEngineEventsFlow extends EplTestSupporter {
 	 * the following order is not important
 	 */
 	@Test public void A_eplSortByLastSwitchedTest() throws ParseException {
-		/*
-		 * while extending the number of lines to be read from sample data -> windowSpanTime should be also adjusted
-		 */
 		int numberOfEvents = 100;
-		List<NetflowEvent> events = EsperTestUtil.getHistoricalEvents(TestUtil.readSampleDataFile("nf_gen.tcp.sample"), numberOfEvents);
-		Pair<Long,Long> timer = EsperTestUtil.getTimeFrameForCurrentTimer(events);
+		List<NetflowEvent> events = getHistoricalEvents(TestUtil.readSampleDataFile("nf_gen.tcp.sample"), numberOfEvents);
+		Pair<Long,Long> timer = getTimeFrameForCurrentTimer(events);
 		int window = 100;
 		/*
 		 * setting listener on the second statement;
@@ -79,9 +78,9 @@ public class TestEplExpressionsWithEngineEventsFlow extends EplTestSupporter {
 	@Test public void finishedTcpConnectionsTest() {
 		int window = 100;
 		SupportUpdateListener supportListener = new SupportUpdateListener();
-		NetflowEventsFinishedTcpConnectionsListener localListener = new NetflowEventsFinishedTcpConnectionsListener(true);
+		TcpFinishedConnectionsListener localListener = new TcpFinishedConnectionsListener(true);
 		Queue<NetflowEventOrdered> netflowsOrdered = listener.getNetflowsOrdered();
-		Pair<Long,Long> timer = EsperTestUtil.getTimeFrameForCurrentTimer((ArrayDeque<NetflowEventOrdered>)netflowsOrdered);
+		Pair<Long,Long> timer = getTimeFrameForCurrentTimer((ArrayDeque<NetflowEventOrdered>)netflowsOrdered);
 		EPStatement detectFinished = admin.createEPL(TcpEplExpressions.eplFinishedFlows());
 		EPStatement selectFinished = admin.createEPL(EplExpressionTestSupporter.selectTcpConnections());
 		selectFinished.addListener(localListener);
@@ -112,13 +111,13 @@ public class TestEplExpressionsWithEngineEventsFlow extends EplTestSupporter {
 	
 	private Pair<Integer,Integer> testingRejectedTcpConnections(String pattern) {
 		SupportUpdateListener supportListener = new SupportUpdateListener();
-		NetflowEventsRejectedTcpConnectionsListener rejectedListener = new NetflowEventsRejectedTcpConnectionsListener(true, pattern);
+		TcpRejectedConnectionsListener rejectedListener = new TcpRejectedConnectionsListener(true, pattern);
 		EPStatement detectRejected = admin.createEPL(TcpEplExpressions.eplRejectedFlows(pattern));
 		EPStatement selectRejected = admin.createEPL(EplExpressionTestSupporter.selectTcpConnections());
 		selectRejected.addListener(rejectedListener);
 		selectRejected.addListener(supportListener);
 		Queue<NetflowEventOrdered> netflowsOrdered = listener.getNetflowsOrdered();
-		Pair<Long,Long> timer = EsperTestUtil.getTimeFrameForCurrentTimer((ArrayDeque<NetflowEventOrdered>) netflowsOrdered);
+		Pair<Long,Long> timer = getTimeFrameForCurrentTimer((ArrayDeque<NetflowEventOrdered>) netflowsOrdered);
 		runtime.sendEvent(new CurrentTimeEvent(timer.getKey()));
 		netflowsOrdered.forEach(runtime::sendEvent);
 		runtime.sendEvent(new CurrentTimeSpanEvent(timer.getRight(), 100));

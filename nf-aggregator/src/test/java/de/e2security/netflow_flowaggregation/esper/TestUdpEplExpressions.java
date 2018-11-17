@@ -10,15 +10,18 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import com.espertech.esper.client.EPStatement;
+import com.espertech.esper.client.scopetest.EPAssertionUtil;
 import com.espertech.esper.client.scopetest.SupportUpdateListener;
 import com.espertech.esper.client.time.CurrentTimeEvent;
 
+import de.e2security.netflow_flowaggregation.esper.utils.EplExpressionTestSupporter;
+import de.e2security.netflow_flowaggregation.esper.utils.EsperTestSupporter;
 import de.e2security.netflow_flowaggregation.model.protocols.NetflowEvent;
 import de.e2security.netflow_flowaggregation.model.protocols.NetflowEventOrdered;
 import de.e2security.netflow_flowaggregation.utils.TestUtil;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class TestUdpEplExpressions extends EplTestSupporter {
+public class TestUdpEplExpressions extends EsperTestSupporter {
 	
 	int numberOfTestEvents = 100;
 	NetflowEventsCorrectOrderTestListener listener = new NetflowEventsCorrectOrderTestListener(true);
@@ -27,13 +30,13 @@ public class TestUdpEplExpressions extends EplTestSupporter {
 	 * dummy test since the sort statement has been already tested in tcpTests
 	 * just to ensure no data are corrupted in dataset 
 	 */
-	@Test public void sortUdpNetflowEventsTest() { 
-		List<NetflowEvent> events = EsperTestUtil.getHistoricalEvents(TestUtil.readSampleDataFile("nf_gen.udp.sample"), numberOfTestEvents);
+	@Test public void A_sortUdpNetflowEventsTest() { 
+		List<NetflowEvent> events = getHistoricalEvents(TestUtil.readSampleDataFile("nf_gen.udp.sample"), numberOfTestEvents);
 		SupportUpdateListener supportListener = new SupportUpdateListener();
 		EPStatement stmt0 = admin.createEPL(EplExpressionTestSupporter.selectNetStreamOrdered());
 		EPStatement stmt1 = admin.createEPL(NetflowEventEplExpressions.eplSortByLastSwitched());
 		stmt0.addListener(listener);
-		Pair<Long,Long> timer = EsperTestUtil.getTimeFrameForCurrentTimer(events);
+		Pair<Long,Long> timer = getTimeFrameForCurrentTimer(events);
 		engine.getEPRuntime().sendEvent(new CurrentTimeEvent(timer.getLeft()));
 		events.forEach(event -> {
 				engine.getEPRuntime().sendEvent(event);
@@ -41,6 +44,15 @@ public class TestUdpEplExpressions extends EplTestSupporter {
 		engine.getEPRuntime().sendEvent(new CurrentTimeEvent(timer.getRight()));
 		Queue<NetflowEventOrdered> orderedList = listener.getNetflowsOrdered();
 		Assert.assertEquals(events.size(), orderedList.size());
+	}
+	
+	@Test public void eplFinishedUDPFlowsTest() {
+		EPAssertionUtil esperAssert = new EPAssertionUtil();
+		Queue<NetflowEventOrdered> orderedEvents = listener.getNetflowsOrdered();
+		SupportUpdateListener supportListener = new SupportUpdateListener();
+		EPStatement stmt0 = admin.createEPL(UdpEplExpressions.eplFinishedUDPFlows());
+		EPStatement stmt1 = admin.createEPL(EplExpressionTestSupporter.selectUdpConnections());
+		stmt1.addListener(new UdpFinishedConnectionsListener());
 	}
 	
 	
