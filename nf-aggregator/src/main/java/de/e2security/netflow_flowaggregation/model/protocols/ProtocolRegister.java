@@ -11,7 +11,8 @@ public class ProtocolRegister implements Serializable {
 	private String description;
 	private ZonedDateTime in_receivedTimeStamp;
 	private ZonedDateTime out_receivedTimeStamp;
-	private String host;
+	private String in_host;
+	private String out_host;
 	private String in_ipv4_src_addr;
 	private String in_ipv4_dst_addr;
 	private String out_ipv4_src_addr;
@@ -39,7 +40,8 @@ public class ProtocolRegister implements Serializable {
 	public ProtocolRegister(String description,
 			ZonedDateTime in_receivedTimeStamp,
 			ZonedDateTime out_receivedTimeStamp,
-			String host,
+			String in_host,
+			String out_host,
 			String in_ipv4_src_addr,
 			String in_ipv4_dst_addr,
 			String out_ipv4_src_addr,
@@ -66,7 +68,8 @@ public class ProtocolRegister implements Serializable {
 		this.description = description;
 		this.in_receivedTimeStamp = in_receivedTimeStamp;
 		this.out_receivedTimeStamp = out_receivedTimeStamp;
-		this.host = host;
+		this.in_host = in_host;
+		this.out_host = out_host;
 		this.in_ipv4_src_addr = in_ipv4_src_addr;
 		this.in_ipv4_dst_addr = in_ipv4_dst_addr;
 		this.out_ipv4_src_addr = out_ipv4_src_addr;
@@ -104,8 +107,12 @@ public class ProtocolRegister implements Serializable {
 		return out_receivedTimeStamp;
 	}
 
-	public String getHost() {
-		return host;
+	public String getIn_host() {
+		return in_host;
+	}
+
+	public String getOut_host() {
+		return out_host;
 	}
 
 	public String getIn_ipv4_src_addr() {
@@ -208,7 +215,7 @@ public class ProtocolRegister implements Serializable {
 				+ "in_l4_src_port=" + in_l4_src_port + " - " + in_l4_dst_port + "=in_l4_dst_port \n" 
 				+ "out_14_src_port=" + out_14_src_port + " - " + out_14_dst_port + "=out_14_dst_port \n"  
 				+ "in_tcp_flags=" + in_tcp_flags + " - " + out_tcp_flags + "=out_tcp_flags \n" 
-				+ "out_first_switched=" + out_first_switched + " - " + out_last_switched + "=out_last_switched \n";
+				+ "out_last_switched=" + out_last_switched + " - " + in_last_switched + "=in_last_switched \n";
 	}
 
 	
