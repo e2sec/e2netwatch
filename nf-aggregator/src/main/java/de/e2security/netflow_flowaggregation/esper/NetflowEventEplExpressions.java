@@ -45,7 +45,8 @@ public final class NetflowEventEplExpressions {
 		static String fields() {
 			return ",a.receivedTimeStamp as in_receivedTimeStamp"
 					+ ",b.receivedTimeStamp as out_receivedTimeStamp"
-					+ ",a.host as host"
+					+ ",a.host as in_host"
+					+ ",b.host as out_host"
 					+ ",a.ipv4_src_addr as in_ipv4_src_addr"
 					+ ",a.ipv4_dst_addr as in_ipv4_dst_addr"
 					+ ",b.ipv4_src_addr as out_ipv4_src_addr"
