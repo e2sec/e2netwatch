@@ -37,6 +37,6 @@ public final class EplExpressionTestSupporter {
 				&& (conn.getOut_ipv4_src_addr().equals(conn.getIn_ipv4_dst_addr()))
 				&& ( (int) conn.getIn_l4_dst_port() == (int) conn.getOut_14_src_port() )
 				&& ( (int) conn.getOut_14_dst_port() == (int) conn.getIn_l4_src_port())
-				&& ( switchedTimeDelta <= timeInterval); //timer:within(60sec);
+				&& ( switchedTimeDelta <= timeInterval); //timer:within(Xsec);
 	}
 }
