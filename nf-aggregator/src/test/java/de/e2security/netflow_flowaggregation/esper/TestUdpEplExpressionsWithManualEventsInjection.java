@@ -165,7 +165,7 @@ public class TestUdpEplExpressionsWithManualEventsInjection extends EsperTestSup
 	}
 	
 	@Test public void mixedUdpConnectionsTest() {
-		List<NetflowEvent> events = getHistoricalEvents(TestUtil.readSampleDataFile("udp_mixed.sample"), 16);
+		List<NetflowEvent> events = getHistoricalEvents(TestUtil.readSampleDataFile("udp_mixed.sample"), 17);
 		Pair<Long,Long> timer = getTimeFrameForCurrentTimer(events);
 		runtime.sendEvent(new CurrentTimeEvent(timer.getLeft())); //initial start
 		try {
@@ -189,6 +189,7 @@ public class TestUdpEplExpressionsWithManualEventsInjection extends EsperTestSup
 			NetflowEventOrdered ordEvent14 = events.get(13).convertToOrderedType();
 			NetflowEventOrdered ordEvent15 = events.get(14).convertToOrderedType();
 			NetflowEventOrdered ordEvent16 = events.get(15).convertToOrderedType();
+			NetflowEventOrdered ordEvent17 = events.get(16).convertToOrderedType();
 
 			//correlated
 			runtime.sendEvent(ordEvent1); 
@@ -208,23 +209,24 @@ public class TestUdpEplExpressionsWithManualEventsInjection extends EsperTestSup
 			runtime.sendEvent(ordEvent8);
 			runtime.sendEvent(new CurrentTimeEvent(timer.getKey() + offset*3)); //third finished
 			finished++;
-			//send 2 different pairs simultaneously
+			//the same correlated
 			runtime.sendEvent(ordEvent9);
 			runtime.sendEvent(ordEvent10);
-			runtime.sendEvent(ordEvent11);
-			runtime.sendEvent(ordEvent12);
-			//setting offset +1 sec due to those fact that timer:interval seems to check time inclusively ->
-			//since ordEvent12 correlates with ordEvent13 it will be checked as additional event pair has been finished <- 
-			//TODO: case should be scrutinized
-			runtime.sendEvent(new CurrentTimeEvent(timer.getKey() + offset*4 + 1000)); //fourth and fifth finished 
-			finished++; //9 and 10
-			finished++; // 11 and 12
+			runtime.sendEvent(new CurrentTimeEvent(timer.getKey() + offset*4)); //fourth finished
+			finished++;
+			//send one other pair with uncorrelated event meantime
+			runtime.sendEvent(ordEvent11); //a
+			runtime.sendEvent(ordEvent12); //b
+			runtime.sendEvent(ordEvent13); //not correlated
+			runtime.sendEvent(ordEvent14); //a as c
+			runtime.sendEvent(new CurrentTimeEvent(timer.getKey() + offset*5)); //fifth finished
+			finished++;
 			//send four uncorrelated events
-			runtime.sendEvent(ordEvent13);
 			runtime.sendEvent(ordEvent14);
 			runtime.sendEvent(ordEvent15);
 			runtime.sendEvent(ordEvent16);
-			runtime.sendEvent(new CurrentTimeEvent(timer.getKey() + offset*5));
+			runtime.sendEvent(ordEvent17);
+			runtime.sendEvent(new CurrentTimeEvent(timer.getKey() + offset*6));
 			//no finished connections are to be awaited
 		} catch (NetflowEventException e1) { e1.printStackTrace(); }
 		supportListener.getNewDataList().forEach(event -> {
