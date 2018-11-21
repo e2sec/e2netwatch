@@ -4,11 +4,18 @@ import java.util.List;
 import java.util.Queue;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import com.espertech.esper.client.Configuration;
+import com.espertech.esper.client.EPAdministrator;
+import com.espertech.esper.client.EPRuntime;
+import com.espertech.esper.client.EPServiceProvider;
+import com.espertech.esper.client.EPServiceProviderManager;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.scopetest.EPAssertionUtil;
 import com.espertech.esper.client.scopetest.SupportUpdateListener;
@@ -18,6 +25,7 @@ import de.e2security.netflow_flowaggregation.esper.utils.EplExpressionTestSuppor
 import de.e2security.netflow_flowaggregation.esper.utils.EsperTestSupporter;
 import de.e2security.netflow_flowaggregation.model.protocols.NetflowEvent;
 import de.e2security.netflow_flowaggregation.model.protocols.NetflowEventOrdered;
+import de.e2security.netflow_flowaggregation.model.protocols.ProtocolRegister;
 import de.e2security.netflow_flowaggregation.utils.TestUtil;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -26,6 +34,24 @@ public class TestUdpEplExpressions extends EsperTestSupporter {
 	int numberOfTestEvents = 100;
 	NetflowEventsCorrectOrderTestListener listener = new NetflowEventsCorrectOrderTestListener(true);
 	
+	protected EPServiceProvider engine;
+	protected EPAdministrator admin;
+	protected EPRuntime runtime;
+	
+	@Before public void init() {
+		Configuration config = new Configuration();
+		config.addEventType(NetflowEvent.class);
+		config.addEventType(NetflowEventOrdered.class);
+		config.addEventType(ProtocolRegister.class);
+		config.getEngineDefaults().getThreading().setInternalTimerEnabled(false);
+		engine = EPServiceProviderManager.getDefaultProvider(config);
+		runtime = engine.getEPRuntime();
+		admin = engine.getEPAdministrator();
+	}
+
+	@After public void destroy() {
+		engine.destroy();
+	}
 	/*
 	 * dummy test since the sort statement has been already tested in tcpTests
 	 * just to ensure no data are corrupted in dataset 
