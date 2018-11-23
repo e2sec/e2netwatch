@@ -5,5 +5,5 @@
 #
 FROM docker.elastic.co/logstash/logstash:6.3.1
 #
-#ADD filesystem /
+ADD filesystem/netflow.rb  /usr/share/logstash/vendor/bundle/jruby/2.3.0/gems/logstash-codec-netflow-3.14.1/lib/logstash/codecs/netflow.rb
 #
