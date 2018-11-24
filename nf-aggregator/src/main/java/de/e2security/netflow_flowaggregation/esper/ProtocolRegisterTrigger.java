@@ -1,5 +1,7 @@
 package de.e2security.netflow_flowaggregation.esper;
 
+import static de.e2security.netflow_flowaggregation.utils.Ecs.Schema.Netflow.*;
+
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
@@ -47,25 +49,26 @@ public class ProtocolRegisterTrigger implements UpdateListener {
 			ZonedDateTime out_last_switched = proto.getOut_last_switched();
 			LOG.info(String.format("%s Connection %s:%d -> %s:%d (%d/%d Bytes)", 
 					description, srcaddr, srcport, dstaddr, dstport, in_bytes, out_bytes));
+			//KEY names are compatible to ECS SCHEMA. ecs.version 0.1.0
 			jsonObject.put("description", description);
-			jsonObject.put("host", host);
-			jsonObject.put("ipv4_src_addr", srcaddr);
-			jsonObject.put("l4_src_port", srcport);
-			jsonObject.put("ipv4_dst_addr", dstaddr);
-			jsonObject.put("l4_dst_port", dstport);
-			jsonObject.put("protocol", protocol);
-			jsonObject.put("in_flow_seq_num", in_flow_seq_num);
-			jsonObject.put("in_flow_records", in_flow_records);
-			jsonObject.put("out_flow_seq_num", out_flow_seq_num);
-			jsonObject.put("out_flow_records", out_flow_records);
-			jsonObject.put("in_bytes", in_bytes);
-			jsonObject.put("out_bytes", out_bytes);
-			jsonObject.put("in_pkts", in_pkts);
-			jsonObject.put("out_pkts", out_pkts);
-			jsonObject.put("in_first_switched", in_first_switched);
-			jsonObject.put("out_first_switched", out_first_switched);
-			jsonObject.put("in_last_switched", in_last_switched);
-			jsonObject.put("out_last_switched", out_last_switched);
+			jsonObject.put(HOST.asEcs(), host);
+			jsonObject.put(IPV4_SRC_ADDR.asEcs(), srcaddr);
+			jsonObject.put(L4_SRC_PORT.asEcs(), srcport);
+			jsonObject.put(IPV4_DST_ADDR.asEcs(), dstaddr);
+			jsonObject.put(L4_DST_PORT.asEcs(), dstport);
+			jsonObject.put(PROTOCOL.asEcs(), protocol);
+			jsonObject.put(IN_FLOW_SEQ_NUM.asEcs(), in_flow_seq_num);
+			jsonObject.put(IN_FLOW_RECORDS.asEcs(), in_flow_records);
+			jsonObject.put(OUT_FLOW_SEQ_NUM.asEcs(), out_flow_seq_num);
+			jsonObject.put(OUT_FLOW_RECORDS.asEcs(), out_flow_records);
+			jsonObject.put(IN_BYTES.asEcs(), in_bytes);
+			jsonObject.put(OUT_BYTES.asEcs(), out_bytes);
+			jsonObject.put(IN_PKTS.asEcs(), in_pkts);
+			jsonObject.put(OUT_PKTS.asEcs(), out_pkts);
+			jsonObject.put(IN_FIRST_SWITCHED.asEcs(), in_first_switched);
+			jsonObject.put(OUT_FIRST_SWITCHED.asEcs(), out_first_switched);
+			jsonObject.put(IN_LAST_SWITCHED.asEcs(), in_last_switched);
+			jsonObject.put(OUT_LAST_SWITCHED.asEcs(), out_last_switched);
 		} catch (ClassCastException ex) {
 			LOG.error("the underlying object is instance of {}", newData[0]);
 		}
