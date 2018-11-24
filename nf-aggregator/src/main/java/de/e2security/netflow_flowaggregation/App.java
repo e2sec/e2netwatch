@@ -79,7 +79,7 @@ public class App {
 		}
 		
 		//check kafka server's availability before establishingn conn
-		new UpstartUtil(configs).status();
+		new UpstartUtil(configs).statusKafka();
 		
 		//start KafkaProducer
 		final CustomKafkaProducer<Serializable, Serializable> producer = new CustomKafkaProducer<>(configs);
@@ -109,8 +109,8 @@ public class App {
 		EPStatement statementTcpConnectionTrigger = epService.getEPAdministrator().createEPL(protocolRegisterTrigger);
 		statementTcpConnectionTrigger.addListener(new ProtocolRegisterTrigger(producer));
 		
-		//start KafkaConsumer with prepared EPService 
-		KafkaConsumerMaster consumerMaster = new KafkaConsumerMaster(epService).startWorkers(configs);
+		//start KafkaConsumer with prepared EPService after checking topics' availability within consumerMaster 
+		KafkaConsumerMaster consumerMaster = new KafkaConsumerMaster(epService, configs).startWorkers();
 		
 		//give overview about started threads
 		ThreadUtil.printThreads();

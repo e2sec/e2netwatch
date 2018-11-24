@@ -32,10 +32,9 @@ public class UpstartUtil {
 		} catch (Exception e) { }
 		return ret;
 	}
-	//check for topic availability
 	
 	//output status of each check (waiting, success, failed)
-	public void status() {
+	public void statusKafka() {
 		int waiting = kafkaUptime;
 		while (!isHostKafkaAvailable()) {
 			if (waiting == 0) {
