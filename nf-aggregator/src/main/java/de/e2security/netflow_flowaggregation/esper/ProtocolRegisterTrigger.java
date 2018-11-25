@@ -30,7 +30,7 @@ public class ProtocolRegisterTrigger implements UpdateListener {
 			ProtocolRegister proto = (ProtocolRegister) newData[0].getUnderlying();
 			String description = proto.getDescription();
 			String host = proto.getIn_host();
-			String srcaddr = proto.getIn_ipv4_dst_addr();
+			String srcaddr = proto.getIn_ipv4_src_addr();
 			Integer srcport = proto.getIn_l4_src_port();
 			String dstaddr = proto.getIn_ipv4_dst_addr();
 			Integer dstport = proto.getIn_l4_dst_port();
