@@ -30,6 +30,7 @@ import de.e2security.netflow_flowaggregation.model.protocols.ProtocolRegister;
 import de.e2security.netflow_flowaggregation.utils.EsperUtil;
 import de.e2security.netflow_flowaggregation.utils.PropertiesUtil;
 import de.e2security.netflow_flowaggregation.utils.ThreadUtil;
+import de.e2security.netflow_flowaggregation.utils.UpstartUtil;
 
 public class App {
 	
@@ -47,7 +48,9 @@ public class App {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(App.class);
 	
-	public static void main(String[] args) { new App().doMain(args); } // Commandline Parser cannot use static object, so we use this ugly workaround
+	public static void main(String[] args) { 
+		new App().doMain(args);  // Commandline Parser cannot use static object, so we use this ugly workaround
+	}
 	
 	public void doMain(String[] args) {
 	
@@ -74,6 +77,9 @@ public class App {
 				System.exit(1);
 			}
 		}
+		
+		//check kafka server's availability before establishingn conn
+		new UpstartUtil(configs).statusKafka();
 		
 		//start KafkaProducer
 		final CustomKafkaProducer<Serializable, Serializable> producer = new CustomKafkaProducer<>(configs);
@@ -103,8 +109,8 @@ public class App {
 		EPStatement statementTcpConnectionTrigger = epService.getEPAdministrator().createEPL(protocolRegisterTrigger);
 		statementTcpConnectionTrigger.addListener(new ProtocolRegisterTrigger(producer));
 		
-		//start KafkaConsumer with prepared EPService 
-		KafkaConsumerMaster consumerMaster = new KafkaConsumerMaster(epService).startWorkers(configs);
+		//start KafkaConsumer with prepared EPService after checking topics' availability within consumerMaster 
+		KafkaConsumerMaster consumerMaster = new KafkaConsumerMaster(epService, configs).startWorkers();
 		
 		//give overview about started threads
 		ThreadUtil.printThreads();

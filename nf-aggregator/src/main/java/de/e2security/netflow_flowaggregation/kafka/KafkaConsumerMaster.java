@@ -26,8 +26,7 @@ public class KafkaConsumerMaster {
 
 	private List<String> topics;
 	private EPServiceProvider engine;
-	private KafkaConsumer consumerGeneral;
-	private Properties configIn;
+	private Properties config;
 	private Map<String,ExecutorService> groupId_executor;
 	
 	/**
@@ -35,11 +34,6 @@ public class KafkaConsumerMaster {
 	 * Reason: multithreading by Engine itself with really good throughput for one instance (up to 500.000 events)
 	 * @see http://esper.espertech.com/release-7.0.0/esper-reference/html_single/index.html#api-threading-advanced
 	 * @see http://esper.espertech.com/release-7.0.0/esper-reference/html_single/index.html#perf-tips-3-a
-	 */
-	public KafkaConsumerMaster(EPServiceProvider engine) {
-		this.engine = engine;
-	}
-	
 	/**
 	 * @param config Configuration used by each KafkaConsumerCallable
 	 * @see https://kafka.apache.org/11/documentation.html#newconsumerconfigs
@@ -61,41 +55,49 @@ public class KafkaConsumerMaster {
 	 *  deserializer: can be custom classes;
 	 * @return itself in order to be instantiated in methods chain
 	 */
-	public KafkaConsumerMaster startWorkers(Properties config) {
-		this.groupId_executor = new HashMap<>();
-		this.configIn = new Properties();
-		configIn.put("bootstrap.servers", config.get("bootstrap.servers"));
-		configIn.put("enable.auto.commit", config.get("enable.auto.commit"));
-		configIn.put("session.timeout.ms", config.get("session.timeout.ms"));
-		configIn.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-		configIn.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+	public KafkaConsumerMaster(EPServiceProvider engine, Properties config) {
+		this.engine = engine;
+		this.config = config;
+		config.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+		config.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 		this.topics = new ArrayList<String>(Arrays.asList(config.getProperty("consumer.topics").split(",")));
+	}
+	
+	public KafkaConsumerMaster startWorkers() {
+		this.groupId_executor = new HashMap<>();
 		topics.forEach(topic -> {
-			int partitionCount = getPartionsNumber(topic);
+			int partitionCount = getPartitionsQuantity(topic);
 			ExecutorService exec = Executors.newFixedThreadPool(partitionCount);
 			String groupId = config.get("consumer.group.id.prefix") + topic;
-			configIn.put("group.id", groupId);
+			config.put("group.id", groupId);
 			this.groupId_executor.put(groupId, exec);
 			IntStream.rangeClosed(1, partitionCount).forEach(partitionCounter -> {
-				configIn.put("client.id", config.get("consumer.client.id") + "_Thread #" + String.valueOf(partitionCounter));
-				KafkaConsumerCallable consumer = new KafkaConsumerCallable<>(configIn, topic, engine);
+				config.put("client.id", config.get("consumer.client.id") + "_Thread #" + String.valueOf(partitionCounter));
+				KafkaConsumerCallable consumer = new KafkaConsumerCallable<>(config, topic, engine);
 				exec.submit(consumer);
 			});
 		});
 		return this;
 	}
-
+	
+	private Map<String, List<PartitionInfo>> fetchTopicsFromKafka() {
+		KafkaConsumer kChecker = new KafkaConsumer<>(config);
+		Map<String, List<PartitionInfo>> map = kChecker.listTopics();
+		kChecker.close();
+		return map;
+	}
+	
 	//TODO: test whether the number of partitions can be read correctly from kafka with the following custom method:
-	private int getPartionsNumber(String topic) {
+	private int getPartitionsQuantity(String topic) {
 		int count;
-		consumerGeneral = new KafkaConsumer<>(configIn);
-		Map<String, List<PartitionInfo>> listTopics = (Map<String, List<PartitionInfo>>) consumerGeneral.listTopics();
-		if (listTopics.isEmpty()) {
+		Map<String, List<PartitionInfo>> listTopics = fetchTopicsFromKafka();
+		if (listTopics == null || listTopics.isEmpty()) {
 			throw new RuntimeException("No Topics are available to read from Kafka -> no any KafkaConsumer can be created");
+		} else if (!listTopics.containsKey(topic)){
+			throw new RuntimeException("Topic " + topic + " is not available in Kafka. Process has been terminated");
 		} else {
 			count = listTopics.get(topic).size();
 		}
-		consumerGeneral.close();
 		return count;
 	}
 	
@@ -103,7 +105,6 @@ public class KafkaConsumerMaster {
 	 * implementing shutdown for each thread;
 	 * threads are grouped by Executor with Thread Pool regarding each kafka group in groupId_executor Map
 	 */
-	
 	public List<String> getKafkaGroups() {
 		return groupId_executor.keySet().stream().collect(Collectors.toList());
 	}
