@@ -145,8 +145,6 @@ public class ProtocolRegister implements Serializable {
 		return out_14_src_port;
 	}
 	
-	
-
 	public Integer getOut_14_dst_port() {
 		return out_14_dst_port;
 	}
