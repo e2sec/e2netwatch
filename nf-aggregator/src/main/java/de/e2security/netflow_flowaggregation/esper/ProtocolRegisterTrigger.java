@@ -42,29 +42,31 @@ public class ProtocolRegisterTrigger implements UpdateListener {
 		this.producer = producer;
 	}
 	
-	private static class Host {
+	//public visibility due to tests
+	public static class Host {
 		private String addr;
 		private Integer port;
 		Host(String addr, Integer port) {
 			this.addr = addr;
 			this.port = port;
 		}
-		String getAddr() { return this.addr; }
-		Integer getPort() { return this.port; }
+		public String getAddr() { return this.addr; }
+		public Integer getPort() { return this.port; }
 	}
-	
+
 	//NW-76 distinguish traffic direction by port numbers.
-	private Pair<Host,Host> sortByLowestPort(ProtocolRegister prtcl) {
+	//public visibility due to tests
+	public Pair<Host,Host> defineByPort(ProtocolRegister prtcl) {
 		String srcaddr = prtcl.getIn_ipv4_src_addr();
 		Integer srcport = prtcl.getIn_l4_src_port();
 		String dstaddr = prtcl.getOut_ipv4_src_addr();
 		Integer dstport = prtcl.getOut_14_src_port();
 		ZonedDateTime in_last_switched = prtcl.getIn_last_switched();
 		ZonedDateTime out_last_switched = prtcl.getOut_last_switched();
-		
+
 		Host src = new Host(srcaddr, srcport);
 		Host dst = new Host(dstaddr, dstport);
-		
+
 		//higher port = source host; lower port = dst hosts
 		int switchCmp = in_last_switched.compareTo(out_last_switched);	
 		if (switchCmp == 0) {
@@ -78,60 +80,67 @@ public class ProtocolRegisterTrigger implements UpdateListener {
 		return new ImmutablePair<>(src, dst);
 	}
 
+	//setting method in order to make it possible for test
+	public JSONObject prepareJson(ProtocolRegister prtcl) {
+		JSONObject jsonObject = new JSONObject();
+		Pair<Host,Host> pair = defineByPort(prtcl);
+
+		String srcaddr = pair.getLeft().getAddr();
+		Integer srcport = pair.getLeft().getPort();
+		String dstaddr = pair.getRight().getAddr();
+		Integer dstport = pair.getRight().getPort();	
+
+		String description = prtcl.getDescription();
+		String host = prtcl.getIn_host();
+		Integer protocol = prtcl.getProtocol();
+		Integer in_flow_seq_num = prtcl.getIn_flow_seq_num();
+		Integer in_flow_records = prtcl.getIn_flow_records();
+		Integer out_flow_seq_num = prtcl.getOut_flow_seq_num();
+		Integer out_flow_records = prtcl.getOut_flow_records();
+		Integer in_bytes = prtcl.getIn_bytes();
+		Integer out_bytes = prtcl.getOut_bytes();
+		Integer in_pkts = prtcl.getIn_pkts();
+		Integer out_pkts = prtcl.getOut_pkts();
+		ZonedDateTime in_last_switched = prtcl.getIn_last_switched();
+		ZonedDateTime out_last_switched = prtcl.getOut_last_switched();
+		ZonedDateTime in_first_switched = prtcl.getIn_first_switched();
+		ZonedDateTime out_first_switched = prtcl.getOut_first_switched();
+
+		LOG.info(String.format("%s Connection %s:%d -> %s:%d (%d/%d Bytes)", 
+				description, srcaddr, srcport, dstaddr, dstport, in_bytes, out_bytes));
+		//KEY names are compatible to ECS SCHEMA. ecs.version 0.1.0
+		jsonObject.put("description", description);
+		jsonObject.put(HOST.asEcs(), host);
+		jsonObject.put(IPV4_SRC_ADDR.asEcs(), srcaddr);
+		jsonObject.put(L4_SRC_PORT.asEcs(), srcport);
+		jsonObject.put(IPV4_DST_ADDR.asEcs(), dstaddr);
+		jsonObject.put(L4_DST_PORT.asEcs(), dstport);
+		jsonObject.put(PROTOCOL.asEcs(), protocol);
+		jsonObject.put(IN_FLOW_SEQ_NUM.asEcs(), in_flow_seq_num);
+		jsonObject.put(IN_FLOW_RECORDS.asEcs(), in_flow_records);
+		jsonObject.put(OUT_FLOW_SEQ_NUM.asEcs(), out_flow_seq_num);
+		jsonObject.put(OUT_FLOW_RECORDS.asEcs(), out_flow_records);
+		jsonObject.put(IN_BYTES.asEcs(), in_bytes);
+		jsonObject.put(OUT_BYTES.asEcs(), out_bytes);
+		jsonObject.put(IN_PKTS.asEcs(), in_pkts);
+		jsonObject.put(OUT_PKTS.asEcs(), out_pkts);
+		jsonObject.put(IN_FIRST_SWITCHED.asEcs(), in_first_switched);
+		jsonObject.put(OUT_FIRST_SWITCHED.asEcs(), out_first_switched);
+		jsonObject.put(IN_LAST_SWITCHED.asEcs(), in_last_switched);
+		jsonObject.put(OUT_LAST_SWITCHED.asEcs(), out_last_switched);
+
+		return jsonObject;
+	}
+
 	@Override
 	public void update(EventBean[] newData, EventBean[] oldEvents) {
-		JSONObject jsonObject = new JSONObject();
 		try {
 			ProtocolRegister prtcl = (ProtocolRegister) newData[0].getUnderlying();
-			Pair<Host,Host> pair = sortByLowestPort(prtcl);
-			
-			String srcaddr = pair.getLeft().getAddr();
-			Integer srcport = pair.getLeft().getPort();
-			String dstaddr = pair.getRight().getAddr();
-			Integer dstport = pair.getRight().getPort();	
-			
-			String description = prtcl.getDescription();
-			String host = prtcl.getIn_host();
-			Integer protocol = prtcl.getProtocol();
-			Integer in_flow_seq_num = prtcl.getIn_flow_seq_num();
-			Integer in_flow_records = prtcl.getIn_flow_records();
-			Integer out_flow_seq_num = prtcl.getOut_flow_seq_num();
-			Integer out_flow_records = prtcl.getOut_flow_records();
-			Integer in_bytes = prtcl.getIn_bytes();
-			Integer out_bytes = prtcl.getOut_bytes();
-			Integer in_pkts = prtcl.getIn_pkts();
-			Integer out_pkts = prtcl.getOut_pkts();
-			ZonedDateTime in_last_switched = prtcl.getIn_last_switched();
-			ZonedDateTime out_last_switched = prtcl.getOut_last_switched();
-			ZonedDateTime in_first_switched = prtcl.getIn_first_switched();
-			ZonedDateTime out_first_switched = prtcl.getOut_first_switched();
-			
-			LOG.info(String.format("%s Connection %s:%d -> %s:%d (%d/%d Bytes)", 
-					description, srcaddr, srcport, dstaddr, dstport, in_bytes, out_bytes));
-			//KEY names are compatible to ECS SCHEMA. ecs.version 0.1.0
-			jsonObject.put("description", description);
-			jsonObject.put(HOST.asEcs(), host);
-			jsonObject.put(IPV4_SRC_ADDR.asEcs(), srcaddr);
-			jsonObject.put(L4_SRC_PORT.asEcs(), srcport);
-			jsonObject.put(IPV4_DST_ADDR.asEcs(), dstaddr);
-			jsonObject.put(L4_DST_PORT.asEcs(), dstport);
-			jsonObject.put(PROTOCOL.asEcs(), protocol);
-			jsonObject.put(IN_FLOW_SEQ_NUM.asEcs(), in_flow_seq_num);
-			jsonObject.put(IN_FLOW_RECORDS.asEcs(), in_flow_records);
-			jsonObject.put(OUT_FLOW_SEQ_NUM.asEcs(), out_flow_seq_num);
-			jsonObject.put(OUT_FLOW_RECORDS.asEcs(), out_flow_records);
-			jsonObject.put(IN_BYTES.asEcs(), in_bytes);
-			jsonObject.put(OUT_BYTES.asEcs(), out_bytes);
-			jsonObject.put(IN_PKTS.asEcs(), in_pkts);
-			jsonObject.put(OUT_PKTS.asEcs(), out_pkts);
-			jsonObject.put(IN_FIRST_SWITCHED.asEcs(), in_first_switched);
-			jsonObject.put(OUT_FIRST_SWITCHED.asEcs(), out_first_switched);
-			jsonObject.put(IN_LAST_SWITCHED.asEcs(), in_last_switched);
-			jsonObject.put(OUT_LAST_SWITCHED.asEcs(), out_last_switched);
+			JSONObject jsonObject = prepareJson(prtcl);
+			producer.send(jsonObject.toString());		
 		} catch (ClassCastException ex) {
 			LOG.error("the underlying object is instance of {}", newData[0]);
 		}
-		producer.send(jsonObject.toString());		
 	}
 
 }
