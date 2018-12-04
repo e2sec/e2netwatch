@@ -22,13 +22,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Properties;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.nifi.annotation.behavior.ReadsAttribute;
 import org.apache.nifi.annotation.behavior.ReadsAttributes;
 import org.apache.nifi.annotation.behavior.WritesAttribute;
@@ -48,12 +46,13 @@ import org.apache.nifi.processor.exception.ProcessException;
 import org.apache.nifi.processor.io.InputStreamCallback;
 import org.apache.nifi.processor.util.StandardValidators;
 
-import com.espertech.esper.client.Configuration;
 import com.espertech.esper.client.EPAdministrator;
 import com.espertech.esper.client.EPRuntime;
 import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPServiceProviderManager;
 import com.espertech.esper.client.EPStatement;
+import com.espertech.esper.client.EventBean;
+import com.espertech.esper.event.map.MapEventBean;
 
 @Tags({"EsperProcessor"})
 @CapabilityDescription("Processing events based on esper engine rules")
@@ -62,14 +61,38 @@ import com.espertech.esper.client.EPStatement;
 @WritesAttributes({@WritesAttribute(attribute="", description="")})
 public class UnwantedProtocolsAlarmProcessor extends AbstractProcessor {
 
-    public static final PropertyDescriptor BlacklistFilter = new PropertyDescriptor
-            .Builder().name("BlacklistFilter")
-            .displayName("BlacklistFilter")
-            .description("Conditional (WHERE)-poststatement: E.g. protocol=6 and source.port=25 or destination.port=80")
-            .required(true)
-            .addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
-            .build();
+    public static final PropertyDescriptor DetectUnwantedProtocolsEplStatement = new PropertyDescriptor.Builder()
+    		.name("UnwantedProtocolsEplStmt")
+    		.displayName("UnwantedProtocolsEplStmt")
+    		.description("EPL Statement")
+    		.required(true)
+    		.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
+    		.build();
 
+    public static final PropertyDescriptor SelectAlarmsDetectedEplStatement = new PropertyDescriptor.Builder()
+    		.name("AlarmsDetectedSelectEplStatement")
+    		.displayName("AlarmsDetectedSelectEplStatement")
+    		.description("EPL Statement")
+    		.required(true)
+    		.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
+    		.build();
+    
+    public static final PropertyDescriptor CreateInputEventSchema = new PropertyDescriptor.Builder()
+    		.name("InputEventSchema")
+    		.displayName("InputEventSchema")
+    		.description("define schema with EPL for input event (as map)")
+    		.required(true)
+    		.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
+    		.build();
+    
+    public static final PropertyDescriptor CreateOutputEventSchema = new PropertyDescriptor.Builder()
+	.name("OuputEventSchema")
+	.displayName("OutputEventSchema")
+	.description("define schema with EPL for output event (as map)")
+	.required(true)
+	.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
+	.build();
+    
     public static final Relationship AlarmedEvent = new Relationship.Builder()
             .name("AlarmedEventt")
             .description("Alarmed Event found from provided Blacklist")
@@ -82,7 +105,10 @@ public class UnwantedProtocolsAlarmProcessor extends AbstractProcessor {
     @Override
     protected void init(final ProcessorInitializationContext context) {
         final List<PropertyDescriptor> descriptors = new ArrayList<PropertyDescriptor>();
-        descriptors.add(BlacklistFilter);
+        descriptors.add(DetectUnwantedProtocolsEplStatement);
+        descriptors.add(SelectAlarmsDetectedEplStatement);
+        descriptors.add(CreateInputEventSchema);
+        descriptors.add(CreateOutputEventSchema);
         this.descriptors = Collections.unmodifiableList(descriptors);
 
         final Set<Relationship> relationships = new HashSet<Relationship>();
@@ -107,53 +133,26 @@ public class UnwantedProtocolsAlarmProcessor extends AbstractProcessor {
 
     @Override
     public void onTrigger(final ProcessContext context, final ProcessSession session) throws ProcessException {
-    	Properties protocolRegisterSchema = new Properties();
-    	protocolRegisterSchema.put("description","string");
-    	protocolRegisterSchema.put("host.ip","string");
-    	protocolRegisterSchema.put("source.ip","string");
-    	protocolRegisterSchema.put("source.port","int");
-    	protocolRegisterSchema.put("destination.ip","string");
-    	protocolRegisterSchema.put("destination.port","int");
-    	protocolRegisterSchema.put("network.iana_number","int");
-    	protocolRegisterSchema.put("netflow.inbound.sequence_number","int");
-    	protocolRegisterSchema.put("netflow.inbound.records","int");
-    	protocolRegisterSchema.put("netflow.outbound.sequence_number","int");
-    	protocolRegisterSchema.put("netflow.outbound.records","int");
-    	protocolRegisterSchema.put("network.inbound.bytes","int");
-    	protocolRegisterSchema.put("network.outbound.bytes","int");
-    	protocolRegisterSchema.put("network.inbound.packets","int");
-    	protocolRegisterSchema.put("network.outbound.packets","int");
-    	protocolRegisterSchema.put("network.inbound.tcp_flags","int");
-    	protocolRegisterSchema.put("network.outbound.tcp_flags","int");
-    	protocolRegisterSchema.put("netflow.inbound.first_switched","string");
-    	protocolRegisterSchema.put("netflow.outbound.first_switched","string");
-    	protocolRegisterSchema.put("netflow.inbound.last_switched","string");
-    	protocolRegisterSchema.put("netflow.outbound.last_switched","string");
-    	Properties alarmedConnectionSchema = new Properties();
-    	alarmedConnectionSchema.put("source.port", "int");
-    	alarmedConnectionSchema.put("destination.port", "int");
+    	
         FlowFile flowFile = session.get();
         if ( flowFile == null ) { return;}
-        //setting esper engine settings
-        Configuration config = new Configuration();
-        config.addEventType("ProtocolRegister", protocolRegisterSchema);
-        config.addEventType("AlarmedConnection", alarmedConnectionSchema);
-        EPServiceProvider engine = EPServiceProviderManager.getDefaultProvider(config);
+        
+        //define esper main instances
+        EPServiceProvider engine = EPServiceProviderManager.getDefaultProvider();
         EPRuntime runtime = engine.getEPRuntime();
         EPAdministrator admin = engine.getEPAdministrator();
+        
+        //creating schema on the fly from the nifi attributes
+        admin.createEPL(context.getProperty(CreateInputEventSchema).getValue());
+        admin.createEPL(context.getProperty(CreateOutputEventSchema).getValue());
+        
         //processing incoming nifi events
-        final AtomicReference<Pair<Integer,Integer>> alertEvent = new AtomicReference<>();
+        final AtomicReference<String> alertEvent = new AtomicReference<>();
         session.read(flowFile, new InputStreamCallback() {
 			@Override
 			public void process(InputStream inputStream) throws IOException {
-				EPStatement blacklistProtocols = admin.createEPL(
-						"insert rstream into AlarmedConnection "
-								+ "select source\\.port, destination\\.port "
-								+ "from ProtocolRegister("
-								+ 	context.getProperty(BlacklistFilter).getValue()
-								+ ")"
-						);
-				EPStatement selectAlarms = admin.createEPL("select * from AlarmedConnection");
+				EPStatement blacklistProtocols = admin.createEPL(context.getProperty(DetectUnwantedProtocolsEplStatement).getValue());
+				EPStatement selectAlarms = admin.createEPL(context.getProperty(SelectAlarmsDetectedEplStatement).getValue());
 	        	try {
 	        		String event = IOUtils.toString(inputStream); //implying just one event due to tests (read from file)
 	        		runtime.sendEvent(event);
@@ -162,17 +161,16 @@ public class UnwantedProtocolsAlarmProcessor extends AbstractProcessor {
 	        		getLogger().error("ERROR processing incoming event");
 	        	}
 	        	selectAlarms.addListener( (newEvents, oldEvents) -> {
-	        		getLogger().info("within listener...");
+	        		getLogger().info("Esper listener has detected a new event...");
 	        		try {
-	        			int src = (int) Integer.valueOf(newEvents[0].get("source.port").toString());
-	        			getLogger().info("SRC: " + src);
-	        			int dst = (int) Integer.valueOf(newEvents[0].get("destination.port").toString());
-	        			getLogger().info("DST: " + dst);
-	        			Pair<Integer,Integer> src_dst = new ImmutablePair<>(src,dst);
-	        			getLogger().info("alerting the following pair: " + src_dst.getLeft() + "-" + src_dst.getRight());
-	        			alertEvent.set(src_dst);
+	        			for (EventBean event : newEvents) {
+	        				if (event instanceof MapEventBean) {
+	        				String catchedEventAsMapEntry = ((Map<?,?>) event.getUnderlying()).entrySet().toString();
+	        				alertEvent.set(catchedEventAsMapEntry);
+	        				}
+	        			}
 	        		} catch (Exception ex) {
-	        			getLogger().error("ERROR parsing events came into BlacklistProtocol listener");
+	        			getLogger().error("ERROR UpdateListener cannot read underlying object...");
 	        			ex.printStackTrace();
 	        		}
 	        	});
@@ -180,7 +178,7 @@ public class UnwantedProtocolsAlarmProcessor extends AbstractProcessor {
         });
       session.write(flowFile, (outStream) -> {
     	 getLogger().info("trying to write output...");
-   		 outStream.write(("" + alertEvent.get().getLeft() + alertEvent.get().getRight()).getBytes()); //serializing
+   		 outStream.write(alertEvent.get().getBytes()); 
       });
       session.transfer(flowFile, AlarmedEvent);
     }
