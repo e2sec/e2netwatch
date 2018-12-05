@@ -28,7 +28,7 @@ public class E2EsperProcessorTest {
 
     @Before
     public void init() {
-//        testRunner = TestRunners.newTestRunner(UnwantedProtocolsAlarmProcessor.class);
+        testRunner = TestRunners.newTestRunner(UnwantedProtocolsAlarmProcessor.class);
     }
 
     @Test

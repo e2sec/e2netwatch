@@ -157,17 +157,46 @@ public class UnwantedProtocolsAlarmProcessor extends AbstractProcessor {
     public void onScheduled(final ProcessContext context) {
 
     }
-
-    private String buildCondition(final ProcessContext context) {
-    	StringBuilder statementBuilder = new StringBuilder("(");
-    		statementBuilder.append("network.iana_number=6 and ");
-    		statementBuilder.append(context.getProperty(UnwantedTcpPortsProperty).getValue());
-    	statementBuilder.append(")");
-    	statementBuilder.append(" or (");
-    		statementBuilder.append("network.iana_number=17 and");
-    		statementBuilder.append(context.getProperty(UnwantedUdpPortsProperty).getValue());
-    	statementBuilder.append(")");
-    	return statementBuilder.toString();
+    
+    protected String concatenatePorts(String unwantedTcpPortsPropertyValue, String unwantedUdpPortsPropertyValue) {
+    	StringBuilder resBuilder = new StringBuilder();
+    	String tcpConc = concatenator("tcp", unwantedTcpPortsPropertyValue);
+    	String udpConc = concatenator("udp", unwantedUdpPortsPropertyValue);
+    	resBuilder.append("(");
+    		resBuilder.append(tcpConc);
+    	resBuilder.append(")");
+    	resBuilder.append(" or ");
+    	resBuilder.append("(");
+    		resBuilder.append(udpConc);
+    	resBuilder.append(")");
+    	return resBuilder.toString();
+    }
+    
+    protected String concatenator(String protocol, String sPorts) {
+    	sPorts.replaceAll(" ", "");
+    	String[] ports = sPorts.split(",");
+    	StringBuilder builder = new StringBuilder("(");
+	    	builder.append("network.iana_number=");
+	    	switch (protocol.toLowerCase()) {
+	    		case "tcp": builder.append(6);
+	    			   break;
+	    		case"udp": builder.append(17);
+	    			   break;
+	    	}
+	    	builder.append(" and");
+	    		builder.append(" (");
+			    	int counter = 0;
+			    	for(String port : ports) {
+			    		builder.append("source.port=" + port + " or destination.port=" + port);
+			    		//prevent adding or to the last port in array
+			    		counter++;
+			    		if (counter < ports.length) {
+			    			builder.append(" or ");
+			    		}
+			    	}
+		    builder.append(")");
+		builder.append(")");
+    	return builder.toString();
     }
     
     @Override
@@ -176,11 +205,14 @@ public class UnwantedProtocolsAlarmProcessor extends AbstractProcessor {
         if ( flowFile == null ) { return;}
 
         //stmt preparations
-        String conditionalExpr = buildCondition(context);
+        String tcpPorts = context.getProperty(UnwantedTcpPortsProperty).getValue();
+    	String udpPorts = context.getProperty(UnwantedUdpPortsProperty).getValue();
+        String conditionalExpr = concatenatePorts(tcpPorts, udpPorts);
+        //select all since retrieving of particular fields is possible through SelectAlarmsDetectedEplStatement PropertyDescriptor;
         String detectUnwantedProtocolsEplStatement = 
         		"insert irstream into " 
         		+ context.getProperty(ToEvent).getValue() 
-        		+ "select * from " 
+        		+ " select * from " 
         		+ context.getProperty(FromEvent) 
         		+ "("
         		+ conditionalExpr
