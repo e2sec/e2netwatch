@@ -10,8 +10,6 @@ import java.util.Properties;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPStatement;
@@ -45,8 +43,6 @@ public class App {
 			System.exit(1);
 		}
 	}
-	
-	private static final Logger LOG = LoggerFactory.getLogger(App.class);
 	
 	public static void main(String[] args) { 
 		new App().doMain(args);  // Commandline Parser cannot use static object, so we use this ugly workaround

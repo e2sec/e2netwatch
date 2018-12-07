@@ -27,6 +27,7 @@ public class UpstartUtil {
 	private boolean isHostKafkaAvailable(){
 		boolean ret = false;
 		try {
+			@SuppressWarnings({ "resource", "unused" }) //should be not used, the sense makes error throwing since 'ret' will be not set to true in this case
 			Socket soc = new Socket(this.host, this.port);
 			ret = true;
 		} catch (Exception e) { }

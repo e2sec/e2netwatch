@@ -29,7 +29,9 @@ import de.e2security.netflow_flowaggregation.utils.TestUtil;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestTcpEplExpressionsWithinEngineEventsFlow extends EsperTestSupporter {
 	
-	static NetflowEventsCorrectOrderTestListener listener = new NetflowEventsCorrectOrderTestListener(true); //static in order to use over the tests
+	boolean stdout = false;
+	
+	static NetflowEventsCorrectOrderTestListener listener = new NetflowEventsCorrectOrderTestListener(false); //static in order to use over the tests
 	
 	private static final Logger LOG = LoggerFactory.getLogger(TestTcpEplExpressionsWithinEngineEventsFlow.class);
 
@@ -78,7 +80,7 @@ public class TestTcpEplExpressionsWithinEngineEventsFlow extends EsperTestSuppor
 	@Test public void finishedTcpConnectionsTest() {
 		int window = 100;
 		SupportUpdateListener supportListener = new SupportUpdateListener();
-		TcpFinishedConnectionsListener localListener = new TcpFinishedConnectionsListener(true);
+		TcpFinishedConnectionsListener localListener = new TcpFinishedConnectionsListener(false);
 		Queue<NetflowEventOrdered> netflowsOrdered = listener.getNetflowsOrdered();
 		Pair<Long,Long> timer = getTimeFrameForCurrentTimer((ArrayDeque<NetflowEventOrdered>)netflowsOrdered);
 		EPStatement detectFinished = admin.createEPL(TcpEplExpressions.eplFinishedFlows());
@@ -92,26 +94,26 @@ public class TestTcpEplExpressionsWithinEngineEventsFlow extends EsperTestSuppor
 		 * during assertion:
 		 * 	compare the result of native Esper's EPstatement with manual boolean checker in NetflowEventsFinishedTcpConnectionsListener
 		 */
-		LOG.info("# FINISHED CONNECTIONS FOUND: " + supportListener.getNewDataList().size());
+		if (stdout) LOG.info("# FINISHED CONNECTIONS FOUND: " + supportListener.getNewDataList().size());
 		Assert.assertEquals(supportListener.getNewDataList().size(), localListener.getFinishedConns().size());
 	}
 
 	
 	@Test public void rejectedTcpConnectionsWithInFlagsSynAndAckAndOutFlagsRstTest() {
 		Pair<Integer,Integer> expecting_actual = testingRejectedTcpConnections(TcpEplExpressions.eplRejectedPatternSyn2Ack16());
-		LOG.info("# REJECTED CONNECTIONS FOUND: " + expecting_actual.getRight());
+		if (stdout) LOG.info("# REJECTED CONNECTIONS FOUND: " + expecting_actual.getRight());
 		Assert.assertEquals(expecting_actual.getLeft(), expecting_actual.getRight());
 	}
 
 	@Test public void rejectedTcpConnectionsWithInFlagsRstAndOutFlagsSynAndAckTest() {
 		Pair<Integer,Integer> expecting_actual = testingRejectedTcpConnections(TcpEplExpressions.eplRejectedPatternRst4());
-		LOG.info("# REJECTED CONNECTIONS FOUND: " + expecting_actual.getRight());
+		if (stdout) LOG.info("# REJECTED CONNECTIONS FOUND: " + expecting_actual.getRight());
 		Assert.assertEquals(expecting_actual.getLeft(), expecting_actual.getRight());
 	}
 	
 	private Pair<Integer,Integer> testingRejectedTcpConnections(String pattern) {
 		SupportUpdateListener supportListener = new SupportUpdateListener();
-		TcpRejectedConnectionsListener rejectedListener = new TcpRejectedConnectionsListener(true, pattern);
+		TcpRejectedConnectionsListener rejectedListener = new TcpRejectedConnectionsListener(false, pattern);
 		EPStatement detectRejected = admin.createEPL(TcpEplExpressions.eplRejectedFlows(pattern));
 		EPStatement selectRejected = admin.createEPL(EplExpressionTestSupporter.selectTcpConnections());
 		selectRejected.addListener(rejectedListener);

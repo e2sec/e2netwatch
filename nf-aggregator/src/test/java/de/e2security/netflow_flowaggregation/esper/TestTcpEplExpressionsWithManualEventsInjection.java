@@ -19,7 +19,7 @@ import de.e2security.netflow_flowaggregation.utils.TestUtil;
 
 public class TestTcpEplExpressionsWithManualEventsInjection extends EsperTestSupporter {
 	
-	static NetflowEventsCorrectOrderTestListener listener = new NetflowEventsCorrectOrderTestListener(true); //static in order to use over the tests
+	static NetflowEventsCorrectOrderTestListener listener = new NetflowEventsCorrectOrderTestListener(false); //static in order to use over the tests
 
 	//test code during manual injection of finished connections
 	@Test public void finishedTcpConnectionIsolatedTest() {

@@ -32,7 +32,7 @@ import de.e2security.netflow_flowaggregation.utils.TestUtil;
 public class TestUdpEplExpressions extends EsperTestSupporter {
 	
 	int numberOfTestEvents = 100;
-	NetflowEventsCorrectOrderTestListener listener = new NetflowEventsCorrectOrderTestListener(true);
+	NetflowEventsCorrectOrderTestListener listener = new NetflowEventsCorrectOrderTestListener(false);
 	
 	protected EPServiceProvider engine;
 	protected EPAdministrator admin;

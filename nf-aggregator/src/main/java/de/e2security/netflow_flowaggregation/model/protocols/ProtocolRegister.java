@@ -36,6 +36,8 @@ public class ProtocolRegister implements Serializable {
 	private ZonedDateTime in_last_switched;
 	private ZonedDateTime out_first_switched;
 	private ZonedDateTime out_last_switched;
+	
+	public ProtocolRegister() {}
 
 	public ProtocolRegister(String description,
 			ZonedDateTime in_receivedTimeStamp,
@@ -218,5 +220,28 @@ public class ProtocolRegister implements Serializable {
 				+ "out_last_switched=" + out_last_switched + " - " + in_last_switched + "=in_last_switched \n";
 	}
 
+	//setters for test purpose
+	public void setIn_l4_src_port(Integer in_l4_src_port) {
+		this.in_l4_src_port = in_l4_src_port;
+	}
 	
+	public void setIn_l4_dst_port(Integer in_l4_dst_port) {
+		this.in_l4_dst_port = in_l4_dst_port;
+	}
+	
+	public void setOut_14_src_port(Integer out_14_src_port) {
+		this.out_14_src_port = out_14_src_port;
+	}
+
+	public void setOut_14_dst_port(Integer out_14_dst_port) {
+		this.out_14_dst_port = out_14_dst_port;
+	}
+
+	public void setIn_last_switched(ZonedDateTime in_last_switched) {
+		this.in_last_switched = in_last_switched;
+	}
+	
+	public void setOut_last_switched(ZonedDateTime out_last_switched) {
+		this.out_last_switched = out_last_switched;
+	}
 }

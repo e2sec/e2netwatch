@@ -5,6 +5,7 @@ import java.util.stream.Stream;
 import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPServiceProviderManager;
 
+@SuppressWarnings("rawtypes")
 public final class EsperUtil {
 	
 	public static EPServiceProvider registerEvents(Class... classes) {

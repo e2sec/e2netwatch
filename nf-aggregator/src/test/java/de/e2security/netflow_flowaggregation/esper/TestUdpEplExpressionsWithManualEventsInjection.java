@@ -46,6 +46,8 @@ import junit.framework.Assert;
 @SuppressWarnings({"deprecation","unused"})
 public class TestUdpEplExpressionsWithManualEventsInjection extends EsperTestSupporter {
 	
+	boolean stdout = false;
+	
 	private static final Logger LOG = LoggerFactory.getLogger(TestUdpEplExpressionsWithManualEventsInjection.class);
 	int offset = 120000;
 	protected EPServiceProvider engine;
@@ -165,6 +167,7 @@ public class TestUdpEplExpressionsWithManualEventsInjection extends EsperTestSup
 	}
 	
 	@Test public void mixedUdpConnectionsTest() {
+		
 		List<NetflowEvent> events = getHistoricalEvents(TestUtil.readSampleDataFile("udp_mixed.sample"), 17);
 		Pair<Long,Long> timer = getTimeFrameForCurrentTimer(events);
 		runtime.sendEvent(new CurrentTimeEvent(timer.getLeft())); //initial start
@@ -230,7 +233,7 @@ public class TestUdpEplExpressionsWithManualEventsInjection extends EsperTestSup
 			//no finished connections are to be awaited
 		} catch (NetflowEventException e1) { e1.printStackTrace(); }
 		supportListener.getNewDataList().forEach(event -> {
-			LOG.info(((ProtocolRegister) event[0].getUnderlying()).toString());
+			if (stdout) LOG.info(((ProtocolRegister) event[0].getUnderlying()).toString());
 		});
 		int eventsPassedThrough = supportListener.getNewDataList().size();
 		Assert.assertEquals(finished++, eventsPassedThrough);
