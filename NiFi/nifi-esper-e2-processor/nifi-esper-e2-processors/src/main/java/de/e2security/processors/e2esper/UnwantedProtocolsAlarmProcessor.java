@@ -52,6 +52,8 @@ import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPServiceProviderManager;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EventBean;
+import com.espertech.esper.client.UpdateListener;
+import com.espertech.esper.client.scopetest.SupportUpdateListener;
 import com.espertech.esper.event.map.MapEventBean;
 
 @Tags({"EsperProcessor"})
@@ -59,6 +61,7 @@ import com.espertech.esper.event.map.MapEventBean;
 @SeeAlso({})
 @ReadsAttributes({@ReadsAttribute(attribute="", description="")})
 @WritesAttributes({@WritesAttribute(attribute="", description="")})
+@SuppressWarnings("unused")
 public class UnwantedProtocolsAlarmProcessor extends AbstractProcessor {
 
     public static final PropertyDescriptor FromEvent = new PropertyDescriptor.Builder()
@@ -199,6 +202,25 @@ public class UnwantedProtocolsAlarmProcessor extends AbstractProcessor {
     	return builder.toString();
     }
     
+    AtomicReference<String> alertEvent = new AtomicReference<>();
+    UpdateListener unwantedProtocolsListener = new UpdateListener() {
+    	
+    	@Override
+    	public void update(EventBean[] newEvents, EventBean[] oldEvents) {
+    		getLogger().info("Esper listener has detected a new event...");
+    		try {
+    			for (EventBean event : newEvents) {
+    				if (event instanceof MapEventBean) {
+    					String catchedEventAsMapEntry = ((Map<?,?>) event.getUnderlying()).entrySet().toString();
+    					alertEvent.set(catchedEventAsMapEntry);
+    				}
+    			}
+    		} catch (Exception ex) {
+    			getLogger().error("ERROR UpdateListener cannot read underlying object...");
+    			ex.printStackTrace();
+    		}
+    	}
+    };
     @Override
     public void onTrigger(final ProcessContext context, final ProcessSession session) throws ProcessException {
         FlowFile flowFile = session.get();
@@ -228,38 +250,29 @@ public class UnwantedProtocolsAlarmProcessor extends AbstractProcessor {
         admin.createEPL(context.getProperty(CreateOutputEventSchema).getValue());
         
         //processing incoming nifi events
-        final AtomicReference<String> alertEvent = new AtomicReference<>();
+       
         session.read(flowFile, new InputStreamCallback() {
 			@Override
 			public void process(InputStream inputStream) throws IOException {
 				EPStatement blacklistProtocols = admin.createEPL(detectUnwantedProtocolsEplStatement);
 				EPStatement selectAlarms = admin.createEPL(context.getProperty(SelectAlarmsDetectedEplStatement).getValue());
+				SupportUpdateListener support = new SupportUpdateListener();
+				selectAlarms.addListener(unwantedProtocolsListener);
+				blacklistProtocols.addListener(unwantedProtocolsListener);
 	        	try {
 	        		String event = IOUtils.toString(inputStream); //implying just one event due to tests (read from file)
 	        		runtime.sendEvent(event);
+//	        		alertEvent.set(support.getNewDataList().toString());
 	        	} catch (Exception ex) {
 	        		ex.printStackTrace();
 	        		getLogger().error("ERROR processing incoming event");
 	        	}
-	        	selectAlarms.addListener( (newEvents, oldEvents) -> {
-	        		getLogger().info("Esper listener has detected a new event...");
-	        		try {
-	        			for (EventBean event : newEvents) {
-	        				if (event instanceof MapEventBean) {
-	        				String catchedEventAsMapEntry = ((Map<?,?>) event.getUnderlying()).entrySet().toString();
-	        				alertEvent.set(catchedEventAsMapEntry);
-	        				}
-	        			}
-	        		} catch (Exception ex) {
-	        			getLogger().error("ERROR UpdateListener cannot read underlying object...");
-	        			ex.printStackTrace();
-	        		}
-	        	});
 			}
         });
       session.write(flowFile, (outStream) -> {
     	 getLogger().info("trying to write output...");
    		 outStream.write(alertEvent.get().getBytes()); 
+   		 getLogger().info(alertEvent.get());
       });
       session.transfer(flowFile, AlarmedEvent);
     }

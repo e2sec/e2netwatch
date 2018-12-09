@@ -28,4 +28,15 @@ public class SupportMethodsTest {
 				+ "source.port=88 or destination.port=88"
 				+ " or source.port=90 or destination.port=90))";
 	}
+	
+	@Test public void testMulitpleEventSchemaDividedByPipeline() {
+		String testSchemaDeclaration = "create map schema Netflow as (source.port int,destination.port int,network.iana_number int)"
+				+ 	"|"
+				+ 	"create map schema ProtocolRegister as (netflow Netflow, version int)";
+		String[] eventSchemas = testSchemaDeclaration.split("\\|");
+		String expected = "create map schema Netflow as (source.port int,destination.port int,network.iana_number int)";
+		String expected2 = "create map schema ProtocolRegister as (netflow Netflow, version int)";
+		Assert.assertEquals(expected, eventSchemas[0]);
+		Assert.assertEquals(expected2, eventSchemas[1]);
+	}
 }
