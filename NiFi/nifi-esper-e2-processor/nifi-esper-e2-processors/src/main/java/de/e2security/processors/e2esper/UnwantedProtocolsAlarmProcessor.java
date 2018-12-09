@@ -56,6 +56,8 @@ import com.espertech.esper.client.UpdateListener;
 import com.espertech.esper.client.scopetest.SupportUpdateListener;
 import com.espertech.esper.event.map.MapEventBean;
 
+import de.e2security.processors.e2esper.utilities.SupportUtility;
+
 @Tags({"EsperProcessor"})
 @CapabilityDescription("Processing events based on esper engine rules")
 @SeeAlso({})
@@ -63,32 +65,24 @@ import com.espertech.esper.event.map.MapEventBean;
 @WritesAttributes({@WritesAttribute(attribute="", description="")})
 @SuppressWarnings("unused")
 public class UnwantedProtocolsAlarmProcessor extends AbstractProcessor {
+	
+	public static final PropertyDescriptor EventName = new PropertyDescriptor.Builder()
+			.name("EventName")
+			.displayName("EventName")
+			.description("Epl statement w/o conditional")
+			.required(true)
+			.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
+			.build();
 
-    public static final PropertyDescriptor FromEvent = new PropertyDescriptor.Builder()
-    		.name("FromEvent")
-    		.displayName("FromEvent")
-    		.description("Name of the Event used in 'InputEventSchema")
-    		.required(true)
-    		.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
-    		.build();
-    
-    public static final PropertyDescriptor ToEvent = new PropertyDescriptor.Builder()
-    		.name("ToEvent")
-    		.displayName("ToEvent")
-    		.description("Name of the Event used in 'OuputEventSchema")
+    public static final PropertyDescriptor EplStatement = new PropertyDescriptor.Builder()
+    		.name("EplStatement")
+    		.displayName("EplStatement")
+    		.description("Epl statement w/o conditional")
     		.required(true)
     		.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
     		.build();
 
-    public static final PropertyDescriptor SelectAlarmsDetectedEplStatement = new PropertyDescriptor.Builder()
-    		.name("AlarmsDetectedSelectEplStatement")
-    		.displayName("AlarmsDetectedSelectEplStatement")
-    		.description("EPL Statement")
-    		.required(true)
-    		.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
-    		.build();
-    
-    public static final PropertyDescriptor UnwantedTcpPortsProperty = new PropertyDescriptor.Builder()
+    public static final PropertyDescriptor UnwantedTcpPorts = new PropertyDescriptor.Builder()
     		.name("UnwantedTcpPorts")
     		.displayName("UnwantedTcpPorts")
     		.description("List of unwanted tcp ports as comma-separated string")
@@ -96,7 +90,7 @@ public class UnwantedProtocolsAlarmProcessor extends AbstractProcessor {
     		.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
     		.build();
 
-    public static final PropertyDescriptor UnwantedUdpPortsProperty = new PropertyDescriptor.Builder()
+    public static final PropertyDescriptor UnwantedUdpPorts = new PropertyDescriptor.Builder()
     		.name("UnwantedUdpPorts")
     		.displayName("UnwantedUdpPorts")
     		.description("List of unwanted udp ports as comma-separated string")
@@ -104,21 +98,13 @@ public class UnwantedProtocolsAlarmProcessor extends AbstractProcessor {
     		.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
     		.build();
     	
-    		public static final PropertyDescriptor CreateInputEventSchema = new PropertyDescriptor.Builder()
+    		public static final PropertyDescriptor InputEventSchema = new PropertyDescriptor.Builder()
     		.name("InputEventSchema")
     		.displayName("InputEventSchema")
     		.description("define schema with EPL for input event (as map)")
     		.required(true)
     		.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
     		.build();
-    
-    public static final PropertyDescriptor CreateOutputEventSchema = new PropertyDescriptor.Builder()
-			.name("OuputEventSchema")
-			.displayName("OutputEventSchema")
-			.description("define schema with EPL for output event (as map)")
-			.required(true)
-			.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
-			.build();
     
     public static final Relationship AlarmedEvent = new Relationship.Builder()
             .name("AlarmedEventt")
@@ -132,13 +118,11 @@ public class UnwantedProtocolsAlarmProcessor extends AbstractProcessor {
     @Override
     protected void init(final ProcessorInitializationContext context) {
         final List<PropertyDescriptor> descriptors = new ArrayList<PropertyDescriptor>();
-        descriptors.add(FromEvent);
-        descriptors.add(ToEvent);
-        descriptors.add(SelectAlarmsDetectedEplStatement);
-        descriptors.add(UnwantedTcpPortsProperty);
-        descriptors.add(UnwantedUdpPortsProperty);
-        descriptors.add(CreateInputEventSchema);
-        descriptors.add(CreateOutputEventSchema);
+        descriptors.add(UnwantedTcpPorts);
+        descriptors.add(UnwantedUdpPorts);
+        descriptors.add(InputEventSchema);
+        descriptors.add(EplStatement);
+        descriptors.add(EventName);
         this.descriptors = Collections.unmodifiableList(descriptors);
 
         final Set<Relationship> relationships = new HashSet<Relationship>();
@@ -227,15 +211,12 @@ public class UnwantedProtocolsAlarmProcessor extends AbstractProcessor {
         if ( flowFile == null ) { return;}
 
         //stmt preparations
-        String tcpPorts = context.getProperty(UnwantedTcpPortsProperty).getValue();
-    	String udpPorts = context.getProperty(UnwantedUdpPortsProperty).getValue();
+        String tcpPorts = context.getProperty(UnwantedTcpPorts).getValue();
+    	String udpPorts = context.getProperty(UnwantedUdpPorts).getValue();
         String conditionalExpr = concatenatePorts(tcpPorts, udpPorts);
         //select all since retrieving of particular fields is possible through SelectAlarmsDetectedEplStatement PropertyDescriptor;
         String detectUnwantedProtocolsEplStatement = 
-        		"insert irstream into " 
-        		+ context.getProperty(ToEvent).getValue() 
-        		+ " select * from " 
-        		+ context.getProperty(FromEvent) 
+        		  context.getProperty(EplStatement).getValue()
         		+ "("
         		+ conditionalExpr
         		+ ")";
@@ -246,8 +227,7 @@ public class UnwantedProtocolsAlarmProcessor extends AbstractProcessor {
         EPAdministrator admin = engine.getEPAdministrator();
         
         //creating schema on the fly from the nifi attributes
-        admin.createEPL(context.getProperty(CreateInputEventSchema).getValue());
-        admin.createEPL(context.getProperty(CreateOutputEventSchema).getValue());
+        admin.createEPL(context.getProperty(InputEventSchema).getValue());
         
         //processing incoming nifi events
        
@@ -255,13 +235,12 @@ public class UnwantedProtocolsAlarmProcessor extends AbstractProcessor {
 			@Override
 			public void process(InputStream inputStream) throws IOException {
 				EPStatement blacklistProtocols = admin.createEPL(detectUnwantedProtocolsEplStatement);
-				EPStatement selectAlarms = admin.createEPL(context.getProperty(SelectAlarmsDetectedEplStatement).getValue());
 				SupportUpdateListener support = new SupportUpdateListener();
-				selectAlarms.addListener(unwantedProtocolsListener);
 				blacklistProtocols.addListener(unwantedProtocolsListener);
 	        	try {
-	        		String event = IOUtils.toString(inputStream); //implying just one event due to tests (read from file)
-	        		runtime.sendEvent(event);
+	        		String eventJson = IOUtils.toString(inputStream); //implying just one event due to tests (read from file)
+	        		Map<String,Object> eventMap = SupportUtility.transformEventToMap(eventJson);
+	        		runtime.sendEvent(eventMap,context.getProperty(EventName).getValue());
 //	        		alertEvent.set(support.getNewDataList().toString());
 	        	} catch (Exception ex) {
 	        		ex.printStackTrace();
@@ -271,6 +250,7 @@ public class UnwantedProtocolsAlarmProcessor extends AbstractProcessor {
         });
         
       engine.destroy();
+      
       session.write(flowFile, (outStream) -> {
     	 getLogger().info("trying to write output...");
    		 outStream.write(alertEvent.get().getBytes()); 
