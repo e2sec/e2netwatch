@@ -269,6 +269,8 @@ public class UnwantedProtocolsAlarmProcessor extends AbstractProcessor {
 	        	}
 			}
         });
+        
+      engine.destroy();
       session.write(flowFile, (outStream) -> {
     	 getLogger().info("trying to write output...");
    		 outStream.write(alertEvent.get().getBytes()); 

@@ -22,10 +22,10 @@ public class CommonEplProcessorTest {
 			runner.clearProperties();
 			runner.clearProvenanceEvents();
 			runner.clearTransferState();
+			runner.shutdown();
 		}
 		
 		@Test public void testOnTrigger() throws IOException {
-			TestRunner runner = TestRunners.newTestRunner(new CommonEplProcessor());
 			InputStream inEvent = new ByteArrayInputStream("{\"source.port\":23,\"destination.port\":21,\"network.iana_number\":6}".getBytes());
 			runner.setProperty(CommonEplProcessor.EplStatement, "@Name('ProtocolRegisterDebugger') @Audit select * from ProtocolRegister(network.iana_number=6)");
 			runner.setProperty(CommonEplProcessor.EventSchema, "create map schema ProtocolRegister as (source.port int,destination.port int,network.iana_number int)");
@@ -37,7 +37,6 @@ public class CommonEplProcessorTest {
 
 
 		@Test public void testComplexEventSchemaDefinition() throws IOException {
-			
 			InputStream inEvent = new ByteArrayInputStream("{\"netflow\":{\"source.port\":23, \"destination.port\":21,\"network.iana_number\":6}, \"version\":1}".getBytes());
 			runner.setProperty(CommonEplProcessor.EplStatement, "select * from ProtocolRegister(netflow.network.iana_number=6)");
 			runner.setProperty(CommonEplProcessor.EventSchema, 

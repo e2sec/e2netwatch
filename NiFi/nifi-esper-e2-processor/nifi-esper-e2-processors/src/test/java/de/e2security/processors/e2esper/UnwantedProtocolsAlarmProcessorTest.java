@@ -28,5 +28,7 @@ public class UnwantedProtocolsAlarmProcessorTest {
 		runner.run(1);
 		
 		runner.assertQueueEmpty(); //assert the event has been processed successfully
+		
+		runner.shutdown();
 	}
 }
