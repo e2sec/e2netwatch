@@ -14,23 +14,10 @@
 #######################################################################
 
 FROM java:openjdk-8-jdk as build
-
-ENV MAVEN_VERSION 3.3.9
-
-RUN mkdir -p /usr/share/maven \
-  && curl -fsSL http://apache.osuosl.org/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz \
-    | tar -xzC /usr/share/maven --strip-components=1 \
-  && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
-
-ENV MAVEN_HOME /usr/share/maven
-
 ADD ./src /tmp/middleware/src
+WORKDIR /tmp/middleware/src
+RUN ./mvnw clean install
 
-WORKDIR /tmp/middleware/src/RestAPI
-
-RUN /usr/bin/mvn package 
-
-
-FROM jetty:alpine
-
-COPY --from=build /tmp/middleware/src/RestAPI/target/middleware.war /var/lib/jetty/webapps/.
+FROM openjdk:8-jdk-alpine
+COPY --from=build /tmp/middleware/src/application/target/middleware.war .
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/middleware.war"]
