@@ -31,49 +31,55 @@ import org.apache.nifi.processor.exception.ProcessException;
 import org.apache.nifi.processor.io.InputStreamCallback;
 import org.apache.nifi.processor.util.StandardValidators;
 
-import com.espertech.esper.client.Configuration;
 import com.espertech.esper.client.EPAdministrator;
 import com.espertech.esper.client.EPRuntime;
 import com.espertech.esper.client.EPServiceProvider;
-import com.espertech.esper.client.EPServiceProviderManager;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.event.map.MapEventBean;
 
+import de.e2security.nifi.controller.esper.EsperService;
 import de.e2security.processors.e2esper.utilities.SupportUtility;
 
 @Tags({"EsperProcessor"})
-@CapabilityDescription("Processing events based on esper engine rules for statical analysis (e.g. w/o time frames/windows, rather with filtering/findings queries)")
+@CapabilityDescription("Processing events based on esper engine rules)")
 @SeeAlso({})
 @ReadsAttributes({@ReadsAttribute(attribute="", description="")})
 @WritesAttributes({@WritesAttribute(attribute="", description="")})
 public class CommonEplProcessor extends AbstractProcessor {
 	
-	public static final PropertyDescriptor EplStatement = new PropertyDescriptor.Builder()
-	.name("EplStatement")
-	.displayName("EplStatement")
-	.description("epl statement")
-	.required(true)
-	.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
-	.build();
+	public static final PropertyDescriptor ESPER_ENGINE = new PropertyDescriptor.Builder().name("EsperEngine")
+			.displayName("EsperEngineService")
+			.description("esper main engine")
+			.required(true)
+			.identifiesControllerService(EsperService.class)
+			.build();
 	
-	public static final PropertyDescriptor NameOfInboundEvent = new PropertyDescriptor.Builder()
-	.name("InboundEventName")
-	.displayName("InboundEventName")
-	.description("name of incoming event against which epl statement should be evaluated")
-	.required(true)
-	.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
-	.build();
+	public static final PropertyDescriptor EPL_STATEMENT = new PropertyDescriptor.Builder()
+			.name("EplStatement")
+			.displayName("EplStatement")
+			.description("epl statement")
+			.required(true)
+			.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
+			.build();
+	
+	public static final PropertyDescriptor INBOUND_EVENT_NAME = new PropertyDescriptor.Builder()
+			.name("InboundEventName")
+			.displayName("InboundEventName")
+			.description("name of incoming event against which epl statement should be evaluated")
+			.required(true)
+			.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
+			.build();
 
-	public static final PropertyDescriptor EventSchema = new PropertyDescriptor.Builder()
-	.name("InputEventSchema")
-	.displayName("InputEventSchema")
-	.description("define schema with EPL as string. In case of complex event schema declaration divide multiple strings with '|'")
-	.required(true)
-	.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
-	.build();
+	public static final PropertyDescriptor EVENT_SCHEMA = new PropertyDescriptor.Builder()
+			.name("InputEventSchema")
+			.displayName("InputEventSchema")
+			.description("define schema with EPL as string. In case of complex event schema declaration divide multiple strings with '|'")
+			.required(true)
+			.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
+			.build();
 
-	public static final Relationship SuccessEvent = new Relationship.Builder()
+	public static final Relationship QUALIFIED_EVENT = new Relationship.Builder()
 	.name("SuccessEvent")
 	.description("SuccessEvent")
 	.build();
@@ -85,13 +91,14 @@ public class CommonEplProcessor extends AbstractProcessor {
 	@Override
 	protected void init(final ProcessorInitializationContext context) {
 		final List<PropertyDescriptor> descriptors = new ArrayList<PropertyDescriptor>();
-		descriptors.add(EventSchema);
-		descriptors.add(EplStatement);
-		descriptors.add(NameOfInboundEvent);
+		descriptors.add(EVENT_SCHEMA);
+		descriptors.add(EPL_STATEMENT);
+		descriptors.add(INBOUND_EVENT_NAME);
+		descriptors.add(ESPER_ENGINE);
 		this.descriptors = Collections.unmodifiableList(descriptors);
 
 		final Set<Relationship> relationships = new HashSet<Relationship>();
-		relationships.add(SuccessEvent);
+		relationships.add(QUALIFIED_EVENT);
 		this.relationships = Collections.unmodifiableSet(relationships);
 	}
 
@@ -114,17 +121,15 @@ public class CommonEplProcessor extends AbstractProcessor {
 	public void onTrigger(final ProcessContext context, final ProcessSession session) throws ProcessException {
 		FlowFile flowFile = session.get();
 		if ( flowFile == null ) { return;}
-		//define esper's units
-		Configuration config = new Configuration();
-		config.getEngineDefaults().getLogging().setEnableExecutionDebug(true);
-		config.getEngineDefaults().getLogging().setEnableTimerDebug(false);
-		EPServiceProvider engine = EPServiceProviderManager.getDefaultProvider(config);
-		EPRuntime runtime = engine.getEPRuntime();
-		EPAdministrator admin = engine.getEPAdministrator();
+		//load esper engine from the controller
+		EsperService esperService = context.getProperty(ESPER_ENGINE).asControllerService(EsperService.class);
+		EPServiceProvider esperEngine = esperService.execute();
+		EPRuntime runtime = esperEngine.getEPRuntime();
+		EPAdministrator admin = esperEngine.getEPAdministrator();
 		
 		// parse each epl statement from array of strings defined in EplStatement
-		SupportUtility.parseMultipleEventSchema(context.getProperty(EventSchema).getValue(), admin);
-		EPStatement eplIn = admin.createEPL(context.getProperty(EplStatement).getValue());
+		SupportUtility.parseMultipleEventSchema(context.getProperty(EVENT_SCHEMA).getValue(), admin);
+		EPStatement eplIn = admin.createEPL(context.getProperty(EPL_STATEMENT).getValue());
 		//processing incoming nifi events
 		final AtomicReference<String> processedEvents = new AtomicReference<>();
 		session.read(flowFile, new InputStreamCallback() {
@@ -148,7 +153,7 @@ public class CommonEplProcessor extends AbstractProcessor {
 					String eventJson = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
 					//parsing inputStream as JSON objects
 					Map<String,Object> eventMap = SupportUtility.transformEventToMap(eventJson);
-					runtime.sendEvent(eventMap, context.getProperty(NameOfInboundEvent).getValue());
+					runtime.sendEvent(eventMap, context.getProperty(INBOUND_EVENT_NAME).getValue());
 				} catch (Exception ex) {
 					ex.printStackTrace();
 					getLogger().error("ERROR processing incoming event");
@@ -156,12 +161,10 @@ public class CommonEplProcessor extends AbstractProcessor {
 			}
 		});
 		
-		engine.destroy();
-
 		session.write(flowFile, (outStream) -> {
 			getLogger().info("trying to write output...");
 			outStream.write(processedEvents.get().getBytes()); 
 		});
-		session.transfer(flowFile, SuccessEvent);
+		session.transfer(flowFile, QUALIFIED_EVENT);
 	}
 }

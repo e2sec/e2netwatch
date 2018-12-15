@@ -23,6 +23,12 @@
 	<packaging>jar</packaging>
 
 	<dependencies>
+		<!-- nifi controll service deps -->
+		<dependency>
+			<groupId>de.e2security</groupId>
+			<artifactId>nifi-e2</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 		<!-- nifi initial dependencies -->
 		<dependency>
 			<groupId>org.apache.nifi</groupId>

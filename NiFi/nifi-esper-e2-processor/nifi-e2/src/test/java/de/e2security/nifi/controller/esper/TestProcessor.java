@@ -16,15 +16,30 @@
  */
 package de.e2security.nifi.controller.esper;
 
-import org.apache.nifi.annotation.documentation.CapabilityDescription;
-import org.apache.nifi.annotation.documentation.Tags;
-import org.apache.nifi.controller.ControllerService;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.nifi.components.PropertyDescriptor;
+import org.apache.nifi.processor.AbstractProcessor;
+import org.apache.nifi.processor.ProcessContext;
+import org.apache.nifi.processor.ProcessSession;
 import org.apache.nifi.processor.exception.ProcessException;
 
-@Tags({"example"})
-@CapabilityDescription("Example Service API.")
-public interface MyService extends ControllerService {
+public class TestProcessor extends AbstractProcessor {
 
-    public void execute()  throws ProcessException;
+    @Override
+    public void onTrigger(ProcessContext context, ProcessSession session) throws ProcessException {
+    }
 
+    @Override
+    protected List<PropertyDescriptor> getSupportedPropertyDescriptors() {
+        List<PropertyDescriptor> propDescs = new ArrayList<>();
+        propDescs.add(new PropertyDescriptor.Builder()
+                .name("MyService test processor")
+                .description("MyService test processor")
+                .identifiesControllerService(EsperService.class)
+                .required(true)
+                .build());
+        return propDescs;
+    }
 }

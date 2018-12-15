@@ -18,24 +18,45 @@
 
     <parent>
         <groupId>de.e2security</groupId>
-        <artifactId>nifi.controller.esper</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <artifactId>nifi-esper-e2-processor</artifactId>
+        <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>nifi-e2-api</artifactId>
+    <artifactId>nifi-e2</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
+        <dependency>
+            <groupId>de.e2security</groupId>
+            <artifactId>nifi-e2-api</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.nifi</groupId>
             <artifactId>nifi-api</artifactId>
             <scope>provided</scope>
         </dependency>
-<!-- esper libraries and dependencies -->
-		<dependency>
-			<groupId>com.espertech</groupId>
-			<artifactId>esper</artifactId>
-			<version>7.1.0</version>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.nifi</groupId>
+            <artifactId>nifi-processor-utils</artifactId>
+            <version>1.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.nifi</groupId>
+            <artifactId>nifi-mock</artifactId>
+            <version>1.8.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 </project>
