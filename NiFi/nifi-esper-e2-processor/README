@@ -1,11 +1,4 @@
-network.iana_number=6 and ( (source.port=23 or destination.port=23) or (source.port=21 or destination.port=21) or (source.port=115 or destination.port=115) or (source.port=107 or destination.por=107) or (source.port=109 or destination.port=109) or (source.port=110 or destination.port=110) or (source.port=143 or destination.port=143) or (source.poort=18081 or destination.port=18081) or (source.port=18080 or destination.port=18080) or (source.port=1935 or destination.port=1935))
-{"netflow.outbound.records":0,"netflow.outbound.sequence_number":0,"destination.port":7070,"netflow.inbound.sequence_number":0,"network.outbound.bytes":0,"netflow.inbound.last_switched":"","description":"","destination.ip":"","host.ip":"","source.port":8080,"netflow.outbound.first_switched":"","network.outbound.packets":0,"netflow.inbound.records":0,"network.inbound.bytes":0,"network.inbound.packets":0,"netflow.inbound.first_switched":"","source.ip":"","network.iana_number":6,"netflow.outbound.last_switched":""}
-e{"source.port":23,"destination.port":21,"network.iana_number":6}
-"insert rstream into AlarmedConnection "
+TODO: mvn surefire plugin should be included and set up so that only fork will be used for tests; 
+      This may be the main reason both nifi controller and processor pass the tests in eclipse, but not in mvn since the Esper instance will shared for both tests and @Before and @After seem to be ignored. 
 
-    	//http://esper.espertech.com/release-5.3.0/esper-reference/html/event_representation.html
-    	/*
-    	 *String[] propertyNames = {"userids", "salesPersons", "items"};
-    	 *Object[] propertyTypes = {int[].class, String.class, String.class};
-    	 *config.addEventType("SalesEvent", propertyNames, propertyTypes);
-    	 */
+Not clear so far: evtl. use ' $ mvn clean install -U ' to update subprojects if some changes has been done;

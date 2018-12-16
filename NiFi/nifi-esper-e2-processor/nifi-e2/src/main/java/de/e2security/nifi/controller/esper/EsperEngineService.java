@@ -23,7 +23,8 @@ import com.espertech.esper.client.EPServiceProviderManager;
 public class EsperEngineService extends AbstractControllerService implements EsperService {
 	
     private static final List<PropertyDescriptor> properties;
-
+    EPServiceProvider engine;
+    
     static {
         final List<PropertyDescriptor> props = new ArrayList<>();
         properties = Collections.unmodifiableList(props);
@@ -40,14 +41,14 @@ public class EsperEngineService extends AbstractControllerService implements Esp
 
     @OnDisabled
     public void shutdown() {
-
+    	engine.destroy();
     }
 
     @Override
     public EPServiceProvider execute() throws ProcessException {
     	Configuration config = new Configuration();
     	config.getEngineDefaults().getLogging().setEnableExecutionDebug(true);
-    	EPServiceProvider engine = EPServiceProviderManager.getDefaultProvider(config);
+    	engine = EPServiceProviderManager.getDefaultProvider(config);
     	return engine;
     }
 

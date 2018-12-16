@@ -31,11 +31,12 @@ public class CommonEplProcessorTest {
 			runner.enableControllerService(controller);
 		}
 		
-		@After public void destroy() {
+		@After public void destroy() throws InterruptedException {
 			runner.clearProperties();
 			runner.clearProvenanceEvents();
 			runner.clearTransferState();
 			((EsperEngineService) controller).shutdown();
+			runner.disableControllerService(controller);
 			runner.shutdown();
 		}
 		

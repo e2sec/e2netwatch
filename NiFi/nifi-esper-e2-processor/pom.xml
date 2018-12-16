@@ -30,8 +30,8 @@
     <modules>
         <module>nifi-esper-e2-processors</module>
         <module>nifi-esper-e2-nar</module>
-		<module>nifi-e2</module>
-		<module>nifi-e2-api</module>
+	<module>nifi-e2</module>
+	<module>nifi-e2-api</module>
     </modules>
 
 </project>

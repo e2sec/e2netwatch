@@ -161,6 +161,7 @@ public class CommonEplProcessor extends AbstractProcessor {
 			}
 		});
 		
+		
 		session.write(flowFile, (outStream) -> {
 			getLogger().info("trying to write output...");
 			outStream.write(processedEvents.get().getBytes()); 
