@@ -1,44 +1,42 @@
 {
-    "configuration": {
-        "name": "log4j2 stage logging",
-        "packages": "de.e2security.e2netwatch",
-        "ThresholdFilter": {
-            "level": "debug"
-        },
-        "appenders": {
-            "RollingFile": {
-	            "name":"File",
-	            "fileName":"/var/opt/middleware/logs/middleware.log",
-	            "filePattern":"/logs/middlewareApp/archive/middleware-backup-%d{MM-dd-yy-HH-mm-ss}-%i.log.gz",
-	            "PatternLayout": {
-	               "pattern":"%d{yyyy-MM-dd HH:mm:ss.SSS} [%-6p] [%t] %C{3}:%L –-- %m%n"
-	            },
-	            "Policies": {
-	               "SizeBasedTriggeringPolicy": {
-	                  "size":"10 MB"
-	               }
-	            },
-	            "DefaultRolloverStrategy": {
-	               "max":"10"
-	            }
-	         },
-	         "Console": {
-                "name": "STDOUT",
-                "PatternLayout": {
-                    "pattern": "%d{yyyy-MM-dd HH:mm:ss.SSS} [%highlight{%-6level}{FATAL=bg_red, ERROR=red, WARN=yellow, INFO=green}] [%t] %C{3}:%L –-- %m%n"
-                }
-            }
-        },
-        "loggers": {
-            "root": {
-                "level": "info",
-            	"AppenderRef": {
-                	"ref": "File"
-            	},
-            	"AppenderRef": {
-                	"ref": "STDOUT"
-            	}
-            }
-        }
-    }
+	"configuration": {
+		"name": "log4j2 stage logging",
+		"packages": "de.e2security.e2netwatch",
+		"ThresholdFilter": {
+			"level": "debug"
+		},
+		"appenders": {
+			"RollingFile": {
+				"name":"File",
+				"fileName":"/var/opt/middlewareApp/logs/middleware.log",
+				"filePattern":"var/opt/middlewareApp/logs/archive/middleware-backup-%d{MM-dd-yy-HH-mm-ss}-%i.log.gz",
+				"PatternLayout": {
+					"pattern":"%d{yyyy-MM-dd HH:mm:ss.SSS} [%-6p] [%t] %C{3}:%L –-- %m%n"
+				},
+				"Policies": {
+					"SizeBasedTriggeringPolicy": {
+						"size":"10 MB"
+					}
+				},
+				"DefaultRolloverStrategy": {
+					"max":"10"
+				}
+			},
+			"Console": {
+				"name": "STDOUT",
+				"PatternLayout": {
+					"pattern": "%d{yyyy-MM-dd HH:mm:ss.SSS} [%highlight{%-6level}{FATAL=bg_red, ERROR=red, WARN=yellow, INFO=green}] [%t] %C{3}:%L –-- %m%n"
+				}
+			}
+		},
+		"loggers": {
+			"root": {
+				"level": "info",
+				"AppenderRef": [
+					{"ref": "File"},
+					{"ref": "STDOUT"}
+				]
+			}
+		}
+	}
 }
