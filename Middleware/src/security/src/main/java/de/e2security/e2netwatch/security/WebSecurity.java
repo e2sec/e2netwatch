@@ -60,6 +60,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().authorizeRequests()
         		.antMatchers(HttpMethod.GET, "/public/**").permitAll()
+        		.antMatchers("/v2/**", "/swagger-ui.html", "/webjars/**", "/swagger-resources/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager(), SECRET, EXPIRATION_TIME, LOGIN_PATH))

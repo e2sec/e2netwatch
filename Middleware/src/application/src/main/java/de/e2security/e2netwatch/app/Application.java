@@ -4,9 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(scanBasePackages = {
-		"de.e2security.e2netwatch.web",
 		"de.e2security.e2netwatch.usermanagement",
-		"de.e2security.e2netwatch.security"
+		"de.e2security.e2netwatch.security",
+		"de.e2security.e2netwatch.config"
 		})
 public class Application {
 
