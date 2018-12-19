@@ -44,7 +44,7 @@ public class UserStatusServiceImplTest {
 	 */
 	
 	@Test
-	public void getUsers_ok() {
+	public void getUserStatuses_ok() {
 		
 		// 
 		
@@ -70,6 +70,20 @@ public class UserStatusServiceImplTest {
 		
 		assertEquals("Number of user statuses not as expected", 2, userStatusesOut.size());
 		assertEquals("Second user status name not as expected", "Not active", userStatusesOut.get(1).getName());
+	}
+	
+	@Test
+	public void getUserStatuses_empty() {
+		
+		//
+		
+		List<UserStatus> userStatusList = new ArrayList<>();
+		
+		Mockito.when(userStatusRepository.findAll()).thenReturn(userStatusList);
+		
+		List<UserStatusDTO> userStatusesOut = userStatusServiceImpl.getUserStatuses();
+		
+		assertEquals("Number of user statuses not as expected", 0, userStatusesOut.size());
 	}
 	
 }

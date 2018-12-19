@@ -903,6 +903,22 @@ public class UsersServiceImplTest {
 		assertEquals("Number of users not as expected", 2, usersOut.getContent().size());
 		assertEquals("User's user group not as expected", "Admin", usersOut.getContent().get(0).getUserGroups().get(0).getName());
 	}
+	
+	@Test
+	public void getUsers_empty() {
+		
+		// No users in DB
+		
+		List<User> userList = new ArrayList<>();
+		
+		Mockito.when(userRepository.findAll()).thenReturn(userList);
+		
+		ListDTO<UserDTO> usersOut = usersServiceImpl.getUsers();
+		
+		assertEquals("Number of users not as expected", 0, usersOut.getContent().size());
+		assertEquals("Number of total users not as expected", 0, usersOut.getTotal());
+		assertEquals("Number of retrieved users not as expected", 0, usersOut.getRetrieved());
+	}
 
 	/*
 	 * checkEmailValidity
