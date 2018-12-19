@@ -26,7 +26,7 @@ import de.e2security.e2netwatch.usermanagement.model.UserStatus;
  *
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(UsersServiceImpl.class)
+@PrepareForTest(UserStatusServiceImpl.class)
 public class UserStatusServiceImplTest {
 	
 	private UserStatusService userStatusServiceImpl;
@@ -40,7 +40,7 @@ public class UserStatusServiceImplTest {
 	}
 	
 	/*
-	 * getUsers
+	 * getUserStatuses
 	 */
 	
 	@Test

@@ -36,7 +36,7 @@ public class UserStatusServiceImpl implements UserStatusService {
 	@Override
 	public List<UserStatusDTO> getUserStatuses() {
 		
-		// Get all user entities
+		// Get all user status entities
 		
 		List<UserStatus> allUserStatuses = userStatusRepository.findAll();
 		

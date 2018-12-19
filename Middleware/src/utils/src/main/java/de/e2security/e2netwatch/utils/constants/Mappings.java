@@ -12,6 +12,7 @@ public final class Mappings {
     
     public static final String USERS = USER_MANAGEMENT + "/users";
     public static final String USERSTATUSES = USER_MANAGEMENT + "/userstatuses";
+    public static final String USERGROUPS = USER_MANAGEMENT + "/usergroups";
     public static final String TIMEZONES = USER_MANAGEMENT + "/timezones";
 
     private Mappings() {

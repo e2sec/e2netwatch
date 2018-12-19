@@ -11,6 +11,11 @@ import de.e2security.e2netwatch.usermanagement.dto.UserStatusDTO;
  */
 public interface UserStatusService {
 	
+	/**
+	 * Get all user statuses
+	 * 
+	 * @return list of user statuses
+	 */
 	List<UserStatusDTO> getUserStatuses();
 
 }
