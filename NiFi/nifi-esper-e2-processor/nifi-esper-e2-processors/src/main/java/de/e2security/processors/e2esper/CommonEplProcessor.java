@@ -1,7 +1,5 @@
 package de.e2security.processors.e2esper;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,7 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.nifi.annotation.behavior.ReadsAttribute;
@@ -28,17 +25,17 @@ import org.apache.nifi.processor.ProcessSession;
 import org.apache.nifi.processor.ProcessorInitializationContext;
 import org.apache.nifi.processor.Relationship;
 import org.apache.nifi.processor.exception.ProcessException;
-import org.apache.nifi.processor.io.InputStreamCallback;
 import org.apache.nifi.processor.util.StandardValidators;
 
 import com.espertech.esper.client.EPAdministrator;
+import com.espertech.esper.client.EPException;
 import com.espertech.esper.client.EPRuntime;
 import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPStatement;
-import com.espertech.esper.client.EventBean;
-import com.espertech.esper.event.map.MapEventBean;
 
 import de.e2security.nifi.controller.esper.EsperService;
+import de.e2security.processors.e2esper.utilities.FailedEventListener;
+import de.e2security.processors.e2esper.utilities.SuccessedEventListener;
 import de.e2security.processors.e2esper.utilities.SupportUtility;
 
 @Tags({"EsperProcessor"})
@@ -80,9 +77,9 @@ public class CommonEplProcessor extends AbstractProcessor {
 			.build();
 
 	public static final Relationship QUALIFIED_EVENT = new Relationship.Builder()
-	.name("SuccessEvent")
-	.description("SuccessEvent")
-	.build();
+			.name("SuccessEvent")
+			.description("SuccessEvent")
+			.build();
 
 	private List<PropertyDescriptor> descriptors;
 
@@ -113,14 +110,12 @@ public class CommonEplProcessor extends AbstractProcessor {
 	}
 
 	@OnScheduled
-	public void onScheduled(final ProcessContext context) {
-
-	}
-
+	public void onScheduled(final ProcessContext context) {	}
+	
 	@Override
 	public void onTrigger(final ProcessContext context, final ProcessSession session) throws ProcessException {
-		FlowFile flowFile = session.get();
-		if ( flowFile == null ) { return;}
+		FlowFile flowFileS = session.get();
+		if ( flowFileS == null ) { return;}
 		//load esper engine from the controller
 		EsperService esperService = context.getProperty(ESPER_ENGINE).asControllerService(EsperService.class);
 		EPServiceProvider esperEngine = esperService.execute();
@@ -128,44 +123,37 @@ public class CommonEplProcessor extends AbstractProcessor {
 		EPAdministrator admin = esperEngine.getEPAdministrator();
 		
 		// parse each epl statement from array of strings defined in EplStatement
-		SupportUtility.parseMultipleEventSchema(context.getProperty(EVENT_SCHEMA).getValue(), admin);
-		EPStatement eplIn = admin.createEPL(context.getProperty(EPL_STATEMENT).getValue());
+		SupportUtility.parseMultipleEventSchema(context.getProperty(EVENT_SCHEMA).getValue(),admin,getLogger());
+		final String _EPL_STATEMENT = context.getProperty(EPL_STATEMENT).getValue();
+		EPStatement eplIn = admin.createEPL(_EPL_STATEMENT);
+		getLogger().debug("[ESPER DEBUG]: " + "has successfully implemented the following epl statement: " + _EPL_STATEMENT);
 		//processing incoming nifi events
-		final AtomicReference<String> processedEvents = new AtomicReference<>();
-		session.read(flowFile, new InputStreamCallback() {
-			@Override
-			public void process(InputStream inputStream) throws IOException {
-				eplIn.addListener( (newEvents, oldEvents) -> {
-					getLogger().info("Esper listener has detected a new incoming event...");
-					try {
-						for (EventBean event : newEvents) {
-							if (event instanceof MapEventBean) {
-								String catchedEventAsMapEntry = ((Map<?,?>) event.getUnderlying()).entrySet().toString();
-								processedEvents.set(catchedEventAsMapEntry);
-							}
-						}
-					} catch (Exception ex) {
-						getLogger().error("ERROR UpdateListener cannot read underlying object...");
-						ex.printStackTrace();
-					}
-				});
-				try {
-					String eventJson = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-					//parsing inputStream as JSON objects
-					Map<String,Object> eventMap = SupportUtility.transformEventToMap(eventJson);
-					runtime.sendEvent(eventMap, context.getProperty(INBOUND_EVENT_NAME).getValue());
-				} catch (Exception ex) {
-					ex.printStackTrace();
-					getLogger().error("ERROR processing incoming event");
-				}
+		SuccessedEventListener sel = new SuccessedEventListener(getLogger());
+		eplIn.addListener(sel);
+		FailedEventListener fel = new FailedEventListener(getLogger());
+		runtime.setUnmatchedListener(fel);
+		final String _INBOUND_EVENT_NAME = context.getProperty(INBOUND_EVENT_NAME).getValue(); 
+		
+		session.read(flowFileS, (inputStream) -> {
+			String eventMapAsString = "";
+			try {
+				String eventJson = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+				//parsing inputStream as JSON objects
+				Map<String,Object> eventMap = SupportUtility.transformEventToMap(eventJson);
+				eventMapAsString = eventMap.entrySet().toString();
+				getLogger().debug("[ESPER DEBUG]: sending event to ESPER as map: " + eventMapAsString);
+				runtime.sendEvent(eventMap, _INBOUND_EVENT_NAME);
+			} catch (EPException epx) {
+				getLogger().error("[ESPER ERROR]: couldn't process the following event as [" + _INBOUND_EVENT_NAME + "]: " + eventMapAsString);
+				epx.printStackTrace();
 			}
 		});
 		
-		
-		session.write(flowFile, (outStream) -> {
-			getLogger().info("trying to write output...");
-			outStream.write(processedEvents.get().getBytes()); 
+		session.write(flowFileS, (outStream) -> {
+			getLogger().debug("[ESPER DEBUG]: " + "writing output of flowfile...");
+			outStream.write(sel.getProcessedEvent().get().getBytes()); 
 		});
-		session.transfer(flowFile, QUALIFIED_EVENT);
+		
+		session.transfer(flowFileS, QUALIFIED_EVENT);
 	}
 }

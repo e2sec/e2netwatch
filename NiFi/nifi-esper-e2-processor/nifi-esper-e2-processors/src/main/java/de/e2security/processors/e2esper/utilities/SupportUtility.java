@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.nifi.processor.ProcessContext;
+import org.apache.nifi.logging.ComponentLog;
 
 import com.espertech.esper.client.EPAdministrator;
+import com.espertech.esper.client.EPException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -23,10 +24,11 @@ public final class SupportUtility {
 		return eventAsMap;
 	}
 
-	public static void parseMultipleEventSchema(String eventSchemaDeclaration, EPAdministrator admin) {
+	public static void parseMultipleEventSchema(String eventSchemaDeclaration, EPAdministrator admin, ComponentLog logger) {
 		String[] eventSchemas = eventSchemaDeclaration.split("\\|");
 		for (String schema : eventSchemas) {
 			admin.createEPL(schema);
+			logger.debug("[ESPER DEBUG]: " + "admin has successfully implemented the following schema: " + schema);
 		}		
 	}
 
