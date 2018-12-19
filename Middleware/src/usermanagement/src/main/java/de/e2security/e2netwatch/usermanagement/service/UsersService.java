@@ -11,7 +11,7 @@ import de.e2security.e2netwatch.usermanagement.dto.UsernameCheckDTO;
 import de.e2security.e2netwatch.usermanagement.model.User;
 
 /**
- * UserManagement manager for managing User requests and data
+ * User service for servicing data for entity User
  * 
  * @author Hrvoje
  *

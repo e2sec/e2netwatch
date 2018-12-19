@@ -22,7 +22,7 @@ import de.e2security.e2netwatch.usermanagement.service.UsersService;
 import de.e2security.e2netwatch.utils.constants.Mappings;
 
 /**
- * Rest endpoint for UserManagement inquiries
+ * Rest endpoint for Users inquiries
  *
  * @author Hrvoje
  *

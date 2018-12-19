@@ -37,7 +37,7 @@ import de.e2security.e2netwatch.usermanagement.model.UserStatus;
 import de.e2security.e2netwatch.utils.constants.CustomError;
 
 /**
- * UserManagement manager implementation for managing User requests and data
+ * Implementation of User service
  * 
  * @author Hrvoje
  *
