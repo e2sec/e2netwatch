@@ -21,8 +21,8 @@ public class SuccessedEventListener implements UpdateListener {
 
 	private AtomicReference<String> processedEvent = new AtomicReference<>();
 
-	public AtomicReference<String> getProcessedEvent() {
-		return processedEvent;
+	public String getProcessedEvent() {
+		return processedEvent.get();
 	}
 
 	@Override

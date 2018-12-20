@@ -9,14 +9,18 @@ import com.espertech.esper.client.UnmatchedListener;
 
 import static de.e2security.processors.e2esper.utilities.EsperProcessorLogger.*;
 
-public class FailedEventListener implements UnmatchedListener {
+public class UnmatchedEventListener implements UnmatchedListener {
 	
 	ComponentLog logger;
 	
+	public UnmatchedEventListener(ComponentLog logger) {
+		this.logger = logger;
+	}
+	
 	private AtomicReference<String> unmatchedEventAtomic = new AtomicReference<>();
 	
-	public FailedEventListener(ComponentLog logger) {
-		this.logger = logger;
+	public String getUnmatchedEvent() {
+		return unmatchedEventAtomic.get();
 	}
 
 	@Override

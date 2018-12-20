@@ -37,7 +37,7 @@ import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPStatement;
 
 import de.e2security.nifi.controller.esper.EsperService;
-import de.e2security.processors.e2esper.utilities.FailedEventListener;
+import de.e2security.processors.e2esper.utilities.UnmatchedEventListener;
 import de.e2security.processors.e2esper.utilities.SuccessedEventListener;
 import de.e2security.processors.e2esper.utilities.SupportUtility;
 
@@ -123,8 +123,9 @@ public class CommonEplProcessor extends AbstractProcessor {
 	
 	@Override
 	public void onTrigger(final ProcessContext context, final ProcessSession session) throws ProcessException {
-		FlowFile flowFileS = session.get();
-		if ( flowFileS == null ) { return;}
+		FlowFile flowFileS = session.get(); //for SUCCEEDED_EVENT REL
+		if ( flowFileS == null ) { return;} //for UNMATCHED_EVENT REL
+//		FlowFile flowFileF = session.clone(flowFileS);
 		//load esper engine from the controller
 		EsperService esperService = context.getProperty(ESPER_ENGINE).asControllerService(EsperService.class);
 		EPServiceProvider esperEngine = esperService.execute();
@@ -139,7 +140,7 @@ public class CommonEplProcessor extends AbstractProcessor {
 		//processing incoming nifi events
 		SuccessedEventListener sel = new SuccessedEventListener(getLogger());
 		eplIn.addListener(sel);
-		FailedEventListener fel = new FailedEventListener(getLogger());
+		UnmatchedEventListener fel = new UnmatchedEventListener(getLogger());
 		runtime.setUnmatchedListener(fel);
 		final String _INBOUND_EVENT_NAME = context.getProperty(INBOUND_EVENT_NAME).getValue(); 
 		session.read(flowFileS, (inputStream) -> {
@@ -149,20 +150,27 @@ public class CommonEplProcessor extends AbstractProcessor {
 				//parsing inputStream as JSON objects
 				Map<String,Object> eventMap = SupportUtility.transformEventToMap(eventJson);
 				eventMapAsString = eventMap.entrySet().toString();
-				getLogger().debug(success("EVENT AS MAP", eventMapAsString));
 				runtime.sendEvent(eventMap, _INBOUND_EVENT_NAME);
-				getLogger().debug(success("PROCESSING EVENT AS MAP", _INBOUND_EVENT_NAME));
+				getLogger().debug(success("PROCESSED EVENT AS MAP", eventMapAsString));
 			} catch (EPException epx) {
 				getLogger().error(epx.getMessage());
 				epx.printStackTrace();
 				getLogger().debug(failure("PROCESSING EVENT",eventMapAsString));
 			}
 		});
-		
-		session.write(flowFileS, (outStream) -> {
-			outStream.write(sel.getProcessedEvent().get().getBytes()); 
-		});
-		
-		session.transfer(flowFileS, SUCCEEDED_EVENT);
+		if (sel.getProcessedEvent() != null) {
+			session.write(flowFileS, (outStream) -> {
+				outStream.write(sel.getProcessedEvent().getBytes()); 
+			});
+			session.transfer(flowFileS, SUCCEEDED_EVENT);
+		} else if (fel.getUnmatchedEvent() != null) {
+			session.write(flowFileS, (outStream) -> {
+				outStream.write(fel.getUnmatchedEvent().getBytes()); 
+			});
+			session.transfer(flowFileS, UNMATCHED_EVENT);
+		} else {
+			getLogger().error("NEITHER SUCCEEDED NOR UNMATCHED EVENT PROCESSED TO FLOW FILE");
+		}
+		session.commit();
 	}
 }

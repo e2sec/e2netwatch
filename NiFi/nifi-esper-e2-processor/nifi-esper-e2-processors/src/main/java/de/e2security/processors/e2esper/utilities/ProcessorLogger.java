@@ -42,7 +42,7 @@ import org.apache.commons.lang3.tuple.Pair;
 		private final String object;
 		private final String message;
 	
-		public ProcessorLogger(String header, String object, String message) {
+		public ProcessorLogger(String header, String message, String object) {
 			super(header);
 			this.message = message;
 			this.object = object;

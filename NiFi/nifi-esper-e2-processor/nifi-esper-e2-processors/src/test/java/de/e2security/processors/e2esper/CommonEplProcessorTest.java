@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.nifi.controller.ControllerService;
+import org.apache.nifi.processor.Relationship;
 import org.apache.nifi.reporting.InitializationException;
 import org.apache.nifi.stream.io.ByteArrayInputStream;
 import org.apache.nifi.util.TestRunner;
@@ -38,10 +39,10 @@ public class CommonEplProcessorTest {
 			runner.clearTransferState();
 			((EsperEngineService) controller).shutdown();
 			runner.disableControllerService(controller);
-//			runner.shutdown();
+			runner.shutdown();
 		}
 		
-		@Test public void testOnTrigger() throws IOException {
+		@Test public void testEventHasBeenProcessedAndTransferedToSucceededRelationship() throws IOException {
 			InputStream inEvent = new ByteArrayInputStream("{\"source.port\":23,\"destination.port\":21,\"network.iana_number\":6}".getBytes());
 			runner.setProperty(CommonEplProcessor.EPL_STATEMENT, "@Name('ProtocolRegisterDebugger') @Audit select * from ProtocolRegister(network.iana_number=6)");
 			runner.setProperty(CommonEplProcessor.EVENT_SCHEMA, "create map schema ProtocolRegister as (source.port int,destination.port int,network.iana_number int)");
@@ -50,8 +51,20 @@ public class CommonEplProcessorTest {
 			runner.enqueue(inEvent);
 			runner.run(1);
 			runner.assertQueueEmpty();
+			runner.assertAllFlowFilesTransferred(CommonEplProcessor.SUCCEEDED_EVENT);
 		}
-
+		
+		@Test public void testEventHasBeenUnmatchedAndTransferedToUnmatchedRelationship() throws IOException {
+			InputStream inEvent = new ByteArrayInputStream("{\"source.port\":23,\"destination.port\":21,\"network.iana_number\":6}".getBytes());
+			runner.setProperty(CommonEplProcessor.EPL_STATEMENT, "@Name('ProtocolRegisterDebugger') @Audit select * from ProtocolRegister(network.iana_number=17)");
+			runner.setProperty(CommonEplProcessor.EVENT_SCHEMA, "create map schema ProtocolRegister as (source.port int,destination.port int,network.iana_number int)");
+			runner.setProperty(CommonEplProcessor.INBOUND_EVENT_NAME, "ProtocolRegister");
+			runner.setProperty(CommonEplProcessor.ESPER_ENGINE,"EsperEngineService");
+			runner.enqueue(inEvent);
+			runner.run(1);
+			runner.assertQueueEmpty();
+			runner.assertAllFlowFilesTransferred(CommonEplProcessor.UNMATCHED_EVENT);
+		}
 
 		@Test public void testComplexEventSchemaDefinition() throws IOException {
 			InputStream inEvent = new ByteArrayInputStream("{\"netflow\":{\"source.port\":23, \"destination.port\":21,\"network.iana_number\":6}, \"version\":1}".getBytes());
