@@ -1,4 +1,9 @@
-TODO: mvn surefire plugin should be included and set up so that only fork will be used for tests; 
-      This may be the main reason both nifi controller and processor pass the tests in eclipse, but not in mvn since the Esper instance will shared for both tests and @Before and @After seem to be ignored. 
+Not clear so far: evtl. use ' 
+	$ mvn clean install -U ' to update subprojects if some changes has been done w/o version ascending. 
 
-Not clear so far: evtl. use ' $ mvn clean install -U ' to update subprojects if some changes has been done;
+In order to update version in parent project and submodule ones:
+	$ mvn versions:set -DnewVersion=x.x.x-SNAPSHOT
+	# maven creates backup files making revert possible: $ mvn versions:revert
+	# if everything is corret after updating version,- commit the changens:
+	$ mvn versions:commit
+
