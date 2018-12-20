@@ -21,14 +21,15 @@ public class CommonEplProcessorTest {
 		
 		@Before public void init() {
 			controller = new EsperEngineService();
-			runner = TestRunners.newTestRunner(new CommonEplProcessor());
+			CommonEplProcessor processor = new CommonEplProcessor();
+			runner = TestRunners.newTestRunner(processor);
 			//adding controller 
 			try {
 				runner.addControllerService("EsperEngineService", controller);
+				runner.enableControllerService(controller);
 			} catch (InitializationException e) {
 				e.printStackTrace();
 			}
-			runner.enableControllerService(controller);
 		}
 		
 		@After public void destroy() throws InterruptedException {
@@ -37,7 +38,7 @@ public class CommonEplProcessorTest {
 			runner.clearTransferState();
 			((EsperEngineService) controller).shutdown();
 			runner.disableControllerService(controller);
-			runner.shutdown();
+//			runner.shutdown();
 		}
 		
 		@Test public void testOnTrigger() throws IOException {

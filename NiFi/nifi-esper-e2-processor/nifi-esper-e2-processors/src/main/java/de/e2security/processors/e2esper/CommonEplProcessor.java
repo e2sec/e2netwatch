@@ -1,5 +1,8 @@
 package de.e2security.processors.e2esper;
 
+import static de.e2security.processors.e2esper.utilities.EsperProcessorLogger.failure;
+import static de.e2security.processors.e2esper.utilities.EsperProcessorLogger.success;
+
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -76,11 +79,16 @@ public class CommonEplProcessor extends AbstractProcessor {
 			.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
 			.build();
 
-	public static final Relationship QUALIFIED_EVENT = new Relationship.Builder()
-			.name("SuccessEvent")
-			.description("SuccessEvent")
+	public static final Relationship SUCCEEDED_EVENT = new Relationship.Builder()
+			.name("SucceededEvent")
+			.description("esper event matched epl statement")
 			.build();
 
+	public static final Relationship UNMATCHED_EVENT = new Relationship.Builder()
+			.name("FailedEvent")
+			.description("esper event unmatched epl statement")
+			.build();
+	
 	private List<PropertyDescriptor> descriptors;
 
 	private Set<Relationship> relationships;
@@ -95,7 +103,8 @@ public class CommonEplProcessor extends AbstractProcessor {
 		this.descriptors = Collections.unmodifiableList(descriptors);
 
 		final Set<Relationship> relationships = new HashSet<Relationship>();
-		relationships.add(QUALIFIED_EVENT);
+		relationships.add(SUCCEEDED_EVENT);
+		relationships.add(UNMATCHED_EVENT);
 		this.relationships = Collections.unmodifiableSet(relationships);
 	}
 
@@ -125,15 +134,14 @@ public class CommonEplProcessor extends AbstractProcessor {
 		// parse each epl statement from array of strings defined in EplStatement
 		SupportUtility.parseMultipleEventSchema(context.getProperty(EVENT_SCHEMA).getValue(),admin,getLogger());
 		final String _EPL_STATEMENT = context.getProperty(EPL_STATEMENT).getValue();
-		EPStatement eplIn = admin.createEPL(_EPL_STATEMENT);
-		getLogger().debug("[ESPER DEBUG]: " + "has successfully implemented the following epl statement: " + _EPL_STATEMENT);
+		EPStatement eplIn = admin.createEPL(_EPL_STATEMENT); //do not try to catch error; this is a runtime critical one
+		getLogger().debug(success("IMPLEMENTED EPL STMT", _EPL_STATEMENT));
 		//processing incoming nifi events
 		SuccessedEventListener sel = new SuccessedEventListener(getLogger());
 		eplIn.addListener(sel);
 		FailedEventListener fel = new FailedEventListener(getLogger());
 		runtime.setUnmatchedListener(fel);
 		final String _INBOUND_EVENT_NAME = context.getProperty(INBOUND_EVENT_NAME).getValue(); 
-		
 		session.read(flowFileS, (inputStream) -> {
 			String eventMapAsString = "";
 			try {
@@ -141,19 +149,20 @@ public class CommonEplProcessor extends AbstractProcessor {
 				//parsing inputStream as JSON objects
 				Map<String,Object> eventMap = SupportUtility.transformEventToMap(eventJson);
 				eventMapAsString = eventMap.entrySet().toString();
-				getLogger().debug("[ESPER DEBUG]: sending event to ESPER as map: " + eventMapAsString);
+				getLogger().debug(success("EVENT AS MAP", eventMapAsString));
 				runtime.sendEvent(eventMap, _INBOUND_EVENT_NAME);
+				getLogger().debug(success("PROCESSING EVENT AS MAP", _INBOUND_EVENT_NAME));
 			} catch (EPException epx) {
-				getLogger().error("[ESPER ERROR]: couldn't process the following event as [" + _INBOUND_EVENT_NAME + "]: " + eventMapAsString);
+				getLogger().error(epx.getMessage());
 				epx.printStackTrace();
+				getLogger().debug(failure("PROCESSING EVENT",eventMapAsString));
 			}
 		});
 		
 		session.write(flowFileS, (outStream) -> {
-			getLogger().debug("[ESPER DEBUG]: " + "writing output of flowfile...");
 			outStream.write(sel.getProcessedEvent().get().getBytes()); 
 		});
 		
-		session.transfer(flowFileS, QUALIFIED_EVENT);
+		session.transfer(flowFileS, SUCCEEDED_EVENT);
 	}
 }
