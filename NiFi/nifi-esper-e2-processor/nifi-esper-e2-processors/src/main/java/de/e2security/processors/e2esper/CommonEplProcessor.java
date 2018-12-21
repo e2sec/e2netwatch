@@ -38,7 +38,7 @@ import com.espertech.esper.client.EPStatement;
 
 import de.e2security.nifi.controller.esper.EsperService;
 import de.e2security.processors.e2esper.utilities.UnmatchedEventListener;
-import de.e2security.processors.e2esper.utilities.SuccessedEventListener;
+import de.e2security.processors.e2esper.utilities.SucceededEventListener;
 import de.e2security.processors.e2esper.utilities.SupportUtility;
 
 @Tags({"EsperProcessor"})
@@ -80,12 +80,12 @@ public class CommonEplProcessor extends AbstractProcessor {
 			.build();
 
 	public static final Relationship SUCCEEDED_EVENT = new Relationship.Builder()
-			.name("SucceededEvent")
+			.name("succeeded event")
 			.description("esper event matched epl statement")
 			.build();
 
 	public static final Relationship UNMATCHED_EVENT = new Relationship.Builder()
-			.name("FailedEvent")
+			.name("unmatched event")
 			.description("esper event unmatched epl statement")
 			.build();
 	
@@ -123,9 +123,8 @@ public class CommonEplProcessor extends AbstractProcessor {
 	
 	@Override
 	public void onTrigger(final ProcessContext context, final ProcessSession session) throws ProcessException {
-		FlowFile flowFileS = session.get(); //for SUCCEEDED_EVENT REL
-		if ( flowFileS == null ) { return;} //for UNMATCHED_EVENT REL
-//		FlowFile flowFileF = session.clone(flowFileS);
+		FlowFile flowFileS = session.get(); 
+		if ( flowFileS == null ) { return;} 
 		//load esper engine from the controller
 		EsperService esperService = context.getProperty(ESPER_ENGINE).asControllerService(EsperService.class);
 		EPServiceProvider esperEngine = esperService.execute();
@@ -138,24 +137,22 @@ public class CommonEplProcessor extends AbstractProcessor {
 		EPStatement eplIn = admin.createEPL(_EPL_STATEMENT); //do not try to catch error; this is a runtime critical one
 		getLogger().debug(success("IMPLEMENTED EPL STMT", _EPL_STATEMENT));
 		//processing incoming nifi events
-		SuccessedEventListener sel = new SuccessedEventListener(getLogger());
+		SucceededEventListener sel = new SucceededEventListener(getLogger());
 		eplIn.addListener(sel);
 		UnmatchedEventListener fel = new UnmatchedEventListener(getLogger());
 		runtime.setUnmatchedListener(fel);
 		final String _INBOUND_EVENT_NAME = context.getProperty(INBOUND_EVENT_NAME).getValue(); 
 		session.read(flowFileS, (inputStream) -> {
-			String eventMapAsString = "";
+			String eventJson = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
 			try {
-				String eventJson = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
 				//parsing inputStream as JSON objects
 				Map<String,Object> eventMap = SupportUtility.transformEventToMap(eventJson);
-				eventMapAsString = eventMap.entrySet().toString();
 				runtime.sendEvent(eventMap, _INBOUND_EVENT_NAME);
-				getLogger().debug(success("PROCESSED EVENT AS MAP", eventMapAsString));
+				getLogger().debug(success("PROCESSED EVENT AS MAP", eventMap.entrySet().toString()));
 			} catch (EPException epx) {
 				getLogger().error(epx.getMessage());
 				epx.printStackTrace();
-				getLogger().debug(failure("PROCESSING EVENT",eventMapAsString));
+				getLogger().debug(failure("TRYING TO CREATE MAP FROM INCOMING EVENT",eventJson));
 			}
 		});
 		if (sel.getProcessedEvent() != null) {

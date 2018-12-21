@@ -11,11 +11,11 @@ import com.espertech.esper.event.map.MapEventBean;
 
 import static de.e2security.processors.e2esper.utilities.EsperProcessorLogger.*;
 
-public class SuccessedEventListener implements UpdateListener {
+public class SucceededEventListener implements UpdateListener {
 
 	ComponentLog logger;
 
-	public SuccessedEventListener(ComponentLog logger) {
+	public SucceededEventListener(ComponentLog logger) {
 		this.logger = logger;
 	}
 
@@ -28,10 +28,11 @@ public class SuccessedEventListener implements UpdateListener {
 	@Override
 	public void update(EventBean[] newEvents, EventBean[] oldEvents) {
 		for (EventBean event : newEvents) {
-			if (event instanceof MapEventBean) {
-				String catchedEventAsMapEntry = ((Map<?,?>) event.getUnderlying()).entrySet().toString();
+			if (event instanceof MapEventBean) { //expected all inbound events as map, otherwise exception
+				Map<?,?> eventAsMap = (Map<?,?>) event.getUnderlying();
+				String catchedEventAsMapEntry = eventAsMap.entrySet().toString();
 				logger.debug(success("SUCCEEDED EVENT", catchedEventAsMapEntry));
-				processedEvent.set(catchedEventAsMapEntry);
+				processedEvent.set(SupportUtility.transformEventMapToJson(eventAsMap));
 			}
 		}
 	}
