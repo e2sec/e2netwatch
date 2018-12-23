@@ -58,7 +58,7 @@ public class NetflowEventOrdered implements Serializable {
 		this.in_pkts = in_pkts;
 		this.first_switched = first_switched;
 		this.last_switched = last_switched;
-		this.first_switched_as_long = last_switched.toEpochSecond();
+		this.first_switched_as_long = first_switched.toEpochSecond();
 	}
 	
 	public long getFirst_switched_as_long() {

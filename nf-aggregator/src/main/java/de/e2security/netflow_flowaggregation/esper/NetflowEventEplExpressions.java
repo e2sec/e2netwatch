@@ -27,10 +27,14 @@ public final class NetflowEventEplExpressions {
 	
 	public static abstract class NetflowEventEplSupporter {
 		static String connectionXReferenceChecker() {
-			return    " and ipv4_src_addr = a.ipv4_dst_addr"
+			return    " ipv4_src_addr = a.ipv4_dst_addr"
 					+ " and l4_src_port   = a.l4_dst_port"
 					+ " and ipv4_dst_addr = a.ipv4_src_addr"
 					+ " and l4_dst_port   = a.l4_src_port";
+		}
+		
+		static String rightOrderChecker() {
+			return "first_switched_as_long >= a.first_switched_as_long";
 		}
 		
 		// @formatter:off

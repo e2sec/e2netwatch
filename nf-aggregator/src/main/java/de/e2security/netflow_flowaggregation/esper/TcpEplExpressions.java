@@ -15,7 +15,8 @@ public final class TcpEplExpressions extends NetflowEventEplSupporter {
 				+ " 'Finished TCP' as description"
 				+ fields()
 				+ " from pattern [every a=NetflowEventOrdered(protocol=6 and (tcp_flags&1)=1) ->"
-				+ " b=NetflowEventOrdered(protocol=6 and (tcp_flags&1)=1 and host=a.host "
+				+ " b=NetflowEventOrdered(protocol=6 and (tcp_flags&1)=1 and host=a.host and "
+				+ rightOrderChecker() + " and "
 				+ connectionXReferenceChecker() + ")" 
 				+ " where timer:within(60 sec)]";
 	}
@@ -33,7 +34,8 @@ public final class TcpEplExpressions extends NetflowEventEplSupporter {
 		return "insert into ProtocolRegister select"
 				+ " 'Rejected TCP' as description"
 				+ fields()
-				+ " from pattern " + pattern
+				+ " from pattern " + pattern + " and "
+				+ rightOrderChecker() + " and "
 				+ connectionXReferenceChecker() + ")"
 				+ " where timer:within(60 sec)]";
 	}

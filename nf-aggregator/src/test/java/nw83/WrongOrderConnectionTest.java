@@ -58,6 +58,10 @@ public class WrongOrderConnectionTest extends EsperTestSupporter{
 		runtime.sendEvent(neo1);
 		runtime.sendEvent(neo2);
 		runtime.sendEvent(neo3);
+		testEvent1.setLast_switched("2018-12-22T00:00:00.999Z");
+		testEvent1.setFirst_switched("2018-12-21T23:59:00.999Z");
+		testEvent1.setProtocol(6);
+
 	}
 	
 	//assuming the following pairs will be created: a1-b2, b2-a3 that results in the problem with wrong connection order
@@ -84,7 +88,7 @@ public class WrongOrderConnectionTest extends EsperTestSupporter{
 	
 	// Esper BEHAVIOURAL test. Assertion based on the correct result of the test self and not on the expectation;
 	// assuming the 'every'-keyword elimination doesn't result in the expected behaviour (even though should be tested)
-	@Test public void testEsperPatternBehaviourWithouEveryKeywordDonnoResult() throws NetflowEventException {
+	@Test public void esperPatternBehaviourWithoutEveryKeywordDonotBringExpectedResult() throws NetflowEventException {
 		Queue<ProtocolRegister> resultList = new ArrayDeque<>();
 		EPStatement selectStmt = admin.createEPL("insert into ProtocolRegister select a.last_switched as in_last_switched, b.last_switched as out_last_switched "
 				+ "from pattern [a=NetflowEventOrdered -> b=NetflowEventOrdered where timer:within(60 sec)]");
@@ -104,8 +108,8 @@ public class WrongOrderConnectionTest extends EsperTestSupporter{
 	
 	@Test public void testEsperPatternConditionalOnFirstSwitched() throws NetflowEventException {
 		Queue<ProtocolRegister> resultList = new ArrayDeque<>();
-		EPStatement selectStmt = admin.createEPL("@Name('EsperDebugger') @Audit insert into ProtocolRegister select a.last_switched as in_last_switched, b.last_switched as out_last_switched "
-				+ "from pattern [a=NetflowEventOrdered -> b=NetflowEventOrdered(first_switched_as_long < a.first_switched_as_long) where timer:within(60 sec)]");
+		EPStatement selectStmt = admin.createEPL("insert into ProtocolRegister select a.last_switched as in_last_switched, b.last_switched as out_last_switched "
+				+ "from pattern [every a=NetflowEventOrdered -> b=NetflowEventOrdered(first_switched_as_long > a.first_switched_as_long) where timer:within(60 sec)]");
 		selectStmt.addListener( (newEvent, oldEvent) ->  {
 			resultList.add((ProtocolRegister) newEvent[0].getUnderlying());
 		});
@@ -115,5 +119,114 @@ public class WrongOrderConnectionTest extends EsperTestSupporter{
 		//asserting only a1-b2 pair will be built
 		assertEquals(neo1.getLast_switched(),resultList.peek().getIn_last_switched());
 		assertEquals(neo2.getLast_switched(),resultList.poll().getOut_last_switched());
+	}
+	
+	/*   1	   2	 3	   4	 5	   6	 7	   8	 9
+	 *   |     |     |     |     |     |     |     |     |  -> correlated events (a1,b1), (c1,d1);  
+	 * a1(1) b1(1) c1(1) b1(2) a1(2) b1(3) a1(3) c1(2) d1(1)
+	 * 
+	 */
+	@Test public void testEsperPatternConditionalOnFirstSwitchedWithinFinishedTcpPattern() throws NetflowEventException {
+		Queue<ProtocolRegister> resultList = new ArrayDeque<>();
+		EPStatement selectStmt = admin.createEPL("insert into ProtocolRegister select a.last_switched as in_last_switched, b.last_switched as out_last_switched "
+				+ "from pattern ["
+				+ 		"every a=NetflowEventOrdered(protocol=6 and (tcp_flags&1)=1) "
+				+ 		"-> b=NetflowEventOrdered(protocol=6 and (tcp_flags&1)=1 and first_switched_as_long > a.first_switched_as_long " 
+				+ 		"and l4_dst_port = a.l4_src_port and l4_src_port = a.l4_dst_port" 
+				+ 		") where timer:within(60 sec)"
+				+ "]");
+		selectStmt.addListener( (newEvent, oldEvent) ->  {
+			resultList.add((ProtocolRegister) newEvent[0].getUnderlying());
+		});
+		NetflowEvent testEvent1 = new NetflowEvent();
+		testEvent1.setLast_switched("2018-12-22T00:00:00.999Z");		
+		testEvent1.setFirst_switched("2018-12-21T23:59:00.999Z");
+		testEvent1.setProtocol(6);
+		testEvent1.setTcp_flags(1);
+		testEvent1.setL4_src_port(80);
+		testEvent1.setL4_dst_port(5353);
+		NetflowEvent testEvent2 = new NetflowEvent();
+		testEvent2.setLast_switched("2018-12-22T00:00:10.999Z");
+		testEvent2.setFirst_switched("2018-12-21T23:59:10.999Z");
+		testEvent2.setProtocol(6);
+		testEvent2.setTcp_flags(1);
+		testEvent2.setL4_src_port(5353);
+		testEvent2.setL4_dst_port(80);
+		NetflowEvent testEvent3 = new NetflowEvent(); 
+		testEvent3.setLast_switched("2018-12-22T00:00:11.999Z"); 
+		testEvent3.setFirst_switched("2018-12-21T23:59:11.999Z");
+		testEvent3.setProtocol(6);
+		testEvent3.setTcp_flags(1);
+		testEvent3.setL4_src_port(5453);
+		testEvent3.setL4_dst_port(8180);
+		NetflowEvent testEvent4 = new NetflowEvent(); //(first_switched_as_long < a.first_switched_as_long)
+		testEvent4.setLast_switched("2018-12-22T00:00:30.999Z");
+		testEvent4.setFirst_switched("2018-12-21T23:59:10.999Z");
+		testEvent4.setProtocol(6);
+		testEvent4.setTcp_flags(0);
+		testEvent4.setL4_src_port(5455);
+		testEvent4.setL4_dst_port(8180);
+		NetflowEvent testEvent5 = new NetflowEvent();
+		testEvent5.setLast_switched("2018-12-22T00:00:35.999Z");
+		testEvent5.setFirst_switched("2018-12-21T23:59:00.999Z");
+		testEvent5.setProtocol(6);
+		testEvent5.setTcp_flags(1);
+		testEvent5.setL4_src_port(4567);
+		testEvent5.setL4_dst_port(9443);
+		NetflowEvent testEvent6 = new NetflowEvent();
+		testEvent6.setLast_switched("2018-12-22T00:00:36.999Z");
+		testEvent6.setFirst_switched("2018-12-21T23:59:10.999Z");
+		testEvent6.setProtocol(6);
+		testEvent6.setTcp_flags(1);
+		testEvent6.setL4_src_port(9443);
+		testEvent6.setL4_dst_port(4567);
+		NetflowEvent testEvent7 = new NetflowEvent();
+		testEvent7.setLast_switched("2018-12-22T00:00:38.999Z");		
+		testEvent7.setFirst_switched("2018-12-21T23:59:00.999Z");
+		testEvent7.setProtocol(6);
+		testEvent7.setTcp_flags(0);
+		testEvent7.setL4_src_port(9991);
+		testEvent7.setL4_dst_port(5353);
+		NetflowEvent testEvent8 = new NetflowEvent(); 
+		testEvent8.setLast_switched("2018-12-22T00:00:40.999Z"); 
+		testEvent8.setFirst_switched("2018-12-21T23:59:11.999Z");
+		testEvent8.setProtocol(17);
+		testEvent8.setTcp_flags(0);
+		testEvent8.setL4_src_port(9443);
+		testEvent8.setL4_dst_port(5353);
+		NetflowEvent testEvent9 = new NetflowEvent(); 
+		testEvent9.setLast_switched("2018-12-22T00:00:41.999Z"); 
+		testEvent9.setFirst_switched("2018-12-21T23:59:20.999Z");
+		testEvent9.setProtocol(6);
+		testEvent9.setTcp_flags(1);
+		testEvent9.setL4_src_port(8180);
+		testEvent9.setL4_dst_port(5453);
+		NetflowEventOrdered neo1 = testEvent1.convertToOrderedType();
+		NetflowEventOrdered neo2 = testEvent2.convertToOrderedType();
+		NetflowEventOrdered neo3 = testEvent3.convertToOrderedType();
+		NetflowEventOrdered neo4 = testEvent4.convertToOrderedType();
+		NetflowEventOrdered neo5 = testEvent5.convertToOrderedType();
+		NetflowEventOrdered neo6 = testEvent6.convertToOrderedType();
+		NetflowEventOrdered neo7 = testEvent7.convertToOrderedType();
+		NetflowEventOrdered neo8 = testEvent8.convertToOrderedType();
+		NetflowEventOrdered neo9 = testEvent9.convertToOrderedType();
+		runtime.sendEvent(new CurrentTimeEvent(TestUtil.getCurrentTimeEvent(neo1.getLast_switched())));
+		runtime.sendEvent(neo1);
+		runtime.sendEvent(neo2);
+		runtime.sendEvent(neo3);
+		runtime.sendEvent(neo4);
+		runtime.sendEvent(neo5);
+		runtime.sendEvent(neo6);
+		runtime.sendEvent(neo7);
+		runtime.sendEvent(neo8);
+		runtime.sendEvent(neo9);
+		runtime.sendEvent(new CurrentTimeEvent(TestUtil.getCurrentTimeEvent(neo1.getLast_switched()) + 60000));
+		assertEquals(3,resultList.size());
+		assertEquals(neo1.getLast_switched(),resultList.peek().getIn_last_switched());
+		assertEquals(neo2.getLast_switched(),resultList.poll().getOut_last_switched());
+		assertEquals(neo5.getLast_switched(),resultList.peek().getIn_last_switched());
+		assertEquals(neo6.getLast_switched(),resultList.poll().getOut_last_switched());
+		assertEquals(neo3.getLast_switched(),resultList.peek().getIn_last_switched());
+		assertEquals(neo9.getLast_switched(),resultList.poll().getOut_last_switched());
 	}
 }
