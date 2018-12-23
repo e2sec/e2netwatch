@@ -237,6 +237,14 @@ public class ProtocolRegister implements Serializable {
 		this.out_14_dst_port = out_14_dst_port;
 	}
 
+	public void setIn_first_switched(ZonedDateTime in_first_switched) {
+		this.in_first_switched = in_first_switched;
+	}
+	
+	public void setOut_first_switched(ZonedDateTime out_first_switched) {
+		this.out_first_switched = out_first_switched;
+	}
+	
 	public void setIn_last_switched(ZonedDateTime in_last_switched) {
 		this.in_last_switched = in_last_switched;
 	}
