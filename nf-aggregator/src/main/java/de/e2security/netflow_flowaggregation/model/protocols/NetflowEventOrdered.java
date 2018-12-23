@@ -25,6 +25,7 @@ public class NetflowEventOrdered implements Serializable {
 	private Integer in_pkts;
 	private ZonedDateTime first_switched;
 	private ZonedDateTime last_switched;
+	private long first_switched_as_long;
 
 	public NetflowEventOrdered(
 			ZonedDateTime receivedTimeStamp,
@@ -57,6 +58,11 @@ public class NetflowEventOrdered implements Serializable {
 		this.in_pkts = in_pkts;
 		this.first_switched = first_switched;
 		this.last_switched = last_switched;
+		this.first_switched_as_long = last_switched.toEpochSecond();
+	}
+	
+	public long getFirst_switched_as_long() {
+		return this.first_switched_as_long;
 	}
 
 	public ZonedDateTime getReceivedTimeStamp() {
