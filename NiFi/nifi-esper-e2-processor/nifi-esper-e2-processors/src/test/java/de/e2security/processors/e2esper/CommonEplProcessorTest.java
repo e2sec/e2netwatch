@@ -3,17 +3,10 @@ package de.e2security.processors.e2esper;
 import java.io.IOException;
 import java.io.InputStream;
 
-import java.util.Map;
-
-import junit.framework.Assert;
-
-
 import org.apache.nifi.controller.ControllerService;
-import org.apache.nifi.flowfile.FlowFile;
-import org.apache.nifi.processor.Relationship;
+import org.apache.nifi.processor.AbstractProcessor;
 import org.apache.nifi.reporting.InitializationException;
 import org.apache.nifi.stream.io.ByteArrayInputStream;
-import org.apache.nifi.util.FlowFileValidator;
 import org.apache.nifi.util.MockFlowFile;
 import org.apache.nifi.util.TestRunner;
 import org.apache.nifi.util.TestRunners;
@@ -21,43 +14,23 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-
 import de.e2security.nifi.controller.esper.EsperEngineService;
+import de.e2security.processors.e2esper.utilities.ProcessorTestSupporter;
 
-public class CommonEplProcessorTest {
-		
-		private TestRunner runner;
-		private ControllerService controller;
-		
-		@Before public void init() {
-			controller = new EsperEngineService();
-			CommonEplProcessor processor = new CommonEplProcessor();
-			runner = TestRunners.newTestRunner(processor);
-			//adding controller 
-			try {
-				runner.addControllerService("EsperEngineService", controller);
-				runner.enableControllerService(controller);
-			} catch (InitializationException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		@After public void destroy() throws InterruptedException {
-			runner.clearProperties();
-			runner.clearProvenanceEvents();
-			runner.clearTransferState();
-			((EsperEngineService) controller).shutdown();
-			runner.disableControllerService(controller);
-			runner.shutdown();
+public class CommonEplProcessorTest extends ProcessorTestSupporter {
+	
+		@Override
+		public AbstractProcessor initializeProcessor() {
+			return new CommonEplProcessor();
 		}
 		
 		@Test public void eventAsMapHasBeenTransformedToJsonFormat() throws IOException {
 			String json = "{\"source.port\":23,\"destination.port\":21,\"network.iana_number\":6}";
 			InputStream inEvent = new ByteArrayInputStream(json.getBytes());
-			runner.setProperty(CommonEplProcessor.EPL_STATEMENT, "@Name('ProtocolRegisterDebugger') @Audit select * from ProtocolRegister(network.iana_number=6)");
-			runner.setProperty(CommonEplProcessor.EVENT_SCHEMA, "create map schema ProtocolRegister as (source.port int,destination.port int,network.iana_number int)");
-			runner.setProperty(CommonEplProcessor.INBOUND_EVENT_NAME, "ProtocolRegister");
-			runner.setProperty(CommonEplProcessor.ESPER_ENGINE,"EsperEngineService");
+			runner.setProperty(CommonPropertyDescriptor.EPL_STATEMENT, "@Name('ProtocolRegisterDebugger') @Audit select * from ProtocolRegister(network.iana_number=6)");
+			runner.setProperty(CommonPropertyDescriptor.EVENT_SCHEMA, "create map schema ProtocolRegister as (source.port int,destination.port int,network.iana_number int)");
+			runner.setProperty(CommonPropertyDescriptor.INBOUND_EVENT_NAME, "ProtocolRegister");
+			runner.setProperty(CommonPropertyDescriptor.ESPER_ENGINE,"EsperEngineService");
 			runner.enqueue(inEvent);
 			runner.run(1);
 			MockFlowFile file = runner.getFlowFilesForRelationship(CommonEplProcessor.SUCCEEDED_EVENT).get(0);
@@ -66,10 +39,10 @@ public class CommonEplProcessorTest {
 		
 		@Test public void testEventHasBeenProcessedAndTransferedToSucceededRelationship() throws IOException {
 			InputStream inEvent = new ByteArrayInputStream("{\"source.port\":23,\"destination.port\":21,\"network.iana_number\":6}".getBytes());
-			runner.setProperty(CommonEplProcessor.EPL_STATEMENT, "@Name('ProtocolRegisterDebugger') @Audit select * from ProtocolRegister(network.iana_number=6)");
-			runner.setProperty(CommonEplProcessor.EVENT_SCHEMA, "create map schema ProtocolRegister as (source.port int,destination.port int,network.iana_number int)");
-			runner.setProperty(CommonEplProcessor.INBOUND_EVENT_NAME, "ProtocolRegister");
-			runner.setProperty(CommonEplProcessor.ESPER_ENGINE,"EsperEngineService");
+			runner.setProperty(CommonPropertyDescriptor.EPL_STATEMENT, "@Name('ProtocolRegisterDebugger') @Audit select * from ProtocolRegister(network.iana_number=6)");
+			runner.setProperty(CommonPropertyDescriptor.EVENT_SCHEMA, "create map schema ProtocolRegister as (source.port int,destination.port int,network.iana_number int)");
+			runner.setProperty(CommonPropertyDescriptor.INBOUND_EVENT_NAME, "ProtocolRegister");
+			runner.setProperty(CommonPropertyDescriptor.ESPER_ENGINE,"EsperEngineService");
 			runner.enqueue(inEvent);
 			runner.run(1);
 			runner.assertQueueEmpty();
@@ -78,10 +51,10 @@ public class CommonEplProcessorTest {
 		
 		@Test public void testEventHasBeenUnmatchedAndTransferedToUnmatchedRelationship() throws IOException {
 			InputStream inEvent = new ByteArrayInputStream("{\"source.port\":23,\"destination.port\":21,\"network.iana_number\":6}".getBytes());
-			runner.setProperty(CommonEplProcessor.EPL_STATEMENT, "@Name('ProtocolRegisterDebugger') @Audit select * from ProtocolRegister(network.iana_number=17)");
-			runner.setProperty(CommonEplProcessor.EVENT_SCHEMA, "create map schema ProtocolRegister as (source.port int,destination.port int,network.iana_number int)");
-			runner.setProperty(CommonEplProcessor.INBOUND_EVENT_NAME, "ProtocolRegister");
-			runner.setProperty(CommonEplProcessor.ESPER_ENGINE,"EsperEngineService");
+			runner.setProperty(CommonPropertyDescriptor.EPL_STATEMENT, "@Name('ProtocolRegisterDebugger') @Audit select * from ProtocolRegister(network.iana_number=17)");
+			runner.setProperty(CommonPropertyDescriptor.EVENT_SCHEMA, "create map schema ProtocolRegister as (source.port int,destination.port int,network.iana_number int)");
+			runner.setProperty(CommonPropertyDescriptor.INBOUND_EVENT_NAME, "ProtocolRegister");
+			runner.setProperty(CommonPropertyDescriptor.ESPER_ENGINE,"EsperEngineService");
 			runner.enqueue(inEvent);
 			runner.run(1);
 			runner.assertQueueEmpty();
@@ -90,17 +63,16 @@ public class CommonEplProcessorTest {
 		
 		@Test public void testComplexEventSchemaDefinition() throws IOException {
 			InputStream inEvent = new ByteArrayInputStream("{\"netflow\":{\"source.port\":23, \"destination.port\":21,\"network.iana_number\":6}, \"version\":1}".getBytes());
-			runner.setProperty(CommonEplProcessor.EPL_STATEMENT, "select * from ProtocolRegister(netflow.network.iana_number=6)");
-			runner.setProperty(CommonEplProcessor.EVENT_SCHEMA, 
+			runner.setProperty(CommonPropertyDescriptor.EPL_STATEMENT, "select * from ProtocolRegister(netflow.network.iana_number=6)");
+			runner.setProperty(CommonPropertyDescriptor.EVENT_SCHEMA, 
 						"create map schema Netflow as (source.port int,destination.port int,network.iana_number int)"
 					+ 	"|"
 					+ 	"create map schema ProtocolRegister as (netflow Netflow, version int)"
 					);
-			runner.setProperty(CommonEplProcessor.INBOUND_EVENT_NAME, "ProtocolRegister");
-			runner.setProperty(CommonEplProcessor.ESPER_ENGINE, "EsperEngineService");
+			runner.setProperty(CommonPropertyDescriptor.INBOUND_EVENT_NAME, "ProtocolRegister");
+			runner.setProperty(CommonPropertyDescriptor.ESPER_ENGINE, "EsperEngineService");
 			runner.enqueue(inEvent);
 			runner.run(1);
 			runner.assertQueueEmpty();
 		}
-
 }

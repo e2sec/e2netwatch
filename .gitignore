@@ -26,3 +26,5 @@ build/
 *.metadata
 *RemoteSystemsTempFiles
 *.recommenders
+*.classpath
+*.settings

@@ -1,10 +1,10 @@
 package de.e2security.processors.e2esper;
 
+import static de.e2security.processors.e2esper.CommonPropertyDescriptor.*;
 import static de.e2security.processors.e2esper.utilities.EsperProcessorLogger.failure;
 import static de.e2security.processors.e2esper.utilities.EsperProcessorLogger.success;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -28,7 +28,6 @@ import org.apache.nifi.processor.ProcessSession;
 import org.apache.nifi.processor.ProcessorInitializationContext;
 import org.apache.nifi.processor.Relationship;
 import org.apache.nifi.processor.exception.ProcessException;
-import org.apache.nifi.processor.util.StandardValidators;
 
 import com.espertech.esper.client.EPAdministrator;
 import com.espertech.esper.client.EPException;
@@ -37,9 +36,9 @@ import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPStatement;
 
 import de.e2security.nifi.controller.esper.EsperService;
-import de.e2security.processors.e2esper.utilities.UnmatchedEventListener;
 import de.e2security.processors.e2esper.utilities.SucceededEventListener;
 import de.e2security.processors.e2esper.utilities.SupportUtility;
+import de.e2security.processors.e2esper.utilities.UnmatchedEventListener;
 
 @Tags({"EsperProcessor"})
 @CapabilityDescription("Processing events based on esper engine rules)")
@@ -48,37 +47,6 @@ import de.e2security.processors.e2esper.utilities.SupportUtility;
 @WritesAttributes({@WritesAttribute(attribute="", description="")})
 public class CommonEplProcessor extends AbstractProcessor {
 	
-	public static final PropertyDescriptor ESPER_ENGINE = new PropertyDescriptor.Builder().name("EsperEngine")
-			.displayName("EsperEngineService")
-			.description("esper main engine")
-			.required(true)
-			.identifiesControllerService(EsperService.class)
-			.build();
-	
-	public static final PropertyDescriptor EPL_STATEMENT = new PropertyDescriptor.Builder()
-			.name("EplStatement")
-			.displayName("EplStatement")
-			.description("epl statement")
-			.required(true)
-			.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
-			.build();
-	
-	public static final PropertyDescriptor INBOUND_EVENT_NAME = new PropertyDescriptor.Builder()
-			.name("InboundEventName")
-			.displayName("InboundEventName")
-			.description("name of incoming event against which epl statement should be evaluated")
-			.required(true)
-			.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
-			.build();
-
-	public static final PropertyDescriptor EVENT_SCHEMA = new PropertyDescriptor.Builder()
-			.name("InputEventSchema")
-			.displayName("InputEventSchema")
-			.description("define schema with EPL as string. In case of complex event schema declaration divide multiple strings with '|'")
-			.required(true)
-			.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
-			.build();
-
 	public static final Relationship SUCCEEDED_EVENT = new Relationship.Builder()
 			.name("succeeded event")
 			.description("esper event matched epl statement")
@@ -95,13 +63,8 @@ public class CommonEplProcessor extends AbstractProcessor {
 
 	@Override
 	protected void init(final ProcessorInitializationContext context) {
-		final List<PropertyDescriptor> descriptors = new ArrayList<PropertyDescriptor>();
-		descriptors.add(EVENT_SCHEMA);
-		descriptors.add(EPL_STATEMENT);
-		descriptors.add(INBOUND_EVENT_NAME);
-		descriptors.add(ESPER_ENGINE);
-		this.descriptors = Collections.unmodifiableList(descriptors);
-
+		this.descriptors = Collections.unmodifiableList(getDescriptors());
+		
 		final Set<Relationship> relationships = new HashSet<Relationship>();
 		relationships.add(SUCCEEDED_EVENT);
 		relationships.add(UNMATCHED_EVENT);
