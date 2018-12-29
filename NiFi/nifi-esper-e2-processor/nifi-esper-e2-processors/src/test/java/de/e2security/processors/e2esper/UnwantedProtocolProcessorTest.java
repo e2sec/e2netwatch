@@ -39,8 +39,8 @@ public class UnwantedProtocolProcessorTest extends ProcessorTestSupporter {
 		List<MockFlowFile> results = runner.getFlowFilesForRelationship(UnwantedProtocolProcessor.UNWANTED_TCP_CONNECTIONS);
 		MockFlowFile result = results.get(0);
 		String resultValue = new String(runner.getContentAsByteArray(result));
-		String expectedMapFormat = "[source.port=23, destination.port=21, network.iana_number=6]";
-		Assert.assertEquals(expectedMapFormat, resultValue);
+		String expectedOutput = "{\"source.port\":23,\"destination.port\":21,\"network.iana_number\":6}";
+		Assert.assertEquals(expectedOutput, resultValue);
 	}
 
 }

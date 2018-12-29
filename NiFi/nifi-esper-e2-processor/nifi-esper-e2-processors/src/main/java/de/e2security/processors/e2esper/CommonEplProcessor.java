@@ -1,6 +1,10 @@
 package de.e2security.processors.e2esper;
 
-import static de.e2security.processors.e2esper.CommonPropertyDescriptor.*;
+import static de.e2security.processors.e2esper.CommonPropertyDescriptor.EPL_STATEMENT;
+import static de.e2security.processors.e2esper.CommonPropertyDescriptor.ESPER_ENGINE;
+import static de.e2security.processors.e2esper.CommonPropertyDescriptor.EVENT_SCHEMA;
+import static de.e2security.processors.e2esper.CommonPropertyDescriptor.INBOUND_EVENT_NAME;
+import static de.e2security.processors.e2esper.CommonPropertyDescriptor.getDescriptors;
 import static de.e2security.processors.e2esper.utilities.EsperProcessorLogger.failure;
 import static de.e2security.processors.e2esper.utilities.EsperProcessorLogger.success;
 
@@ -9,9 +13,12 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.nifi.annotation.behavior.ReadsAttribute;
 import org.apache.nifi.annotation.behavior.ReadsAttributes;
 import org.apache.nifi.annotation.behavior.WritesAttribute;
@@ -86,8 +93,9 @@ public class CommonEplProcessor extends AbstractProcessor {
 	
 	@Override
 	public void onTrigger(final ProcessContext context, final ProcessSession session) throws ProcessException {
-		FlowFile flowFileS = session.get(); 
-		if ( flowFileS == null ) { return;} 
+		FlowFile flowFile = session.get(); 
+		if ( flowFile == null ) { return;} 
+		final AtomicReference<Optional<Pair<String,Relationship>>> finalResult = new AtomicReference<>();
 		//load esper engine from the controller
 		EsperService esperService = context.getProperty(ESPER_ENGINE).asControllerService(EsperService.class);
 		EPServiceProvider esperEngine = esperService.execute();
@@ -100,12 +108,12 @@ public class CommonEplProcessor extends AbstractProcessor {
 		EPStatement eplIn = admin.createEPL(_EPL_STATEMENT); //do not try to catch error; this is a runtime critical one
 		getLogger().debug(success("IMPLEMENTED EPL STMT", _EPL_STATEMENT));
 		//processing incoming nifi events
-		SucceededEventListener sel = new SucceededEventListener(getLogger());
+		SucceededEventListener sel = new SucceededEventListener(getLogger(),SUCCEEDED_EVENT,finalResult);
 		eplIn.addListener(sel);
-		UnmatchedEventListener fel = new UnmatchedEventListener(getLogger());
+		UnmatchedEventListener fel = new UnmatchedEventListener(getLogger(),UNMATCHED_EVENT,finalResult);
 		runtime.setUnmatchedListener(fel);
 		final String _INBOUND_EVENT_NAME = context.getProperty(INBOUND_EVENT_NAME).getValue(); 
-		session.read(flowFileS, (inputStream) -> {
+		session.read(flowFile, (inputStream) -> {
 			String eventJson = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
 			try {
 				//parsing inputStream as JSON objects
@@ -118,19 +126,18 @@ public class CommonEplProcessor extends AbstractProcessor {
 				getLogger().debug(failure("TRYING TO CREATE MAP FROM INCOMING EVENT",eventJson));
 			}
 		});
-		if (sel.getProcessedEvent() != null) {
-			session.write(flowFileS, (outStream) -> {
-				outStream.write(sel.getProcessedEvent().getBytes()); 
+		
+		Optional<Pair<String,Relationship>> resultOptional = finalResult.get();
+		if (resultOptional.isPresent()) {
+			session.write(flowFile, (outStream) -> {
+				outStream.write(resultOptional.get().getLeft().getBytes());
 			});
-			session.transfer(flowFileS, SUCCEEDED_EVENT);
-		} else if (fel.getUnmatchedEvent() != null) {
-			session.write(flowFileS, (outStream) -> {
-				outStream.write(fel.getUnmatchedEvent().getBytes()); 
-			});
-			session.transfer(flowFileS, UNMATCHED_EVENT);
+			session.transfer(flowFile,resultOptional.get().getRight());
 		} else {
 			getLogger().error("NEITHER SUCCEEDED NOR UNMATCHED EVENT PROCESSED TO FLOW FILE");
+			session.transfer(flowFile,null);
 		}
+		
 		session.commit();
 	}
 }
