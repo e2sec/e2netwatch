@@ -53,7 +53,7 @@ import de.e2security.processors.e2esper.utilities.UnmatchedEventListener;
 @ReadsAttributes({@ReadsAttribute(attribute="", description="")})
 @WritesAttributes({@WritesAttribute(attribute="", description="")})
 public class CommonEplProcessor extends AbstractProcessor {
-	
+
 	public static final Relationship SUCCEEDED_EVENT = new Relationship.Builder()
 			.name("succeeded event")
 			.description("esper event matched epl statement")
@@ -63,7 +63,7 @@ public class CommonEplProcessor extends AbstractProcessor {
 			.name("unmatched event")
 			.description("esper event unmatched epl statement")
 			.build();
-	
+
 	private List<PropertyDescriptor> descriptors;
 
 	private Set<Relationship> relationships;
@@ -71,7 +71,7 @@ public class CommonEplProcessor extends AbstractProcessor {
 	@Override
 	protected void init(final ProcessorInitializationContext context) {
 		this.descriptors = Collections.unmodifiableList(getDescriptors());
-		
+
 		final Set<Relationship> relationships = new HashSet<Relationship>();
 		relationships.add(SUCCEEDED_EVENT);
 		relationships.add(UNMATCHED_EVENT);
@@ -90,18 +90,21 @@ public class CommonEplProcessor extends AbstractProcessor {
 
 	@OnScheduled
 	public void onScheduled(final ProcessContext context) {	}
-	
+
+	//should be out of onTrigger scope
+	final AtomicReference<Optional<Pair<String,Relationship>>> finalResult = new AtomicReference<>();
+
 	@Override
 	public void onTrigger(final ProcessContext context, final ProcessSession session) throws ProcessException {
 		FlowFile flowFile = session.get(); 
 		if ( flowFile == null ) { return;} 
-		final AtomicReference<Optional<Pair<String,Relationship>>> finalResult = new AtomicReference<>();
+		finalResult.set(Optional.empty()); //initial set
 		//load esper engine from the controller
 		EsperService esperService = context.getProperty(ESPER_ENGINE).asControllerService(EsperService.class);
 		EPServiceProvider esperEngine = esperService.execute();
 		EPRuntime runtime = esperEngine.getEPRuntime();
 		EPAdministrator admin = esperEngine.getEPAdministrator();
-		
+
 		// parse each epl statement from array of strings defined in EplStatement
 		SupportUtility.parseMultipleEventSchema(context.getProperty(EVENT_SCHEMA).getValue(),admin,getLogger());
 		final String _EPL_STATEMENT = context.getProperty(EPL_STATEMENT).getValue();
@@ -126,7 +129,7 @@ public class CommonEplProcessor extends AbstractProcessor {
 				getLogger().debug(failure("TRYING TO CREATE MAP FROM INCOMING EVENT",eventJson));
 			}
 		});
-		
+
 		Optional<Pair<String,Relationship>> resultOptional = finalResult.get();
 		if (resultOptional.isPresent()) {
 			session.write(flowFile, (outStream) -> {
@@ -135,9 +138,9 @@ public class CommonEplProcessor extends AbstractProcessor {
 			session.transfer(flowFile,resultOptional.get().getRight());
 		} else {
 			getLogger().error("NEITHER SUCCEEDED NOR UNMATCHED EVENT PROCESSED TO FLOW FILE");
-			session.transfer(flowFile,null);
+			session.remove(flowFile);
 		}
-		
+
 		session.commit();
 	}
 }
