@@ -34,7 +34,7 @@ public class SucceededEventListener implements UpdateListener {
 				Map<?,?> eventAsMap = (Map<?,?>) event.getUnderlying();
 				String catchedEventAsMapEntry = eventAsMap.entrySet().toString();
 				logger.debug(success("SUCCEEDED EVENT", catchedEventAsMapEntry));
-				resultReference.set(Optional.of(new ImmutablePair(SupportUtility.transformEventMapToJson(eventAsMap),relationship)));
+				resultReference.set(Optional.of(new ImmutablePair<>(SupportUtility.transformEventMapToJson(eventAsMap),relationship)));
 			}
 		}
 	}
