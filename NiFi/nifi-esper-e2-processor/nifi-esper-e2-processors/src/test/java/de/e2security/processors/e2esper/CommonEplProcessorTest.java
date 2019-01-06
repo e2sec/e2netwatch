@@ -3,20 +3,14 @@ package de.e2security.processors.e2esper;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.nifi.controller.ControllerService;
 import org.apache.nifi.processor.AbstractProcessor;
-import org.apache.nifi.reporting.InitializationException;
 import org.apache.nifi.stream.io.ByteArrayInputStream;
 import org.apache.nifi.util.MockFlowFile;
-import org.apache.nifi.util.TestRunner;
-import org.apache.nifi.util.TestRunners;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
-import de.e2security.nifi.controller.esper.EsperEngineService;
 import de.e2security.processors.e2esper.utilities.ProcessorTestSupporter;
 
+@SuppressWarnings("deprecation")
 public class CommonEplProcessorTest extends ProcessorTestSupporter {
 	
 		@Override
