@@ -1,7 +1,7 @@
 package de.e2security.processors.e2esper.utilities;
 
 import org.apache.nifi.controller.ControllerService;
-import org.apache.nifi.processor.AbstractProcessor;
+import org.apache.nifi.processor.AbstractSessionFactoryProcessor;
 import org.apache.nifi.reporting.InitializationException;
 import org.apache.nifi.util.TestRunner;
 import org.apache.nifi.util.TestRunners;
@@ -16,7 +16,7 @@ public abstract class ProcessorTestSupporter {
 	public ControllerService controller;
 	public TestRunner runner;
 	
-	public abstract AbstractProcessor initializeProcessor();
+	public abstract AbstractSessionFactoryProcessor initializeProcessor();
 	
 	@Before public void init() {
 		controller = new EsperEngineService();

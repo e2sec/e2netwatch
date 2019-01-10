@@ -18,8 +18,6 @@ import com.espertech.esper.client.Configuration;
 import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPServiceProviderManager;
 
-import de.e2security.nifi.controller.esper.observer.EventTimerObserverFactory;
-
 @Tags({"e2", "esper"})
 @CapabilityDescription("main esper engine controller")
 public class EsperEngineService extends AbstractControllerService implements EsperService {
@@ -39,6 +37,10 @@ public class EsperEngineService extends AbstractControllerService implements Esp
 
     @OnEnabled
     public void onEnabled(final ConfigurationContext context) throws InitializationException {
+    	Configuration config = new Configuration();
+    	config.addPlugInPatternObserver("timer", "event", "de.e2security.nifi.controller.esper.observer.EventTimerObserverFactory");
+    	config.getEngineDefaults().getLogging().setEnableExecutionDebug(true);
+    	engine = EPServiceProviderManager.getDefaultProvider(config);
     }
 
     @OnDisabled
@@ -48,10 +50,6 @@ public class EsperEngineService extends AbstractControllerService implements Esp
 
     @Override
     public EPServiceProvider execute() throws ProcessException {
-    	Configuration config = new Configuration();
-    	config.addPlugInPatternObserver("timer", "event", "de.e2security.nifi.controller.esper.observer.EventTimerObserverFactory");
-    	config.getEngineDefaults().getLogging().setEnableExecutionDebug(true);
-    	engine = EPServiceProviderManager.getDefaultProvider(config);
     	return engine;
     }
 
