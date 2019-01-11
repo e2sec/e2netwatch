@@ -30,7 +30,11 @@ import de.e2security.netflow_flowaggregation.utils.PropertiesUtil;
 import de.e2security.netflow_flowaggregation.utils.ThreadUtil;
 import de.e2security.netflow_flowaggregation.utils.UpstartUtil;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class App {
+	private static final Logger LOG = LoggerFactory.getLogger(App.class);
 	
 	private Properties configs = new Properties();
 	private File configFile;
@@ -74,6 +78,8 @@ public class App {
 			}
 		}
 		
+		LOG.info("Starting version {} ({})", configs.getProperty("application.version"), configs.getProperty("application.builddate"));
+
 		//check kafka server's availability before establishingn conn
 		new UpstartUtil(configs).statusKafka();
 		
