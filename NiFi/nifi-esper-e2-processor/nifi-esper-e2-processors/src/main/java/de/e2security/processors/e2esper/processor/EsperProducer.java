@@ -69,6 +69,7 @@ public class EsperProducer extends AbstractSessionFactoryProcessor {
 		 */
 		esperEngine = esperService.execute();  
 		epstmt = esperEngine.getEPAdministrator().getStatement(stmtName);
+		//while not found ??? loop over
 		if (epstmt == null) {
 			getLogger().error(String.format("STMT [%s] doesn't exist or consumer has not been started yet", stmtName)); //throws an error on addListener(...)
 		}
