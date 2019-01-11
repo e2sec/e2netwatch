@@ -14,6 +14,7 @@ public final class Mappings {
     public static final String USERSTATUSES = USER_MANAGEMENT + "/userstatuses";
     public static final String USERGROUPS = USER_MANAGEMENT + "/usergroups";
     public static final String TIMEZONES = USER_MANAGEMENT + "/timezones";
+    public static final String PROFILE_PREFERENCES = USER_MANAGEMENT + "/profilepreferences";
 
     private Mappings() {
         throw new AssertionError();
