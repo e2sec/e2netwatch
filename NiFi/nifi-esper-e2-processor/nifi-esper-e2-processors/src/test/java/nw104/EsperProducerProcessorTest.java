@@ -1,5 +1,7 @@
 package nw104;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,13 +11,11 @@ import org.apache.nifi.util.MockFlowFile;
 import org.apache.nifi.util.TestRunner;
 import org.apache.nifi.util.TestRunners;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gson.Gson;
 
 import de.e2security.nifi.controller.esper.EsperEngineService;
-import de.e2security.processors.e2esper.CommonEplProcessor;
 import de.e2security.processors.e2esper.CommonPropertyDescriptor;
 import de.e2security.processors.e2esper.processor.EsperConsumer;
 import de.e2security.processors.e2esper.processor.EsperProducer;
@@ -93,18 +93,25 @@ public class EsperProducerProcessorTest {
 		event1.setTarget_user_name_hash("79957b8bf053a695e62603c1f81bb49");
 		TestEvent event2 = event0.clone();
 		event2.setEvent_id(4726);
-		event2.setTarget_user_name_hash("79957b8bf053a695e62603c1f81bb49");
+		event2.setTarget_user_name_hash("79957b8bf053a695e62603c1f81bb50");
+
 		
 		runnerConsumer.enqueue(gson.toJson(event1).getBytes());
-		
 		runnerConsumer.run(1);
+		
+		//setting intiial listener -> first event has been lost
 		runnerProducer.run(1);
+		List<MockFlowFile> succ = runnerProducer.getFlowFilesForRelationship(EsperProducer.SUCCEEDED_REL);
+		assertTrue(succ.isEmpty());
 		
 		runnerConsumer.enqueue(gson.toJson(event2).getBytes());
 		runnerConsumer.run(1);
 		
-		MockFlowFile succ = runnerProducer.getFlowFilesForRelationship(EsperProducer.SUCCEEDED_REL).get(0);
-		runnerProducer.assertAllFlowFilesContainAttribute("json");
+		runnerProducer.assertAllFlowFilesTransferred(EsperProducer.SUCCEEDED_REL);
+		
+		runnerConsumer.enqueue(gson.toJson(event2).getBytes());
+		runnerConsumer.run(1);
+		runnerProducer.assertAllFlowFilesTransferred(EsperProducer.SUCCEEDED_REL);		
 	}
 
 }

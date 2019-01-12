@@ -54,38 +54,37 @@ public class EsperProducer extends AbstractSessionFactoryProcessor {
 			.description("esper event matched epl statement on listener")
 			.build();
 	
-	private EPServiceProvider esperEngine;
-	private EPStatement epstmt;
-	private String stmtName;
+	private final AtomicReference<EsperListener> successListener = new AtomicReference<>();
 	
 	@OnStopped public void stop(final ProcessContext context) {}
 	
 	@OnScheduled public void start(final ProcessContext context) {
-		final EsperService esperService = context.getProperty(ESPER_ENGINE).asControllerService(EsperService.class);
-		stmtName = context.getProperty(EPSTMT_NAME).getValue();
 		/*
 		 * instantiated on controller's ENABLEMENT. execute() returns the shared instance back;
 		 * no NULL check is required -> the processor cannot be started w/o controller has been enabled
 		 */
-		esperEngine = esperService.execute();  
-		epstmt = esperEngine.getEPAdministrator().getStatement(stmtName);
-		//while not found ??? loop over
-		if (epstmt == null) {
-			getLogger().error(String.format("STMT [%s] doesn't exist or consumer has not been started yet", stmtName)); //throws an error on addListener(...)
+		final EsperService esperService = context.getProperty(ESPER_ENGINE).asControllerService(EsperService.class);
+		final EPServiceProvider esperEngine = esperService.execute();
+		final String stmtName = context.getProperty(EPSTMT_NAME).getValue();
+		
+		/*
+		 * if producer and consumer haven been started simultaneously or 
+		 * producer has been started before consumer => wait for EPStatement initilization 
+		 */
+		EPStatement stmt = null;
+		while (stmt == null) {
+			stmt = esperEngine.getEPAdministrator().getStatement(stmtName);
+			getLogger().error(String.format("Searching for EPStatement called [%s]", stmtName));
 		}
+		successListener.compareAndSet(null, new EsperListener(getLogger(),SUCCEEDED_REL));
+		stmt.addListener(successListener.get());
 	}
 
 	@Override
 	public void onTrigger(ProcessContext context, ProcessSessionFactory sessionFactory) throws ProcessException {
-		ProcessSession newSession = sessionFactory.createSession();
-		EsperListener successListener = new EsperListener(getLogger(), 
-														  stmtName, 
-														  newSession,
-														  SUCCEEDED_REL);
-		epstmt.addListener(successListener);
-		
-		context.yield(); //delay on start
+		successListener.get().setSession(sessionFactory);
 	}
+	
 	
 	private List<PropertyDescriptor> descriptors;
 	

@@ -11,8 +11,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.nifi.annotation.lifecycle.OnScheduled;
@@ -33,11 +33,6 @@ import de.e2security.processors.e2esper.utilities.SupportUtility;
 
 public class EsperConsumer extends AbstractProcessor {
 	
-	public static final Relationship IGNORE = new Relationship.Builder()
-			.name("null relationship")
-			.description("terminate this relationship")
-			.build();
-	
 	private EPServiceProvider esperEngine;
 	
 	@OnStopped public void stop(final ProcessContext context) {}
@@ -50,24 +45,21 @@ public class EsperConsumer extends AbstractProcessor {
 	}
 
 	@Override public void onTrigger(ProcessContext context, ProcessSession session) throws ProcessException {
-		FlowFile flowFile = session.get();
+		final FlowFile flowFile = session.get();
 		if (flowFile == null) { return ; }
 		final String eventName = context.getProperty(INBOUND_EVENT_NAME).getValue();
 		
-		String[] input = new String[1];
+		final AtomicReference<String> input = new AtomicReference<>();
 		session.read(flowFile, (inputStream) -> {
 			try {
-				input[0] = IOUtils.toString(inputStream, StandardCharsets.UTF_8); 
+				input.set(IOUtils.toString(inputStream, StandardCharsets.UTF_8)); 
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
 		});
-		try {
-			Map<String, Object> eventMap = SupportUtility.transformEventToMap(input[0]);
-			esperEngine.getEPRuntime().sendEvent(eventMap, eventName);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		try { esperEngine.getEPRuntime().sendEvent(SupportUtility.transformEventToMap(input.get()), eventName);
+		} catch (IOException e) { e.printStackTrace(); }
+		
 		session.remove(flowFile);
 	}
 	
@@ -77,10 +69,8 @@ public class EsperConsumer extends AbstractProcessor {
 	
 	@Override
 	protected void init(ProcessorInitializationContext context) {
-		this.descriptors = Collections.unmodifiableList(getDescriptors());
-		
 		final Set<Relationship> relationships = new HashSet<Relationship>();
-		relationships.add(IGNORE);
+		this.descriptors = Collections.unmodifiableList(getDescriptors());
 		this.relationships = Collections.unmodifiableSet(relationships);
 	}
 	
