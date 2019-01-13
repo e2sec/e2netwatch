@@ -7,18 +7,22 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.espertech.esper.client.EPException;
 import com.espertech.esper.client.EPStatement;
+import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.scopetest.SupportUpdateListener;
 import com.espertech.esper.client.time.CurrentTimeEvent;
-import com.espertech.esper.client.time.CurrentTimeSpanEvent;
 
 import de.e2security.netflow_flowaggregation.esper.NetflowEventEplExpressions;
+import de.e2security.netflow_flowaggregation.esper.TcpEplExpressions;
+import de.e2security.netflow_flowaggregation.esper.utils.EplExpressionTestSupporter;
 import de.e2security.netflow_flowaggregation.esper.utils.EsperTestSupporter;
 import de.e2security.netflow_flowaggregation.exceptions.NetflowEventException;
 import de.e2security.netflow_flowaggregation.model.protocols.NetflowEvent;
@@ -47,6 +51,59 @@ public class WrongOrderConnectionTest extends EsperTestSupporter {
 		runtime.sendEvent(testEvent1);
 		runtime.sendEvent(new CurrentTimeEvent(TestUtil.getCurrentTimeEvent("2018-12-22T00:01:20.999Z")));
 		Assert.assertEquals(testEvent1.convertToOrderedType().toString(), neoReference.get().toString());
+	}
+	
+	@Test public void testSortByLastSwitchedEplStatementOnSameLastSwitchedValue() throws EPException, NetflowEventException {
+		NetflowEvent testEvent1 = new NetflowEvent();
+		testEvent1.setLast_switched("2018-12-22T00:00:00.999Z");
+		testEvent1.setFirst_switched("2018-12-21T23:59:00.999Z");
+		testEvent1.setProtocol(6);
+		testEvent1.setTcp_flags(1);
+		testEvent1.setHost("ident");
+		testEvent1.setIpv4_dst_addr("hostB");
+		testEvent1.setL4_src_port(9191);
+		testEvent1.setIpv4_src_addr("hostA");
+		testEvent1.setL4_dst_port(5353);
+		NetflowEvent testEvent2 = new NetflowEvent();
+		testEvent2.setLast_switched("2018-12-22T00:00:00.999Z");
+		testEvent2.setFirst_switched("2018-12-21T23:59:10.999Z");
+		testEvent2.setProtocol(6);
+		testEvent2.setTcp_flags(1);
+		testEvent2.setHost("ident");
+		testEvent2.setIpv4_dst_addr("hostA");
+		testEvent2.setIpv4_src_addr("hostB");
+		testEvent2.setL4_src_port(5353);
+		testEvent2.setL4_dst_port(9191);
+		EPStatement ordered = admin.createEPL(NetflowEventEplExpressions.eplSortByLastSwitched());
+		EPStatement finished = admin.createEPL(TcpEplExpressions.eplFinishedFlows());
+		SupportUpdateListener supportListener = new SupportUpdateListener();
+		finished.addListener(supportListener);
+		
+		ordered.addListener((newEvents,oldEvents) ->  {
+			for (EventBean event : newEvents) {
+				NetflowEventOrdered neo = (NetflowEventOrdered) event.getUnderlying();
+				runtime.sendEvent(neo);
+			}
+		});
+		
+		runtime.sendEvent(new CurrentTimeEvent(TestUtil.getCurrentTimeEvent("2018-12-22T00:00:00.999Z")));
+		runtime.sendEvent(testEvent1);
+		runtime.sendEvent(testEvent2);
+		runtime.sendEvent(new CurrentTimeEvent(TestUtil.getCurrentTimeEvent("2018-12-22T00:01:00.999Z")));
+
+		runtime.sendEvent(new CurrentTimeEvent(TestUtil.getCurrentTimeEvent("2018-12-22T00:01:10.999Z")));
+		runtime.sendEvent(new CurrentTimeEvent(TestUtil.getCurrentTimeEvent("2018-12-22T00:01:40.999Z")));
+
+		Assert.assertTrue(!supportListener.getNewDataList().isEmpty());
+		
+		/*		Test fails in case:
+		 * 		testEvent2.getLast_switched() == testEvent1.getLast_switched();
+		 * 		and 		runtime.sendEvent(testEvent2);
+							runtime.sendEvent(testEvent1);
+				Reason: rightOrderChecker() in TcpEplExpression, cause in the case compared timestamps are equal, 
+				esper sort the events by the time as they came into the engine
+				//TODO: write custom Pattern Observer
+		 */
 	}
 	
 	
