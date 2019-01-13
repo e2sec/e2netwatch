@@ -229,4 +229,8 @@ public class NetflowEvent implements Serializable {
     public void setLast_switched(String last_switched) {
     	this.last_switched = ZonedDateTime.parse(last_switched);
     }
+
+	public void setHost(String host) {
+		this.host = host;
+	}
 }
