@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.mockito.internal.matchers.And;
 
 import de.e2security.processors.e2esper.CommonEplProcessor;
-import de.e2security.processors.e2esper.CommonPropertyDescriptor;
+import de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor;
 import de.e2security.processors.e2esper.utilities.ProcessorTestSupporter;
 
 public class _50005_0008_01 extends ProcessorTestSupporter {

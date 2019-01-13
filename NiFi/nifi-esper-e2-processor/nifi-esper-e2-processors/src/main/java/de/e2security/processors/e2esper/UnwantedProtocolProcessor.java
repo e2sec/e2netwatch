@@ -1,9 +1,9 @@
 package de.e2security.processors.e2esper;
 
-import static de.e2security.processors.e2esper.CommonPropertyDescriptor.EPL_STATEMENT;
-import static de.e2security.processors.e2esper.CommonPropertyDescriptor.ESPER_ENGINE;
-import static de.e2security.processors.e2esper.CommonPropertyDescriptor.EVENT_SCHEMA;
-import static de.e2security.processors.e2esper.CommonPropertyDescriptor.INBOUND_EVENT_NAME;
+import static de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor.EPL_STATEMENT;
+import static de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor.ESPER_ENGINE;
+import static de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor.EVENT_SCHEMA;
+import static de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor.INBOUND_EVENT_NAME;
 import static de.e2security.processors.e2esper.utilities.UnwantedProtocolProcessorHelper.concatenatePorts;
 
 import java.io.IOException;
@@ -44,6 +44,7 @@ import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPStatement;
 
 import de.e2security.nifi.controller.esper.EsperService;
+import de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor;
 import de.e2security.processors.e2esper.utilities.SucceededEventListener;
 import de.e2security.processors.e2esper.utilities.SupportUtility;
 import de.e2security.processors.e2esper.utilities.UnmatchedEventListener;

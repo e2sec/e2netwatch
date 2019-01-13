@@ -12,7 +12,7 @@ import de.e2security.nifi.controller.esper.EsperEngineService;
 
 public abstract class ProcessorTestSupporter {
 	
-	private TestRunners runners = new TestRunners();
+	public TestRunners runners = new TestRunners();
 	public ControllerService controller;
 	public TestRunner runner;
 	

@@ -16,9 +16,9 @@ import org.junit.Test;
 import com.google.gson.Gson;
 
 import de.e2security.nifi.controller.esper.EsperEngineService;
-import de.e2security.processors.e2esper.CommonPropertyDescriptor;
 import de.e2security.processors.e2esper.processor.EsperConsumer;
 import de.e2security.processors.e2esper.processor.EsperProducer;
+import de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor;
 import nw101.EplPatternProcessingTest.TestEvent;
 
 public class EsperProducerProcessorTest {
@@ -43,7 +43,7 @@ public class EsperProducerProcessorTest {
 	Gson gson = new Gson();
 	TestEvent event0 = new TestEvent().createDefaultTestEvent();
 	
-	@Test public void generaEsperProducerRunlTest() throws CloneNotSupportedException {
+	@Test public void generaEsperProducerRunTest() throws CloneNotSupportedException {
 		
 			runnerConsumer = runners.newTestRunner(new EsperConsumer());
 			runnerProducer = runners.newTestRunner(new EsperProducer());

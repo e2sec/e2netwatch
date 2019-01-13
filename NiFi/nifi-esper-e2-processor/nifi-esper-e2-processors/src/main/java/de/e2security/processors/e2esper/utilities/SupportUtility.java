@@ -9,6 +9,9 @@ import java.util.Map;
 import org.apache.nifi.logging.ComponentLog;
 
 import com.espertech.esper.client.EPAdministrator;
+import com.espertech.esper.client.metric.EngineMetric;
+import com.espertech.esper.client.metric.MetricEvent;
+import com.espertech.esper.client.metric.StatementMetric;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -34,6 +37,16 @@ public final class SupportUtility {
 			admin.createEPL(schema); //do not try to catch failure; this is a runtime critical one; 
 			logger.debug(success("IMPLEMENTED SCHEMA", schema)); //debug if error wasn't thrown
 		}		
+	}
+
+	public static String transformMetricEventToJson(MetricEvent underlying) {
+		String json = gson.toJson(underlying);
+		if (underlying instanceof StatementMetric) {
+			StatementMetric stmtMetric = (StatementMetric) underlying;
+		} else if (underlying instanceof EngineMetric) {
+			EngineMetric engineMetric = (EngineMetric) underlying;
+		}
+		return json;
 	}
 	
 }

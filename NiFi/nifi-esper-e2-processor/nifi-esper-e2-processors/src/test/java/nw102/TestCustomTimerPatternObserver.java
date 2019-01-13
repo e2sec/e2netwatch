@@ -10,7 +10,7 @@ import org.junit.Test;
 import com.google.gson.Gson;
 
 import de.e2security.processors.e2esper.CommonEplProcessor;
-import de.e2security.processors.e2esper.CommonPropertyDescriptor;
+import de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor;
 import de.e2security.processors.e2esper.utilities.ProcessorTestSupporter;
 import nw101.EplPatternProcessingTest.TestEvent;
 

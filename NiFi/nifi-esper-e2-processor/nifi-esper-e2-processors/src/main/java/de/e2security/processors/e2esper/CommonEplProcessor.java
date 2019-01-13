@@ -1,10 +1,10 @@
 package de.e2security.processors.e2esper;
 
-import static de.e2security.processors.e2esper.CommonPropertyDescriptor.EPL_STATEMENT;
-import static de.e2security.processors.e2esper.CommonPropertyDescriptor.ESPER_ENGINE;
-import static de.e2security.processors.e2esper.CommonPropertyDescriptor.EVENT_SCHEMA;
-import static de.e2security.processors.e2esper.CommonPropertyDescriptor.INBOUND_EVENT_NAME;
-import static de.e2security.processors.e2esper.CommonPropertyDescriptor.getDescriptors;
+import static de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor.EPL_STATEMENT;
+import static de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor.ESPER_ENGINE;
+import static de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor.EVENT_SCHEMA;
+import static de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor.INBOUND_EVENT_NAME;
+import static de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor.getDescriptors;
 import static de.e2security.processors.e2esper.utilities.EsperProcessorLogger.failure;
 import static de.e2security.processors.e2esper.utilities.EsperProcessorLogger.success;
 

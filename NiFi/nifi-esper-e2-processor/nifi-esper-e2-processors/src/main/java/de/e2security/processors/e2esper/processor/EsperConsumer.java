@@ -1,10 +1,10 @@
 package de.e2security.processors.e2esper.processor;
 
-import static de.e2security.processors.e2esper.CommonPropertyDescriptor.EPL_STATEMENT;
-import static de.e2security.processors.e2esper.CommonPropertyDescriptor.ESPER_ENGINE;
-import static de.e2security.processors.e2esper.CommonPropertyDescriptor.EVENT_SCHEMA;
-import static de.e2security.processors.e2esper.CommonPropertyDescriptor.INBOUND_EVENT_NAME;
-import static de.e2security.processors.e2esper.CommonPropertyDescriptor.getDescriptors;
+import static de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor.EPL_STATEMENT;
+import static de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor.ESPER_ENGINE;
+import static de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor.EVENT_SCHEMA;
+import static de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor.INBOUND_EVENT_NAME;
+import static de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor.getDescriptors;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -15,6 +15,8 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.nifi.annotation.documentation.CapabilityDescription;
+import org.apache.nifi.annotation.documentation.Tags;
 import org.apache.nifi.annotation.lifecycle.OnScheduled;
 import org.apache.nifi.annotation.lifecycle.OnStopped;
 import org.apache.nifi.components.PropertyDescriptor;
@@ -31,6 +33,8 @@ import com.espertech.esper.client.EPServiceProvider;
 import de.e2security.nifi.controller.esper.EsperService;
 import de.e2security.processors.e2esper.utilities.SupportUtility;
 
+@Tags({"E2EsperProcessor"})
+@CapabilityDescription("Sending incoming events to esper engine)")
 public class EsperConsumer extends AbstractProcessor {
 	
 	private EPServiceProvider esperEngine;

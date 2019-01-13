@@ -1,12 +1,15 @@
 package nw104;
 
 import org.apache.nifi.processor.AbstractProcessor;
+import org.apache.nifi.reporting.InitializationException;
+import org.apache.nifi.util.TestRunner;
 import org.junit.Test;
 
 import com.google.gson.Gson;
 
-import de.e2security.processors.e2esper.CommonPropertyDescriptor;
 import de.e2security.processors.e2esper.processor.EsperConsumer;
+import de.e2security.processors.e2esper.processor.EsperProducer;
+import de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor;
 import de.e2security.processors.e2esper.utilities.ProcessorTestSupporter;
 import nw101.EplPatternProcessingTest.TestEvent;
 
@@ -20,7 +23,8 @@ public class EsperConsumerProcessorTest extends ProcessorTestSupporter {
 	Gson gson = new Gson();
 	TestEvent event0 = new TestEvent().createDefaultTestEvent();
 	
-	@Test public void generaEsperConsumerRunlTest() throws CloneNotSupportedException {
+	@Test public void generaEsperConsumerRunlTest() throws CloneNotSupportedException, InitializationException {
+		
 		runner.setProperty(CommonPropertyDescriptor.EPL_STATEMENT, "@Name(TEST) SELECT '50005-0008-01' AS alert_uc_scenario, "
 				+ "'ip_hash' AS enrichment_field,"
 				+ "'50005_inv_ip2ci' AS enrichment_index, "
@@ -44,18 +48,38 @@ public class EsperConsumerProcessorTest extends ProcessorTestSupporter {
 		runner.setProperty(CommonPropertyDescriptor.INBOUND_EVENT_NAME, "T_50005_0008_01_02");
 		runner.setProperty(CommonPropertyDescriptor.ESPER_ENGINE, "EsperEngineService");
 		
-		TestEvent event3 = event0.clone();
-		event3.setEvent_id(4720);
-		event3.setTarget_user_name_hash("79957b8bf053a695e62603c1f81bb49");
-		TestEvent event4 = event0.clone();
-		event4.setEvent_id(4726);
-		event4.setTarget_user_name_hash("79957b8bf053a695e62603c1f81bb49");
+		TestEvent event1 = event0.clone();
+		event1.setEvent_id(4720);
+		event1.setTarget_user_name_hash("79957b8bf053a695e62603c1f81bb49");
+		TestEvent event2 = event0.clone();
+		event2.setEvent_id(4726);
+		event2.setTarget_user_name_hash("79957b8bf053a695e62603c1f81bb49");
 		
-		runner.enqueue(gson.toJson(event3).getBytes());
-		runner.enqueue(gson.toJson(event4).getBytes());
+		//set current time due to external timer
+		/* TODO: implement also other types of events; 
+		 * implementation in test is difficult. EsperConsumer awaits JSON format
+		 * For Test Purpose EsperEngineController ExternalTimer should be enabled;
+		 */
+//		runner.enqueue(new CurrentTimeEvent(System.currentTimeMillis()).toString().getBytes());
+//		runner.run(1);
+
+		runner.enqueue(gson.toJson(event1).getBytes());
+		runner.run(1); 
 		
-		runner.run(2);
-		runner.assertQueueEmpty();
+		//initialize monitor
+		TestRunner runnerMonitor = runners.newTestRunner(new EsperProducer());
+		runnerMonitor.addControllerService("EsperEngineService", controller);
+		runnerMonitor.setProperty(EsperProducer.ESPER_ENGINE, "EsperEngineService");
+		runnerMonitor.setProperty(EsperProducer.EPSTMT_NAME, "StmtMetric");
+		runnerMonitor.enableControllerService(controller);
+		runnerMonitor.run(1);
+		
+		runner.enqueue(gson.toJson(event2).getBytes());
+		runner.run(1);
+		
+		runnerMonitor.run();
+//		MockFlowFile metricOutput = runnerMonitor.getFlowFilesForRelationship(EsperProducer.SUCCEEDED_REL).get(0);
+		
 	}
 	
 }

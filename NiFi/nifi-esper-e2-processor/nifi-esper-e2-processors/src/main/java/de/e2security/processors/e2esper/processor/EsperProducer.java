@@ -7,12 +7,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.apache.nifi.annotation.documentation.CapabilityDescription;
+import org.apache.nifi.annotation.documentation.Tags;
 import org.apache.nifi.annotation.lifecycle.OnScheduled;
 import org.apache.nifi.annotation.lifecycle.OnStopped;
 import org.apache.nifi.components.PropertyDescriptor;
 import org.apache.nifi.processor.AbstractSessionFactoryProcessor;
 import org.apache.nifi.processor.ProcessContext;
-import org.apache.nifi.processor.ProcessSession;
 import org.apache.nifi.processor.ProcessSessionFactory;
 import org.apache.nifi.processor.ProcessorInitializationContext;
 import org.apache.nifi.processor.Relationship;
@@ -25,6 +26,8 @@ import com.espertech.esper.client.EPStatement;
 import de.e2security.nifi.controller.esper.EsperService;
 import de.e2security.processors.e2esper.listener.EsperListener;
 
+@Tags({"E2EsperProcessor"})
+@CapabilityDescription("Producing events from listener based on esper engine rules)")
 public class EsperProducer extends AbstractSessionFactoryProcessor {
 	
 	public static final PropertyDescriptor ESPER_ENGINE = new PropertyDescriptor.Builder().name("EsperEngine")

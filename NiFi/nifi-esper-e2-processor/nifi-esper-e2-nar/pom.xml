@@ -19,11 +19,11 @@
     <parent>
         <groupId>de.e2security</groupId>
         <artifactId>nifi-esper-e2-processor</artifactId>
-        <version>1.1.6-SNAPSHOT</version>
+        <version>1.1.7</version>
     </parent>
 
     <artifactId>nifi-esper-e2-nar</artifactId>
-    <version>1.1.6-SNAPSHOT</version>
+    <version>1.1.7</version>
     <packaging>nar</packaging>
     <properties>
         <maven.javadoc.skip>true</maven.javadoc.skip>
@@ -34,7 +34,7 @@
         <dependency>
             <groupId>de.e2security</groupId>
             <artifactId>nifi-esper-e2-processors</artifactId>
-            <version>1.1.6-SNAPSHOT</version>
+            <version>1.1.7</version>
         </dependency>
     </dependencies>
 

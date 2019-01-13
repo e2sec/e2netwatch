@@ -8,6 +8,7 @@ import org.apache.nifi.stream.io.ByteArrayInputStream;
 import org.apache.nifi.util.MockFlowFile;
 import org.junit.Test;
 
+import de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor;
 import de.e2security.processors.e2esper.utilities.ProcessorTestSupporter;
 
 @SuppressWarnings("deprecation")

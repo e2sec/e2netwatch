@@ -1,6 +1,7 @@
 package de.e2security.processors.e2esper.listener;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.nifi.flowfile.FlowFile;
 import org.apache.nifi.logging.ComponentLog;
@@ -10,6 +11,7 @@ import org.apache.nifi.processor.Relationship;
 
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.UpdateListener;
+import com.espertech.esper.client.metric.MetricEvent;
 import com.espertech.esper.event.map.MapEventBean;
 
 import de.e2security.processors.e2esper.utilities.SupportUtility;
@@ -30,16 +32,24 @@ public class EsperListener implements UpdateListener {
 		ProcessSession session = this.sessionFactory.createSession();
 		FlowFile file = session.create();
 		EventBean event = newEvents[0];
+		final AtomicReference<String> result = new AtomicReference<>();
 		if (event instanceof MapEventBean) {
 			Map<?,?> eventAsMap = (Map<?,?>) event.getUnderlying();
-			String json = SupportUtility.transformEventMapToJson(eventAsMap);
-			logger.debug("[" + json + "]");	
+			 result.set(SupportUtility.transformEventMapToJson(eventAsMap));
+			logger.debug("[" + result.get() + "]");	
+		} else if (event.getUnderlying() instanceof MetricEvent) {
+			String json = SupportUtility.transformMetricEventToJson((MetricEvent) event.getUnderlying());
+			result.set(json);
+		}
+		if (result.get() != null) {
 			file = session.write(file, (outStream) -> {
-				outStream.write(json.getBytes());
+				outStream.write(result.get().getBytes());
 			});
 			session.getProvenanceReporter().route(file, rel);
 			session.transfer(file, rel);
 			session.commit();
+		} else {
+			session.remove(file);
 		}
 	}
 
