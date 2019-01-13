@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public final class TestUtil {
+	
+	static DateTimeFormatter formater = DateTimeFormatter.ISO_INSTANT;	
 
 	public static List<String> readSampleDataFile(String fileName) {
 		InputStream is = TestUtil.class.getResourceAsStream("/" + fileName);
@@ -22,8 +24,12 @@ public final class TestUtil {
 		return contentLines;
 	}
 	
+	public static long getCurrentTimeEvent(String dateString) {
+		Date date = Date.from(Instant.from(formater.parse(dateString)));
+		return date.getTime();
+	}
+	
 	public static long getCurrentTimeEvent(ZonedDateTime zdt) {
-		DateTimeFormatter formater = DateTimeFormatter.ISO_INSTANT;	
 		long res = 0L;
 		try {
 			Date date = Date.from(Instant.from(formater.parse(zdt.toString())));

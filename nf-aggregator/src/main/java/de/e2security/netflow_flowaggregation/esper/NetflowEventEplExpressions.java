@@ -5,9 +5,15 @@ public final class NetflowEventEplExpressions {
 	 * Get events into correct order
 	 * @see http://esper.espertech.com/release-5.5.0/esper-reference/html/epl-views.html#view-time-order
 	 */
+	
+	/* 
+	 * From Esper Reference 7.1 to (ext:)time_order:
+	 * Note the statement above uses the rstream keyword in both the  insert into clause and the select clause to select ordered events only. 
+	 * It uses the insert into clause to makes such ordered stream available for subsequent statements to use.
+	 */
 	public static String eplSortByLastSwitched() {
 		return "insert rstream into NetflowEventOrdered"
-				+ " select receivedTimeStamp"
+				+ " select rstream receivedTimeStamp"
 				+ ",host"
 				+ ",ipv4_src_addr"
 				+ ",ipv4_dst_addr"

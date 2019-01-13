@@ -4,7 +4,10 @@ import static org.junit.Assert.assertEquals;
 
 import java.rmi.UnexpectedException;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -13,7 +16,9 @@ import org.slf4j.LoggerFactory;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.scopetest.SupportUpdateListener;
 import com.espertech.esper.client.time.CurrentTimeEvent;
+import com.espertech.esper.client.time.CurrentTimeSpanEvent;
 
+import de.e2security.netflow_flowaggregation.esper.NetflowEventEplExpressions;
 import de.e2security.netflow_flowaggregation.esper.utils.EsperTestSupporter;
 import de.e2security.netflow_flowaggregation.exceptions.NetflowEventException;
 import de.e2security.netflow_flowaggregation.model.protocols.NetflowEvent;
@@ -22,7 +27,28 @@ import de.e2security.netflow_flowaggregation.model.protocols.ProtocolRegister;
 import de.e2security.netflow_flowaggregation.utils.TestUtil;
 import junit.framework.Assert;
 
-public class WrongOrderConnectionTest extends EsperTestSupporter{
+public class WrongOrderConnectionTest extends EsperTestSupporter {
+	
+	@Test public void testSortByLastSwitchedEplStatement() throws NetflowEventException {
+		NetflowEvent testEvent1 = new NetflowEvent();
+		testEvent1.setLast_switched("2018-12-22T00:00:00.999Z");
+		testEvent1.setFirst_switched("2018-12-21T23:59:00.999Z");
+		NetflowEvent testEvent2 = new NetflowEvent();
+		testEvent2.setLast_switched("2018-12-22T00:00:20.999Z");
+		testEvent2.setFirst_switched("2018-12-21T23:59:10.999Z");
+		EPStatement stmt = admin.createEPL(NetflowEventEplExpressions.eplSortByLastSwitched());
+		AtomicReference<NetflowEventOrdered> neoReference = new AtomicReference<>();
+		stmt.addListener((newEvents, oldEvents) ->  {
+			NetflowEventOrdered neo = (NetflowEventOrdered) newEvents[0].getUnderlying();
+			neoReference.compareAndSet(null, neo);
+		});
+		runtime.sendEvent(new CurrentTimeEvent(TestUtil.getCurrentTimeEvent("2018-12-22T00:00:00.999Z"))); //+ 60 seconds to lastSwitched
+		runtime.sendEvent(testEvent2);
+		runtime.sendEvent(testEvent1);
+		runtime.sendEvent(new CurrentTimeEvent(TestUtil.getCurrentTimeEvent("2018-12-22T00:01:20.999Z")));
+		Assert.assertEquals(testEvent1.convertToOrderedType().toString(), neoReference.get().toString());
+	}
+	
 	
 	/*
 	 * reason of wrong order connection is that either client or server sends subsequent events event though the connection is finished or rejected;
