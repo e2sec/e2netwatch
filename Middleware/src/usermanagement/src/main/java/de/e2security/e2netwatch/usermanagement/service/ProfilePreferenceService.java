@@ -32,4 +32,11 @@ public interface ProfilePreferenceService {
 	 */
 	ProfilePreferenceDTO updateProfilePreferences(ProfilePreferenceUpdateDTO profilePreferences);
 	
+	/**
+	 * Update global profile preferences
+	 * 
+	 * @return updated profile preference data
+	 */
+	ProfilePreferenceDTO updateGlobal(ProfilePreferenceUpdateDTO profilePreferences);
+	
 }

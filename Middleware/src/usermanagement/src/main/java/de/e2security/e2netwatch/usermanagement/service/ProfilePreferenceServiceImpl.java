@@ -101,6 +101,24 @@ public class ProfilePreferenceServiceImpl implements ProfilePreferenceService {
 			return mapper.map(profilePreferences, ProfilePreferenceDTO.class);
 		}
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see de.e2security.e2netwatch.usermanagement.service.ProfilePreferenceService#updateGlobal(de.e2security.e2netwatch.usermanagement.dto.ProfilePreferenceUpdateDTO)
+	 */
+	@Override
+	@Transactional
+	public ProfilePreferenceDTO updateGlobal(ProfilePreferenceUpdateDTO profilePreferencesIn) {
+		
+		// Get global profile preference
+		
+		ProfilePreference globalProfilePreference = profilePreferenceRepository.findGlobal();
+		
+		// Update global profile preference
+		
+		globalProfilePreference.setTimezone(profilePreferencesIn.getTimezone());	
+		return mapper.map(globalProfilePreference, ProfilePreferenceDTO.class);
+	}
 	
 	
 }

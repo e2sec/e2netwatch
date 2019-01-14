@@ -176,4 +176,28 @@ public class ProfilePreferenceServiceImplTest {
 		assertEquals("Timezone not as expected", ppIn.getTimezone(), ppDto.getTimezone());
 	}
 	
+	/*
+	 * updateGlobal
+	 */
+	
+	@Test
+	public void updateGlobal_1() throws Exception {
+		
+		// User has profile preference
+		
+		ProfilePreferenceUpdateDTO ppIn = new ProfilePreferenceUpdateDTO();
+		ppIn.setId(null);
+		ppIn.setTimezone("my/updated/timezone");
+				
+		ProfilePreference ppGlobal = new ProfilePreference();
+		ppGlobal.setId(1);
+		ppGlobal.setTimezone("global/timezone");
+		
+		Mockito.when(profilePreferenceRepository.findGlobal()).thenReturn(ppGlobal);
+		
+		ProfilePreferenceDTO ppDto = profilePreferenceServiceImpl.updateGlobal(ppIn);
+		
+		assertEquals("Timezone not as expected", ppIn.getTimezone(), ppDto.getTimezone());
+	}
+	
 }

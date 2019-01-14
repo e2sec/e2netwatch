@@ -45,4 +45,13 @@ public class ProfilePreferenceController {
 		return manager.updateProfilePreferences(profilePreferences);
 	}
 	
+	/**
+	 * Update global profile preferences
+	 */
+	@RequestMapping(value = "/global", method = RequestMethod.PUT, headers = "Accept=application/json")
+	@ResponseStatus(value=HttpStatus.OK)
+	public ProfilePreferenceDTO updateGlobal(@RequestBody ProfilePreferenceUpdateDTO profilePreferences) {
+		return manager.updateGlobal(profilePreferences);
+	}
+	
 }
