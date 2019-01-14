@@ -6,6 +6,7 @@ import org.dozer.DozerBeanMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -16,6 +17,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import de.e2security.e2netwatch.usermanagement.dao.ProfilePreferenceRepository;
 import de.e2security.e2netwatch.usermanagement.dao.UserRepository;
 import de.e2security.e2netwatch.usermanagement.dto.ProfilePreferenceDTO;
+import de.e2security.e2netwatch.usermanagement.dto.ProfilePreferenceUpdateDTO;
 import de.e2security.e2netwatch.usermanagement.model.ProfilePreference;
 import de.e2security.e2netwatch.usermanagement.model.User;
 
@@ -77,7 +79,7 @@ public class ProfilePreferenceServiceImplTest {
 		pp.setTimezone("Europe/Berlin");
 		
 		User user = new User();
-		user.setUsername("username");
+		user.setUsername(username);
 		user.setProfilePreference(pp);
 		
 		Mockito.when(requestMiner.getCurrentUsername()).thenReturn(username);
@@ -103,7 +105,7 @@ public class ProfilePreferenceServiceImplTest {
 		ProfilePreferenceDTO globalProfilePreferenceDTO = mapper.map(globalpp, ProfilePreferenceDTO.class);	
 		
 		User user = new User();
-		user.setUsername("username");
+		user.setUsername(username);
 		user.setProfilePreference(null);
 		
 		Mockito.when(requestMiner.getCurrentUsername()).thenReturn(username);
@@ -113,6 +115,65 @@ public class ProfilePreferenceServiceImplTest {
 		ProfilePreferenceDTO ppDto = profilePreferenceServiceImpl.getForCurrent();
 		
 		assertEquals("Id of the profile preference not as expected", globalProfilePreferenceDTO.getId(), ppDto.getId());
+	}
+	
+	/*
+	 * updateProfilePreferences
+	 */
+	
+	@Test
+	public void updateProfilePreferences_1() {
+		
+		// User has profile preference
+		
+		ProfilePreferenceUpdateDTO ppIn = new ProfilePreferenceUpdateDTO();
+		ppIn.setId(null);
+		ppIn.setTimezone("my/updated/timezone");
+				
+		ProfilePreference pp = new ProfilePreference();
+		pp.setId(2);
+		pp.setTimezone("my/timezone");
+		
+		User user = new User();
+		user.setUsername("username");
+		user.setProfilePreference(pp);
+		
+		Mockito.when(requestMiner.getCurrentUsername()).thenReturn("username");
+		Mockito.when(userRepository.findByUsername("username")).thenReturn(user);
+		
+		ProfilePreferenceDTO ppDto = profilePreferenceServiceImpl.updateProfilePreferences(ppIn);
+		
+		assertEquals("Timezone not as expected", ppIn.getTimezone(), ppDto.getTimezone());
+	}
+	
+	@Test
+	public void updateProfilePreferences_2() {
+		
+		// User has no profile preference
+		
+		ProfilePreferenceUpdateDTO ppIn = new ProfilePreferenceUpdateDTO();
+		ppIn.setId(null);
+		ppIn.setTimezone("my/new/timezone");
+				
+		ProfilePreference pp = new ProfilePreference();
+		pp.setId(1);
+		pp.setTimezone("global/timezone");
+		
+		ProfilePreference ppOut = new ProfilePreference();
+		ppOut.setId(2);
+		ppOut.setTimezone("my/new/timezone");
+		
+		User user = new User();
+		user.setUsername("username");
+		user.setProfilePreference(null);
+		
+		Mockito.when(requestMiner.getCurrentUsername()).thenReturn("username");
+		Mockito.when(userRepository.findByUsername("username")).thenReturn(user);
+		Mockito.when(profilePreferenceRepository.save(ArgumentMatchers.any(ProfilePreference.class))).thenReturn(ppOut);
+		
+		ProfilePreferenceDTO ppDto = profilePreferenceServiceImpl.updateProfilePreferences(ppIn);
+		
+		assertEquals("Timezone not as expected", ppIn.getTimezone(), ppDto.getTimezone());
 	}
 	
 }

@@ -1,5 +1,7 @@
 package de.e2security.e2netwatch.usermanagement.service;
 
+import javax.transaction.Transactional;
+
 import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -7,6 +9,7 @@ import org.springframework.stereotype.Service;
 import de.e2security.e2netwatch.usermanagement.dao.ProfilePreferenceRepository;
 import de.e2security.e2netwatch.usermanagement.dao.UserRepository;
 import de.e2security.e2netwatch.usermanagement.dto.ProfilePreferenceDTO;
+import de.e2security.e2netwatch.usermanagement.dto.ProfilePreferenceUpdateDTO;
 import de.e2security.e2netwatch.usermanagement.model.ProfilePreference;
 import de.e2security.e2netwatch.usermanagement.model.User;
 
@@ -48,7 +51,7 @@ public class ProfilePreferenceServiceImpl implements ProfilePreferenceService {
 		
 		ProfilePreferenceDTO profilePreferenceDTO = null;
 		if (user.getProfilePreference() != null) {
-			profilePreferenceDTO = mapper.map(user.getProfilePreference(), ProfilePreferenceDTO.class);	
+			profilePreferenceDTO = mapper.map(user.getProfilePreference(), ProfilePreferenceDTO.class);
 		} else {
 			profilePreferenceDTO = getGlobal();
 		}
@@ -70,6 +73,33 @@ public class ProfilePreferenceServiceImpl implements ProfilePreferenceService {
 		
 		ProfilePreferenceDTO profilePreferenceDto = mapper.map(globalProfilePreference, ProfilePreferenceDTO.class);
 		return profilePreferenceDto;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see de.e2security.e2netwatch.usermanagement.service.ProfilePreferenceService#updateProfilePreferences(de.e2security.e2netwatch.usermanagement.dto.ProfilePreferenceUpdateDTO)
+	 */
+	@Override
+	@Transactional
+	public ProfilePreferenceDTO updateProfilePreferences(ProfilePreferenceUpdateDTO profilePreferencesIn) {
+		
+		// Get current user
+		
+		User user = userRepository.findByUsername(requestMiner.getCurrentUsername());
+		
+		// Check if new profile preferences need to be added or existing updated
+		
+		ProfilePreference profilePreferences = user.getProfilePreference();
+		if (profilePreferences == null) {
+			profilePreferences = new ProfilePreference();
+			profilePreferences.setUser(user);
+			profilePreferences.setTimezone(profilePreferencesIn.getTimezone());
+			ProfilePreference insertedProfilePreferences = profilePreferenceRepository.save(profilePreferences);
+			return mapper.map(insertedProfilePreferences, ProfilePreferenceDTO.class);
+		} else {
+			profilePreferences.setTimezone(profilePreferencesIn.getTimezone());
+			return mapper.map(profilePreferences, ProfilePreferenceDTO.class);
+		}
 	}
 	
 	
