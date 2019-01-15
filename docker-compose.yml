@@ -25,12 +25,13 @@ services:
   middleware:
     build:
       context: ./Middleware
+      dockerfile: Dockerfile-${mw_envTarget-stage}
     image: e2nw/middleware
     depends_on:
       - mysql
       - elasticsearch
     environment:
-      - envTarget=stage
+      - envTarget=${mw_envTarget-stage}
     ports:
       - "8080:8080"
     expose:
