@@ -1,11 +1,14 @@
 import axios from 'axios'
 import {helpers} from "../../helpers/helpers";
 
-
-/*
 const token = helpers.getToken();
 
-const apiClient = axios.create({
+
+const apiAuth = axios.create({
+    baseURL: 'http://localhost:8080/api/',
+});
+
+const apiActions = axios.create({
     baseURL: 'http://localhost:8080/api/',
     headers: {
         'Content-Type': 'application/json',
@@ -15,21 +18,19 @@ const apiClient = axios.create({
 
 
 export default {
+
     auth: {
-        userLogin(payload) {
-            return apiClient.post('/auth/login/', payload)
+        login(data) {
+            return apiAuth.post('/auth/login/', data)
         },
-        userAliveAndActive() {
-            return apiClient.post('/auth/check/')
+        logout() {
+            localStorage.clear();
         },
-        userLogout() {
-            return apiClient.post('/auth/logout/')
+    },
+
+    actions: {
+        userDetails(data) {
+            return apiActions.post('/auth/login/', data)
         },
-        generateResetToken(payload) {
-            return apiClient.post('/auth/generate_reset_token/', payload)
-        },
-        resetPassword(payload) {
-            return apiClient.post('/auth/reset_password/', payload)
-        }
     }
-};*/
+};

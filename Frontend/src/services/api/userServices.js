@@ -1,4 +1,5 @@
 import axios from 'axios';
+import api from './api';
 import moment from 'moment';
 import { helpers } from './../../helpers/helpers'
 
@@ -10,7 +11,7 @@ export const userServices = {
 
 function login (user) {
 
-    return axios.post('http://localhost:8080/api/auth/login', user)
+    return api.auth.login(user)
         .then(res => {
 
             const startTime = moment().format(),
@@ -51,7 +52,7 @@ function login (user) {
 
 
 function logout() {
-    localStorage.clear();
+    api.auth.logout();
 }
 
 function userDetails() {

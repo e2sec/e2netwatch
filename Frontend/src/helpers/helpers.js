@@ -7,6 +7,7 @@ export const helpers = {
     isTokenExpired,
     localStorageSave,
     getToken,
+    getUser,
 }
 
 
@@ -43,11 +44,9 @@ function localStorageSave(items) {
 }
 
 function getToken (){
+    return localStorage.getItem('token');
+}
 
-    if("user" in localStorage){
-        return localStorage.getItem('token');
-    } else {
-        return "";
-    }
-
+function getUser (){
+    return localStorage.getItem('user');
 }

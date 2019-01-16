@@ -13,7 +13,7 @@ class Profile extends Component {
     tabs = () => {
         const elems = document.querySelectorAll('.tabs');
         M.Tabs.init(elems)
-    }
+    };
 
     componentDidMount() {
         this.tabs();

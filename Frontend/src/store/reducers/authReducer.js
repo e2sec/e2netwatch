@@ -1,6 +1,7 @@
+import { helpers } from "../../helpers/helpers";
 
-const user = localStorage.getItem('user');
-const token = localStorage.getItem('token');
+const user = helpers.getUser();
+const token = helpers.getToken();
 
 const initState = token ? {
         loggingIn : false,
@@ -9,7 +10,7 @@ const initState = token ? {
     } : {};
 
 
-const authReducer = ( state = initState, action ) => {
+const authReducer = (state = initState, action ) => {
     switch(action.type){
         case 'LOGIN_REQUEST':
             return {
