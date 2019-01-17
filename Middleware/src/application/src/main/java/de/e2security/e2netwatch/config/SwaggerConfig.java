@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
 
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -19,10 +20,9 @@ public class SwaggerConfig {
 	@Bean
 	public Docket mainConfig() {
 		return new Docket(DocumentationType.SWAGGER_2)
-				.select().apis(RequestHandlerSelectors.any())
-				.paths(PathSelectors.ant("/um/**"))
+				.select().apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
+				.paths(PathSelectors.ant("/**"))
 				.build()
-				.pathMapping("/")
 				.directModelSubstitute(LocalDate.class, String.class)
 				.genericModelSubstitutes(ResponseEntity.class);
 	}
