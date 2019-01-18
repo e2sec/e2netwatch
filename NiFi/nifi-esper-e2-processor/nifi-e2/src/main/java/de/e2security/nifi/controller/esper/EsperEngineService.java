@@ -92,12 +92,12 @@ public class EsperEngineService extends AbstractControllerService implements Esp
         return properties;
     }
     
-    private EPServiceProvider engine;
+    private volatile EPServiceProvider engine;
 
     @OnEnabled
     public void onEnabled(final ConfigurationContext context) throws InitializationException {
     	//*** ESPER CONFIGURATION ***\\
-    	Configuration config = new Configuration();
+    	final Configuration config = new Configuration();
     	config.addPlugInPatternObserver("timer", "event", "de.e2security.nifi.controller.esper.observer.EventTimerObserverFactory");
     	
     	if (context.getProperty(ENABLE_ENGINE_METRIC).asBoolean().booleanValue() 

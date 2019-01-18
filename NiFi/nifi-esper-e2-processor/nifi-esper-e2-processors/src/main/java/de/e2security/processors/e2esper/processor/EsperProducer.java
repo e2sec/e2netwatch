@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.nifi.annotation.documentation.CapabilityDescription;
 import org.apache.nifi.annotation.documentation.Tags;
@@ -57,7 +56,7 @@ public class EsperProducer extends AbstractSessionFactoryProcessor {
 			.description("esper event matched epl statement on listener")
 			.build();
 	
-	private final AtomicReference<EsperListener> successListener = new AtomicReference<>();
+	private volatile EsperListener successListener;
 	
 	@OnStopped public void stop(final ProcessContext context) {}
 	
@@ -71,7 +70,7 @@ public class EsperProducer extends AbstractSessionFactoryProcessor {
 		final String stmtName = context.getProperty(EPSTMT_NAME).getValue();
 		
 		/*
-		 * if producer and consumer haven been started simultaneously or 
+		 * if producer and consumer haven been started simultaneously (as pair in Process Group) or 
 		 * producer has been started before consumer => wait for EPStatement initilization 
 		 */
 		EPStatement stmt = null;
@@ -79,15 +78,15 @@ public class EsperProducer extends AbstractSessionFactoryProcessor {
 			stmt = esperEngine.getEPAdministrator().getStatement(stmtName);
 			getLogger().error(String.format("Searching for EPStatement called [%s]", stmtName));
 		}
-		successListener.compareAndSet(null, new EsperListener(getLogger(),SUCCEEDED_REL));
-		stmt.addListener(successListener.get());
+		getLogger().info(String.format("[%s] EPStatement has been found", stmtName));
+		successListener = new EsperListener(getLogger(),SUCCEEDED_REL);
+		stmt.addListener(successListener);
 	}
 
 	@Override
 	public void onTrigger(ProcessContext context, ProcessSessionFactory sessionFactory) throws ProcessException {
-		successListener.get().setSession(sessionFactory);
+		successListener.setSession(sessionFactory);
 	}
-	
 	
 	private List<PropertyDescriptor> descriptors;
 	

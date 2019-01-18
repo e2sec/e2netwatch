@@ -55,6 +55,7 @@ import de.e2security.processors.e2esper.utilities.UnmatchedEventListener;
 @ReadsAttributes({@ReadsAttribute(attribute="", description="")})
 @WritesAttributes({@WritesAttribute(attribute="", description="")})
 @SuppressWarnings("unused")
+@Deprecated
 public class UnwantedProtocolProcessor extends AbstractProcessor {
 
     public static final PropertyDescriptor UNWANTED_TCP_PORTS_LIST = new PropertyDescriptor.Builder()

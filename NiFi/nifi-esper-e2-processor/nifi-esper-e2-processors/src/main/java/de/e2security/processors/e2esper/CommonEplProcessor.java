@@ -52,6 +52,7 @@ import de.e2security.processors.e2esper.utilities.UnmatchedEventListener;
 @SeeAlso({})
 @ReadsAttributes({@ReadsAttribute(attribute="", description="")})
 @WritesAttributes({@WritesAttribute(attribute="", description="")})
+@Deprecated
 public class CommonEplProcessor extends AbstractProcessor {
 
 	public static final Relationship SUCCEEDED_EVENT = new Relationship.Builder()

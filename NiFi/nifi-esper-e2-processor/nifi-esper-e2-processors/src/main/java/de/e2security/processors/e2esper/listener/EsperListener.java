@@ -18,45 +18,44 @@ import de.e2security.processors.e2esper.utilities.SupportUtility;
 
 public class EsperListener implements UpdateListener {
 
-	private ComponentLog logger;
-	private ProcessSessionFactory sessionFactory;
-	private Relationship rel;
+	private final ComponentLog logger;
+	private AtomicReference<ProcessSessionFactory> sessionFactory;
+	private final Relationship rel;
 
 	public EsperListener(ComponentLog logger, Relationship rel) {
 		this.logger = logger;
 		this.rel = rel;
+		this.sessionFactory = new AtomicReference<>();
 	} 
 
 	@Override
 	public void update(EventBean[] newEvents, EventBean[] oldEvents) {
-		ProcessSession session = this.sessionFactory.createSession();
-		FlowFile file = session.create();
-		EventBean event = newEvents[0];
+		final ProcessSession session = this.sessionFactory.get().createSession();
+		final AtomicReference<FlowFile> file = new AtomicReference<>(session.create());
+		final EventBean event = newEvents[0];
 		final AtomicReference<String> result = new AtomicReference<>();
 		if (event instanceof MapEventBean) {
-			Map<?,?> eventAsMap = (Map<?,?>) event.getUnderlying();
-			 result.set(SupportUtility.transformEventMapToJson(eventAsMap));
+			final Map<?,?> eventAsMap = (Map<?,?>) event.getUnderlying();
+			result.set(SupportUtility.transformEventMapToJson(eventAsMap));
 			logger.debug("[" + result.get() + "]");	
 		} else if (event.getUnderlying() instanceof MetricEvent) {
-			String json = SupportUtility.transformMetricEventToJson((MetricEvent) event.getUnderlying());
+			final String json = SupportUtility.transformMetricEventToJson((MetricEvent) event.getUnderlying());
 			result.set(json);
 		}
 		if (result.get() != null) {
-			file = session.write(file, (outStream) -> {
+			file.set(session.write(file.get(), (outStream) -> {
 				outStream.write(result.get().getBytes());
-			});
-			session.getProvenanceReporter().route(file, rel);
-			session.transfer(file, rel);
+			}));
+			session.getProvenanceReporter().route(file.get(), rel);
+			session.transfer(file.get(), rel);
 			session.commit();
 		} else {
-			session.remove(file);
+			session.remove(file.get());
 		}
 	}
 
-	public void setSession(ProcessSessionFactory sessioFactory) {
-		if (this.sessionFactory == null) {
-			this.sessionFactory = sessioFactory;
-		}
+	public void setSession(ProcessSessionFactory sessionFactory) {
+		this.sessionFactory.compareAndSet(null, sessionFactory);
 	}
 
 }
