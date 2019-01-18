@@ -3,7 +3,6 @@ package de.e2security.processors.e2esper;
 import static de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor.EPL_STATEMENT;
 import static de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor.ESPER_ENGINE;
 import static de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor.EVENT_SCHEMA;
-import static de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor.INBOUND_EVENT_NAME;
 import static de.e2security.processors.e2esper.utilities.UnwantedProtocolProcessorHelper.concatenatePorts;
 
 import java.io.IOException;
@@ -175,7 +174,7 @@ public class UnwantedProtocolProcessor extends AbstractProcessor {
 	        		default:
 	        			break;
 	        		}
-	        		runtime.sendEvent(eventMap,context.getProperty(INBOUND_EVENT_NAME).getValue());
+	        		runtime.sendEvent(eventMap, SupportUtility.retrieveClassNameFromSchemaEPS(context.getProperty(EPL_STATEMENT).getValue()));
 	        	} catch (Exception ex) {
 	        		ex.printStackTrace();
 	        	}

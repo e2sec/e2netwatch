@@ -3,7 +3,6 @@ package de.e2security.processors.e2esper.processor;
 import static de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor.EPL_STATEMENT;
 import static de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor.ESPER_ENGINE;
 import static de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor.EVENT_SCHEMA;
-import static de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor.INBOUND_EVENT_NAME;
 import static de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor.getDescriptors;
 
 import java.io.IOException;
@@ -37,21 +36,23 @@ import de.e2security.processors.e2esper.utilities.SupportUtility;
 @CapabilityDescription("Sending incoming events to esper engine)")
 public class EsperConsumer extends AbstractProcessor {
 	
-	private EPServiceProvider esperEngine;
+	private volatile EPServiceProvider esperEngine;
 	
 	@OnStopped public void stop(final ProcessContext context) {}
+	
+	final private AtomicReference<String> eventName = new AtomicReference<String>();
 	
 	@OnScheduled public void start(final ProcessContext context) {
 		final EsperService esperService = context.getProperty(ESPER_ENGINE).asControllerService(EsperService.class);
 		esperEngine = esperService.execute(); //instantiated on controller's ENABLEMENT. execute() returns the shared instance back; 
 		esperEngine.getEPAdministrator().createEPL(context.getProperty(EVENT_SCHEMA).getValue());
 		esperEngine.getEPAdministrator().createEPL(context.getProperty(EPL_STATEMENT).getValue());
+		eventName.compareAndSet(null, SupportUtility.retrieveClassNameFromSchemaEPS(context.getProperty(EVENT_SCHEMA).getValue()));
 	}
 
 	@Override public void onTrigger(ProcessContext context, ProcessSession session) throws ProcessException {
 		final FlowFile flowFile = session.get();
 		if (flowFile == null) { return ; }
-		final String eventName = context.getProperty(INBOUND_EVENT_NAME).getValue();
 		
 		final AtomicReference<String> input = new AtomicReference<>();
 		session.read(flowFile, (inputStream) -> {
@@ -61,7 +62,7 @@ public class EsperConsumer extends AbstractProcessor {
 				ex.printStackTrace();
 			}
 		});
-		try { esperEngine.getEPRuntime().sendEvent(SupportUtility.transformEventToMap(input.get()), eventName);
+		try { esperEngine.getEPRuntime().sendEvent(SupportUtility.transformEventToMap(input.get()), eventName.get());
 		} catch (IOException e) { e.printStackTrace(); }
 		
 		session.remove(flowFile);

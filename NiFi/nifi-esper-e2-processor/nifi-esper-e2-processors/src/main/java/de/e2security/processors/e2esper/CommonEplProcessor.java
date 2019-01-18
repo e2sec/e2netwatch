@@ -3,7 +3,6 @@ package de.e2security.processors.e2esper;
 import static de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor.EPL_STATEMENT;
 import static de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor.ESPER_ENGINE;
 import static de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor.EVENT_SCHEMA;
-import static de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor.INBOUND_EVENT_NAME;
 import static de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor.getDescriptors;
 import static de.e2security.processors.e2esper.utilities.EsperProcessorLogger.failure;
 import static de.e2security.processors.e2esper.utilities.EsperProcessorLogger.success;
@@ -116,7 +115,7 @@ public class CommonEplProcessor extends AbstractProcessor {
 		eplIn.addListener(sel);
 		UnmatchedEventListener fel = new UnmatchedEventListener(getLogger(),UNMATCHED_EVENT,finalResult);
 		runtime.setUnmatchedListener(fel);
-		final String _INBOUND_EVENT_NAME = context.getProperty(INBOUND_EVENT_NAME).getValue(); 
+		final String _INBOUND_EVENT_NAME = SupportUtility.retrieveClassNameFromSchemaEPS(context.getProperty(EPL_STATEMENT).getValue()); 
 		session.read(flowFile, (inputStream) -> {
 			String eventJson = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
 			try {

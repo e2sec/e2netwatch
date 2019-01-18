@@ -1,10 +1,10 @@
 package nw101;
 
-import java.time.Instant;
 import java.util.List;
 
 import org.apache.nifi.processor.AbstractProcessor;
 import org.apache.nifi.util.MockFlowFile;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.gson.Gson;
@@ -17,6 +17,7 @@ import de.e2security.processors.e2esper.utilities.ProcessorTestSupporter;
  * testing the case neither Unmatched nor Succeeded events has been triggered
  */
 @SuppressWarnings("unused")
+@Ignore
 public class EplPatternProcessingTest extends ProcessorTestSupporter {
 
 	Gson gson = new Gson();
@@ -59,7 +60,6 @@ public class EplPatternProcessingTest extends ProcessorTestSupporter {
 				+ "target_user_name_hash string, "
 				+ "event_id int, "
 				+ "hostname_domain string)");
-		runner.setProperty(CommonPropertyDescriptor.INBOUND_EVENT_NAME, "T_50005_0008_01_02");
 		runner.setProperty(CommonPropertyDescriptor.ESPER_ENGINE, "EsperEngineService");
 	}
 

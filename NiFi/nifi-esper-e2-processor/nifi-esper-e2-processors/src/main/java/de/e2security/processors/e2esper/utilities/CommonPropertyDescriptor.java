@@ -24,19 +24,11 @@ public class CommonPropertyDescriptor {
 			.required(true)
 			.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
 			.build();
-	
-	public static final PropertyDescriptor INBOUND_EVENT_NAME = new PropertyDescriptor.Builder()
-			.name("InboundEventName")
-			.displayName("InboundEventName")
-			.description("name of incoming event against which epl statement should be evaluated")
-			.required(true)
-			.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
-			.build();
 
 	public static final PropertyDescriptor EVENT_SCHEMA = new PropertyDescriptor.Builder()
 			.name("InputEventSchema")
 			.displayName("InputEventSchema")
-			.description("define schema with EPL as string. In case of complex event schema declaration divide multiple strings with '|'")
+			.description("define schema with EPL as string. 'create schema <NAME> as ...' Keywords 'create' 'schema' 'as' are case-sensitive")
 			.required(true)
 			.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
 			.build();
@@ -45,7 +37,6 @@ public class CommonPropertyDescriptor {
 		final List<PropertyDescriptor> descriptors = new ArrayList<PropertyDescriptor>();
 		descriptors.add(EVENT_SCHEMA);
 		descriptors.add(EPL_STATEMENT);
-		descriptors.add(INBOUND_EVENT_NAME);
 		descriptors.add(ESPER_ENGINE);
 		return descriptors;
 	}

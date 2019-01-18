@@ -26,6 +26,8 @@ public abstract class ProcessorTestSupporter {
 			runner.addControllerService("EsperEngineService", controller);
 			runner.enableControllerService(controller);
 		} catch (InitializationException e) {
+			runner.setProperty(controller, EsperEngineService.ENABLE_STATEMENT_METRIC, "true");
+			runner.setProperty(controller, EsperEngineService.ENABLE_ENGINE_METRIC, "true");
 			e.printStackTrace();
 		}
 	}

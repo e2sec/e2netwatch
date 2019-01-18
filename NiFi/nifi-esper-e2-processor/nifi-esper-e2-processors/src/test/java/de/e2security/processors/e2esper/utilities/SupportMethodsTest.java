@@ -1,13 +1,26 @@
 package de.e2security.processors.e2esper.utilities;
 
-import org.junit.Test;
+import static de.e2security.processors.e2esper.utilities.UnwantedProtocolProcessorHelper.concatenatePorts;
+import static de.e2security.processors.e2esper.utilities.UnwantedProtocolProcessorHelper.concatenator;
 
-import de.e2security.processors.e2esper.UnwantedProtocolProcessor;
-import static de.e2security.processors.e2esper.utilities.UnwantedProtocolProcessorHelper.*;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.Test;
 
 import junit.framework.Assert;
 
 public class SupportMethodsTest {
+	
+	@Test public void retriveClassNameTest() {
+		String eventName = SupportUtility.retrieveClassNameFromSchemaEPS("create schema T_50005_0008_01_02 as (\"\n" + 
+				"				+ \"tilde_event_uuid string, \"\n" + 
+				"				+ \"cep_delta long, \"\n" + 
+				"				+ \"host_hash string, \"\n" + 
+				"				+ \"target_user_name string, \"\n" + 
+				"				+ \"target_user_name_hash string, \"\n" + 
+				"				+ \"event_id int, \"\n" + 
+				"				+ \"hostname_domain string)");
+		Assert.assertEquals("T_50005_0008_01_02", eventName);
+	}
 
 	@Test public void testPortsConcatenation() {
 		String actual = concatenator("tcp", "21,23,80");

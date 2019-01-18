@@ -26,7 +26,7 @@ public class EsperEngineService extends AbstractControllerService implements Esp
 	public static final PropertyDescriptor ENABLE_INTERNAL_TIMING = new PropertyDescriptor.Builder()
 			.name("EnableInternalTiming")
 			.displayName("Enable Internal Timing")
-			.description("activate internal timing instead of external one")
+			.description("activate internal timing instead of external one. Set to 'false' if historical data should be processed")
 			.required(true)
 			.defaultValue("true")
 			.addValidator(StandardValidators.BOOLEAN_VALIDATOR)
@@ -37,7 +37,7 @@ public class EsperEngineService extends AbstractControllerService implements Esp
 			.displayName("Enable Engine Metric")
 			.description("activate default listeners esper engine metric")
 			.required(true)
-			.defaultValue("true")
+			.defaultValue("false")
 			.addValidator(StandardValidators.BOOLEAN_VALIDATOR)
 			.build();
 	
@@ -46,7 +46,7 @@ public class EsperEngineService extends AbstractControllerService implements Esp
 			.displayName("Enable Stmt Metric")
 			.description("activate default listeners for esper statement metric")
 			.required(true)
-			.defaultValue("true")
+			.defaultValue("false")
 			.addValidator(StandardValidators.BOOLEAN_VALIDATOR)
 			.build();
 	
@@ -55,7 +55,7 @@ public class EsperEngineService extends AbstractControllerService implements Esp
 			.displayName("Enable JMX Metrics")
 			.description("activate default listener for jmx metrics for esper engine")
 			.required(true)
-			.defaultValue("true")
+			.defaultValue("false")
 			.addValidator(StandardValidators.BOOLEAN_VALIDATOR)
 			.build();
 
@@ -64,7 +64,7 @@ public class EsperEngineService extends AbstractControllerService implements Esp
 			.displayName("Enable Debug Level")
 			.description("set engine's log level to DEBUG")
 			.required(true)
-			.defaultValue("true")
+			.defaultValue("false")
 			.addValidator(StandardValidators.BOOLEAN_VALIDATOR)
 			.build();
 	

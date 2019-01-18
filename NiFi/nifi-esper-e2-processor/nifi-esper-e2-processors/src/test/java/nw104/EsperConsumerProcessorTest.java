@@ -7,12 +7,14 @@ import org.junit.Test;
 
 import com.google.gson.Gson;
 
+import de.e2security.nifi.controller.esper.EsperEngineService;
 import de.e2security.processors.e2esper.processor.EsperConsumer;
 import de.e2security.processors.e2esper.processor.EsperProducer;
 import de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor;
 import de.e2security.processors.e2esper.utilities.ProcessorTestSupporter;
 import nw101.EplPatternProcessingTest.TestEvent;
 
+@SuppressWarnings("static-access")
 public class EsperConsumerProcessorTest extends ProcessorTestSupporter {
 
 	@Override
@@ -45,7 +47,6 @@ public class EsperConsumerProcessorTest extends ProcessorTestSupporter {
 				+ "target_user_name_hash string, "
 				+ "event_id int, "
 				+ "hostname_domain string)");
-		runner.setProperty(CommonPropertyDescriptor.INBOUND_EVENT_NAME, "T_50005_0008_01_02");
 		runner.setProperty(CommonPropertyDescriptor.ESPER_ENGINE, "EsperEngineService");
 		
 		TestEvent event1 = event0.clone();
@@ -69,6 +70,7 @@ public class EsperConsumerProcessorTest extends ProcessorTestSupporter {
 		//initialize monitor
 		TestRunner runnerMonitor = runners.newTestRunner(new EsperProducer());
 		runnerMonitor.addControllerService("EsperEngineService", controller);
+		runnerMonitor.setProperty(controller, EsperEngineService.ENABLE_STATEMENT_METRIC, "true");
 		runnerMonitor.setProperty(EsperProducer.ESPER_ENGINE, "EsperEngineService");
 		runnerMonitor.setProperty(EsperProducer.EPSTMT_NAME, "StmtMetric");
 		runnerMonitor.enableControllerService(controller);

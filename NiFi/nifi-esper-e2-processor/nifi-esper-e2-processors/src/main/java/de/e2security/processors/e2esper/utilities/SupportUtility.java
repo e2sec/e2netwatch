@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.nifi.components.PropertyValue;
 import org.apache.nifi.logging.ComponentLog;
 
 import com.espertech.esper.client.EPAdministrator;
@@ -47,6 +49,11 @@ public final class SupportUtility {
 			EngineMetric engineMetric = (EngineMetric) underlying;
 		}
 		return json;
+	}
+
+	public static String retrieveClassNameFromSchemaEPS(String eventSchema) {
+		String eventName = StringUtils.substringBetween(eventSchema, "create schema ", " as");
+		return eventName;
 	}
 	
 }

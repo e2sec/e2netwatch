@@ -21,6 +21,7 @@ import de.e2security.processors.e2esper.processor.EsperProducer;
 import de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor;
 import nw101.EplPatternProcessingTest.TestEvent;
 
+@SuppressWarnings("static-access")
 public class EsperProducerProcessorTest {
 	
 	TestRunners runners = new TestRunners();
@@ -80,7 +81,6 @@ public class EsperProducerProcessorTest {
 				+ "target_user_name_hash string, "
 				+ "event_id int, "
 				+ "hostname_domain string)");
-		runnerConsumer.setProperty(CommonPropertyDescriptor.INBOUND_EVENT_NAME, "T_50005_0008_01_02");
 		runnerConsumer.setProperty(CommonPropertyDescriptor.ESPER_ENGINE, "EsperEngineService");
 
 		runnerProducer.setProperty(EsperProducer.ESPER_ENGINE, "EsperEngineService");
