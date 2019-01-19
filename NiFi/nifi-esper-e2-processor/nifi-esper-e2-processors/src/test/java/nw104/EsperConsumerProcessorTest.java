@@ -1,7 +1,10 @@
 package nw104;
 
+import java.util.List;
+
 import org.apache.nifi.processor.AbstractProcessor;
 import org.apache.nifi.reporting.InitializationException;
+import org.apache.nifi.util.MockFlowFile;
 import org.apache.nifi.util.TestRunner;
 import org.junit.Test;
 

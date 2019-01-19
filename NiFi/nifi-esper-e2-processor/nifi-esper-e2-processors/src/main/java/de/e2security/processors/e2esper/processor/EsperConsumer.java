@@ -30,7 +30,9 @@ import org.apache.nifi.processor.exception.ProcessException;
 import com.espertech.esper.client.EPServiceProvider;
 
 import de.e2security.nifi.controller.esper.EsperService;
+import de.e2security.processors.e2esper.utilities.EventTransformer;
 import de.e2security.processors.e2esper.utilities.SupportUtility;
+import de.e2security.processors.e2esper.utilities.TransformerWithMetrics;
 
 @Tags({"E2EsperProcessor"})
 @CapabilityDescription("Sending incoming events to esper engine)")
@@ -53,8 +55,8 @@ public class EsperConsumer extends AbstractProcessor {
 	@Override public void onTrigger(ProcessContext context, ProcessSession session) throws ProcessException {
 		final FlowFile flowFile = session.get();
 		if (flowFile == null) { return ; }
-		
 		final AtomicReference<String> input = new AtomicReference<>();
+		//send event with EVENT_NAME_ATTR
 		session.read(flowFile, (inputStream) -> {
 			try {
 				input.set(IOUtils.toString(inputStream, StandardCharsets.UTF_8)); 
@@ -62,7 +64,8 @@ public class EsperConsumer extends AbstractProcessor {
 				ex.printStackTrace();
 			}
 		});
-		try { esperEngine.getEPRuntime().sendEvent(SupportUtility.transformEventToMap(input.get()), eventName.get());
+		EventTransformer transformer = new TransformerWithMetrics(flowFile);
+		try { esperEngine.getEPRuntime().sendEvent(transformer.transform(input.get()), eventName.get());
 		} catch (IOException e) { e.printStackTrace(); }
 		
 		session.remove(flowFile);

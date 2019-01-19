@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.nifi.components.PropertyValue;
 import org.apache.nifi.logging.ComponentLog;
 
 import com.espertech.esper.client.EPAdministrator;
@@ -22,6 +21,7 @@ public final class SupportUtility {
 	
 	private static Gson gson = new Gson();
 	
+	@Deprecated
 	public static Map<String,Object> transformEventToMap(String eventAsJson) throws IOException {
 		Map<String,Object> eventAsMap = new HashMap<>();
 		ObjectMapper mapper = new ObjectMapper();

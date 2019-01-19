@@ -21,6 +21,7 @@ public abstract class ProcessorTestSupporter {
 	@Before public void init() {
 		controller = new EsperEngineService();
 		runner = runners.newTestRunner(initializeProcessor());
+		runner.setValidateExpressionUsage(false);
 		//adding controller 
 		try {
 			runner.addControllerService("EsperEngineService", controller);

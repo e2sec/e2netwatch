@@ -47,6 +47,7 @@ public class EsperProducerProcessorTest {
 	@Test public void generaEsperProducerRunTest() throws CloneNotSupportedException {
 		
 			runnerConsumer = runners.newTestRunner(new EsperConsumer());
+			runnerConsumer.setValidateExpressionUsage(false);
 			runnerProducer = runners.newTestRunner(new EsperProducer());
 			testRunners = new ArrayList<>();
 			testRunners.add(runnerConsumer);
