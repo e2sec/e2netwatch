@@ -19,7 +19,7 @@ public class TransformerWithMetrics implements EventTransformer {
 
 	@Override
 	public Map<String, Object> transform(final String eventAsJson) throws IOException {
-		final Map<String,String> ffAttributesAsMap = ff.getAttributes();
+		final Map<String,String> ffAttributesAsMap = ff.getAttributes(); 
 		final Map<String,Object> eventAsMap = new HashMap<>();
 		final ObjectMapper mapper = new ObjectMapper();
 		eventAsMap.putAll(mapper.readValue(eventAsJson, new TypeReference<Map<String,Object>>(){}));
@@ -28,6 +28,7 @@ public class TransformerWithMetrics implements EventTransformer {
 		if (numberOfDuplicates > 0) 
 			throw new RuntimeException("some args of event schema overlaps with the flow file attributes...");
 		eventAsMap.putAll(ffAttributesAsMap);
+		eventAsMap.put(CommonSchema.EVENT.flowFileAttributes.toString(),ffAttributesAsMap);
 		return eventAsMap;
 	}
 

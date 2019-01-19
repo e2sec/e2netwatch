@@ -36,10 +36,9 @@ public class EsperProducerProcessorTest {
 			runner.clearProperties();
 			runner.clearProvenanceEvents();
 			runner.clearTransferState();
-			((EsperEngineService) controller).shutdown();
-			runner.disableControllerService(controller);
 			runner.shutdown();
 		});
+		((EsperEngineService) controller).shutdown();
 	}
 	
 	Gson gson = new Gson();

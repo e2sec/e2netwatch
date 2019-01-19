@@ -10,7 +10,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -48,8 +47,10 @@ public class EsperConsumer extends AbstractProcessor {
 	@OnScheduled public void start(final ProcessContext context) {
 		final EsperService esperService = context.getProperty(ESPER_ENGINE).asControllerService(EsperService.class);
 		esperEngine = esperService.execute(); //instantiated on controller's ENABLEMENT. execute() returns the shared instance back; 
-		esperEngine.getEPAdministrator().createEPL(context.getProperty(EVENT_SCHEMA).getValue());
-		esperEngine.getEPAdministrator().createEPL(context.getProperty(EPL_STATEMENT).getValue());
+		String modifiedEventSchema = SupportUtility.modifyUserDefinedSchema(context.getProperty(EVENT_SCHEMA).getValue());
+		esperEngine.getEPAdministrator().createEPL(modifiedEventSchema);
+		String modifiedEPStatement = SupportUtility.modifyUserDefinedEPStatement(context.getProperty(EPL_STATEMENT).getValue());
+		esperEngine.getEPAdministrator().createEPL(modifiedEPStatement);
 		eventName.compareAndSet(null, SupportUtility.retrieveClassNameFromSchemaEPS(context.getProperty(EVENT_SCHEMA).getValue()));
 	}
 
@@ -65,9 +66,8 @@ public class EsperConsumer extends AbstractProcessor {
 				ex.printStackTrace();
 			}
 		});
-		try { esperEngine.getEPRuntime().sendEvent(
-				SupportUtility.transformEventToMap(input.get(),esper_lb.get()), 
-				eventName.get());
+		EventTransformer transformer = new TransformerWithMetrics(flowFile);
+		try { esperEngine.getEPRuntime().sendEvent(transformer.transform(input.get()), eventName.get());
 		} catch (IOException e) { e.printStackTrace(); }
 		
 		session.remove(flowFile);

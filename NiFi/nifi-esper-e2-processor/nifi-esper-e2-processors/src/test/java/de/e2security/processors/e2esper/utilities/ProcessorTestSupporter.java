@@ -12,9 +12,9 @@ import de.e2security.nifi.controller.esper.EsperEngineService;
 
 public abstract class ProcessorTestSupporter {
 	
-	public TestRunners runners = new TestRunners();
-	public ControllerService controller;
-	public TestRunner runner;
+	public volatile TestRunners runners = new TestRunners();
+	public volatile ControllerService controller;
+	public volatile TestRunner runner;
 	
 	public abstract AbstractSessionFactoryProcessor initializeProcessor();
 	
@@ -37,7 +37,6 @@ public abstract class ProcessorTestSupporter {
 		runner.clearProperties();
 		runner.clearProvenanceEvents();
 		runner.clearTransferState();
-		((EsperEngineService) controller).shutdown();
 		runner.disableControllerService(controller);
 		runner.shutdown();
 	}

@@ -127,6 +127,8 @@ public class EsperEngineService extends AbstractControllerService implements Esp
 
     @OnDisabled
     public void shutdown() {
+    	engine.removeAllServiceStateListeners();
+    	engine.removeAllStatementStateListeners();
     	engine.destroy();
     }
 

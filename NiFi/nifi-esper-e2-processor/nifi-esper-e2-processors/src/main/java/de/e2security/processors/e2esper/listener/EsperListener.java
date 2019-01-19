@@ -1,6 +1,8 @@
 package de.e2security.processors.e2esper.listener;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.nifi.flowfile.FlowFile;
@@ -14,6 +16,7 @@ import com.espertech.esper.client.UpdateListener;
 import com.espertech.esper.client.metric.MetricEvent;
 import com.espertech.esper.event.map.MapEventBean;
 
+import de.e2security.processors.e2esper.utilities.CommonSchema;
 import de.e2security.processors.e2esper.utilities.SupportUtility;
 
 public class EsperListener implements UpdateListener {
@@ -36,11 +39,17 @@ public class EsperListener implements UpdateListener {
 		final AtomicReference<String> result = new AtomicReference<>();
 		if (event instanceof MapEventBean) {
 			final Map<?,?> eventAsMap = (Map<?,?>) event.getUnderlying();
-			if (eventAsMap.containsKey("esper_lb")) {
-				session.putAttribute(file.get(), "esper_lb", (String) eventAsMap.get("esper_lb")); 
+			//apply flow file attributes sent by EsperConsumer to session/current FF 
+			{
+				Optional<Map<String,String>> attrEvent = Optional.ofNullable((Map<String,String>) eventAsMap.get(CommonSchema.EVENT.flowFileAttributes.toString()));
+				attrEvent.ifPresent((map) -> session.putAllAttributes(file.get(), map));
+				logger.debug(String.format("[%s]:[%s]", CommonSchema.EVENT.flowFileAttributes.toString(),
+										  SupportUtility.transformEventMapToJson(attrEvent.orElse(new HashMap<String,String>()))));
 			}
 			result.set(SupportUtility.transformEventMapToJson(eventAsMap));
-			logger.debug("[" + result.get() + "]");	
+			logger.debug("[" + result.get() + "]");
+			/* since EsperListener to be used also for fetching Esper Metrics
+			 * TODO: two independent listener implementations of one interface to be used */
 		} else if (event.getUnderlying() instanceof MetricEvent) {
 			final String json = SupportUtility.transformMetricEventToJson((MetricEvent) event.getUnderlying());
 			result.set(json);
