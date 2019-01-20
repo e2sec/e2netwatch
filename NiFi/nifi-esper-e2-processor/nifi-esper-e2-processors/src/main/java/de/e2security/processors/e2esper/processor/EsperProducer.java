@@ -11,6 +11,7 @@ import org.apache.nifi.annotation.documentation.Tags;
 import org.apache.nifi.annotation.lifecycle.OnScheduled;
 import org.apache.nifi.annotation.lifecycle.OnStopped;
 import org.apache.nifi.components.PropertyDescriptor;
+import org.apache.nifi.expression.ExpressionLanguageScope;
 import org.apache.nifi.processor.AbstractSessionFactoryProcessor;
 import org.apache.nifi.processor.ProcessContext;
 import org.apache.nifi.processor.ProcessSessionFactory;
@@ -41,6 +42,7 @@ public class EsperProducer extends AbstractSessionFactoryProcessor {
 			.displayName("EPStatement_Name")
 			.description("name of EPStatement the result to be produced of")
 			.required(true)
+			.expressionLanguageSupported(ExpressionLanguageScope.VARIABLE_REGISTRY)
 			.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
 			.build();
 	

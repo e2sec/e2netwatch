@@ -72,6 +72,7 @@ public class EsperConsumerProcessorTest extends ProcessorTestSupporter {
 		
 		//initialize monitor
 		TestRunner runnerMonitor = runners.newTestRunner(new EsperProducer());
+		runnerMonitor.setValidateExpressionUsage(false);
 		runnerMonitor.addControllerService("EsperEngineService", controller);
 		runnerMonitor.setProperty(controller, EsperEngineService.ENABLE_STATEMENT_METRIC, "true");
 		runnerMonitor.setProperty(EsperProducer.ESPER_ENGINE, "EsperEngineService");

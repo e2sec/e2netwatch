@@ -32,6 +32,7 @@ public class EsperProducerProcessorTest {
 
 	@After public void destroy() throws InterruptedException {
 		testRunners.forEach(runner -> {
+			runner.setValidateExpressionUsage(false);
 			runner.clearProperties();
 			runner.clearProvenanceEvents();
 			runner.clearTransferState();
@@ -56,6 +57,7 @@ public class EsperProducerProcessorTest {
 			testRunners.forEach(runner -> {
 				try {
 					runner.addControllerService("EsperEngineService", controller);
+					runner.setValidateExpressionUsage(false);
 				} catch (InitializationException e) {
 					e.printStackTrace();
 				}

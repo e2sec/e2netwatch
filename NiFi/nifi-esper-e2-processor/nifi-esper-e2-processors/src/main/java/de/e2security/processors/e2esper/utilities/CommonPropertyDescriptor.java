@@ -23,6 +23,7 @@ public class CommonPropertyDescriptor {
 			.displayName("EplStatement")
 			.description("epl statement. @Name('<NAME>') anno should be provided. Events can be retrieved with Esper Producer by provided name")
 			.required(true)
+			.expressionLanguageSupported(ExpressionLanguageScope.VARIABLE_REGISTRY)
 			.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
 			.expressionLanguageSupported(ExpressionLanguageScope.VARIABLE_REGISTRY)
 			.build();
@@ -32,6 +33,7 @@ public class CommonPropertyDescriptor {
 			.displayName("InputEventSchema")
 			.description("define schema with EPL as string. 'create schema <NAME> as ( <parameter_name type> , ...)'; Keywords 'create' 'schema' 'as' are case-sensitive in this pattern")
 			.required(true)
+			.expressionLanguageSupported(ExpressionLanguageScope.VARIABLE_REGISTRY)
 			.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
 			.expressionLanguageSupported(ExpressionLanguageScope.VARIABLE_REGISTRY)
 			.build();
