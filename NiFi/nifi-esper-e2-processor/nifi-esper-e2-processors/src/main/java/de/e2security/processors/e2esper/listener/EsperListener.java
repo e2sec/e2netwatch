@@ -36,6 +36,9 @@ public class EsperListener implements UpdateListener {
 		final AtomicReference<String> result = new AtomicReference<>();
 		if (event instanceof MapEventBean) {
 			final Map<?,?> eventAsMap = (Map<?,?>) event.getUnderlying();
+			if (eventAsMap.containsKey("esper_lb")) {
+				session.putAttribute(file.get(), "esper_lb", (String) eventAsMap.get("esper_lb")); 
+			}
 			result.set(SupportUtility.transformEventMapToJson(eventAsMap));
 			logger.debug("[" + result.get() + "]");	
 		} else if (event.getUnderlying() instanceof MetricEvent) {

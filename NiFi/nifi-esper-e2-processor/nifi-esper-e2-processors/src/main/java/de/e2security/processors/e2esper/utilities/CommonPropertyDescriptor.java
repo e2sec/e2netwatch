@@ -25,17 +25,16 @@ public class CommonPropertyDescriptor {
 			.required(true)
 			.expressionLanguageSupported(ExpressionLanguageScope.VARIABLE_REGISTRY)
 			.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
-			.expressionLanguageSupported(ExpressionLanguageScope.VARIABLE_REGISTRY)
 			.build();
 
 	public static final PropertyDescriptor EVENT_SCHEMA = new PropertyDescriptor.Builder()
 			.name("InputEventSchema")
 			.displayName("InputEventSchema")
-			.description("define schema with EPL as string. 'create schema <NAME> as ( <parameter_name type> , ...)'; Keywords 'create' 'schema' 'as' are case-sensitive in this pattern")
+			//TODO: write validator regarding stmt pattern
+			.description("define schema with EPL regarding the following pattern: 'create schema <NAME> as ...'")
 			.required(true)
 			.expressionLanguageSupported(ExpressionLanguageScope.VARIABLE_REGISTRY)
 			.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
-			.expressionLanguageSupported(ExpressionLanguageScope.VARIABLE_REGISTRY)
 			.build();
 	
 	public static List<PropertyDescriptor> getDescriptors() {

@@ -120,7 +120,7 @@ public class CommonEplProcessor extends AbstractProcessor {
 			String eventJson = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
 			try {
 				//parsing inputStream as JSON objects
-				Map<String,Object> eventMap = SupportUtility.transformEventToMap(eventJson);
+				Map<String,Object> eventMap = SupportUtility.transformEventToMap(eventJson, Optional.empty());
 				runtime.sendEvent(eventMap, _INBOUND_EVENT_NAME);
 				getLogger().debug(success("PROCESSED EVENT AS MAP", eventMap.entrySet().toString()));
 			} catch (EPException epx) {

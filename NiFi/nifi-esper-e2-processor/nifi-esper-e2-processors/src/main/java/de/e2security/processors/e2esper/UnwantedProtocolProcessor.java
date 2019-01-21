@@ -161,7 +161,7 @@ public class UnwantedProtocolProcessor extends AbstractProcessor {
 				EPStatement blacklistProtocols = admin.createEPL(detectUnwantedProtocolsEplStatement);
 				String eventJson = IOUtils.toString(inputStream);
 	        	try {
-	        		Map<String,Object> eventMap = SupportUtility.transformEventToMap(eventJson);
+	        		Map<String,Object> eventMap = SupportUtility.transformEventToMap(eventJson,Optional.empty());
 	        		Optional<Object> protocol = Optional.ofNullable(eventMap.get("network.iana_number"));
 	        		int proto = protocol.map(obj -> (int) obj).orElse(0);
 	        		switch (proto) {

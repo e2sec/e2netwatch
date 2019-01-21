@@ -46,7 +46,6 @@ public class EsperProducerProcessorTest {
 	TestEvent event0 = new TestEvent().createDefaultTestEvent();
 	
 	@Test public void generaEsperProducerRunTest() throws CloneNotSupportedException {
-		
 			runnerConsumer = runners.newTestRunner(new EsperConsumer());
 			runnerConsumer.setValidateExpressionUsage(false);
 			runnerProducer = runners.newTestRunner(new EsperProducer());
@@ -97,8 +96,6 @@ public class EsperProducerProcessorTest {
 		TestEvent event2 = event0.clone();
 		event2.setEvent_id(4726);
 		event2.setTarget_user_name_hash("79957b8bf053a695e62603c1f81bb50");
-
-		
 		runnerConsumer.enqueue(gson.toJson(event1).getBytes());
 		runnerConsumer.run(1);
 		

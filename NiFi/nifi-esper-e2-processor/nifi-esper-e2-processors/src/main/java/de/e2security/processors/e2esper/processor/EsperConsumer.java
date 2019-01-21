@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -64,8 +65,9 @@ public class EsperConsumer extends AbstractProcessor {
 				ex.printStackTrace();
 			}
 		});
-		EventTransformer transformer = new TransformerWithMetrics(flowFile);
-		try { esperEngine.getEPRuntime().sendEvent(transformer.transform(input.get()), eventName.get());
+		try { esperEngine.getEPRuntime().sendEvent(
+				SupportUtility.transformEventToMap(input.get(),esper_lb.get()), 
+				eventName.get());
 		} catch (IOException e) { e.printStackTrace(); }
 		
 		session.remove(flowFile);

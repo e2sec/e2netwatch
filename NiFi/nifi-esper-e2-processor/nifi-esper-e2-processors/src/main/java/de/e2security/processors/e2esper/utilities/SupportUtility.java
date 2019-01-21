@@ -5,6 +5,7 @@ import static de.e2security.processors.e2esper.utilities.EsperProcessorLogger.su
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.nifi.logging.ComponentLog;
@@ -26,7 +27,9 @@ public final class SupportUtility {
 		Map<String,Object> eventAsMap = new HashMap<>();
 		ObjectMapper mapper = new ObjectMapper();
 		eventAsMap = mapper.readValue(eventAsJson, new TypeReference<Map<String,Object>>(){});
-		return eventAsMap;
+		final Map<String,Object> _eventAsMap = eventAsMap;
+		esper_lb.ifPresent((value) -> _eventAsMap.put("esper_lb", (String) value));
+		return _eventAsMap;
 	}
 	
 	public static String transformEventMapToJson(Map eventAsMap) {
