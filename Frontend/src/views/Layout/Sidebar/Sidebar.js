@@ -1,18 +1,116 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 
-const Sidebar = () => {
-    return(
-        <div className='sidebar'>
-            <ul>
-                <li><NavLink exact to='/'><i className="material-icons">dashboard</i>Dashboard</NavLink></li>
-                <li><NavLink to='/menu-item-1'><i className="material-icons">menu</i>Menu item 1</NavLink></li>
-                <li><NavLink to='/menu-item-2'><i className="material-icons">menu</i>Menu item 2</NavLink></li>
-                <li><NavLink to='/menu-item-3'><i className="material-icons">menu</i>Menu item 3</NavLink></li>
-                <li><NavLink to='/menu-item-4'><i className="material-icons">menu</i>Menu item 4</NavLink></li>
-            </ul>
-        </div>
-    )
+import { withStyles } from '@material-ui/core/styles';
+import { Drawer, List, ListItem, ListItemIcon, ListItemText, Divider} from '@material-ui/core';
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import ListIcon from '@material-ui/icons/List';
+
+
+import logo from '../../../assets/images/logo-white.png';
+
+
+const styles = theme => ({
+    drawer: {
+        [theme.breakpoints.up('md')]: {
+            width: '20%',
+            flexShrink: 0,
+        },
+    },
+    drawerPaper: {
+        width: '20%',
+    },
+    logo: {
+        minHeight: '64px'
+    },
+    list: {
+        paddingTop: theme.spacing.unit * 3,
+    },
+    listItem: {
+        paddingLeft: theme.spacing.unit * 3,
+    },
+    linkText: {
+        padding: 0,
+    }
+});
+
+
+
+
+class Sidebar extends Component{
+
+    state = {
+        isDesktop: false
+    };
+
+    componentDidMount() {
+        this.getViewportWidth();
+        window.addEventListener("resize", this.getViewportWidth);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("resize", this.getViewportWidth);
+    }
+
+    getViewportWidth = () => {
+        this.setState({
+            isDesktop: window.innerWidth > 968
+        });
+    }
+
+    handleMenuClick = () => {
+        this.props.handleDrawerToggle();
+    };
+
+    render() {
+
+        const { isDesktop } = this.state;
+        const { classes, isOpen } = this.props;
+
+        return(
+
+            <nav className={classes.drawer}>
+
+                <Drawer
+                    variant={isDesktop ? "permanent" : "temporary"}
+                    open={isOpen}
+                    onClose={this.handleMenuClick}
+                    classes={{
+                        paper: classes.drawerPaper,
+                    }}
+                >
+                    <div className={classes.logo}> </div>
+                    <Divider/>
+
+
+                    <List className={classes.list}>
+
+                        <ListItem component={NavLink} to='/dashboard' className={classes.listItem}>
+                            <ListItemIcon><DashboardIcon/></ListItemIcon>
+                            <ListItemText primary="Dashboard" className={classes.linkText}/>
+                        </ListItem>
+                        <ListItem component={NavLink} to='/menu-item-1' className={classes.listItem}>
+                            <ListItemIcon><ListIcon/></ListItemIcon>
+                            <ListItemText primary="Menu Item 1" className={classes.linkText}/>
+                        </ListItem>
+                        <ListItem component={NavLink} to='/menu-item-2' className={classes.listItem}>
+                            <ListItemIcon><ListIcon/></ListItemIcon>
+                            <ListItemText primary="Menu Item 2" className={classes.linkText}/>
+                        </ListItem>
+                        <ListItem component={NavLink} to='/menu-item-3' className={classes.listItem}>
+                            <ListItemIcon><ListIcon/></ListItemIcon>
+                            <ListItemText primary="Menu Item 3" className={classes.linkText}/>
+                        </ListItem>
+
+                    </List>
+
+
+                </Drawer>
+
+            </nav>
+
+        )
+    }
 }
 
-export default Sidebar;
+export default withStyles(styles)(Sidebar);
