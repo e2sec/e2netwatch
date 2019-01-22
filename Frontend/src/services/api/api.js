@@ -21,7 +21,7 @@ export default {
 
     auth: {
         login(data) {
-            return apiAuth.post('/auth/login/', data)
+            return apiAuth.post('/auth/login', data)
         },
         logout() {
             localStorage.clear();
@@ -30,7 +30,7 @@ export default {
 
     actions: {
         userDetails(data) {
-            return apiActions.post('/auth/login/', data)
+            return apiActions.post('/auth/login', data)
         },
     }
 };

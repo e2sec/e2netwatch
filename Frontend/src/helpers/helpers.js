@@ -30,7 +30,7 @@ function tokenInterval(tokenExpireDate) {
 
     setTimeout( function(){
         tokenInterval(tokenExpireDate)
-    }, 100000)
+    }, 5000)
 
 }
 
