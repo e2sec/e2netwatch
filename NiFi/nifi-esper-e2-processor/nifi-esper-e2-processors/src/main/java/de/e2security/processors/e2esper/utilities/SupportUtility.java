@@ -3,9 +3,14 @@ package de.e2security.processors.e2esper.utilities;
 import static de.e2security.processors.e2esper.utilities.EsperProcessorLogger.success;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
@@ -61,54 +66,42 @@ public final class SupportUtility {
 		return eventName;
 	}
 
-	@SuppressWarnings("deprecation") //TODO: check replacement method
 	//Logical test (not test of method) is in nw104/EsperBehaviourTest.java
 	public static String modifyUserDefinedSchema(String userSchema) {
 		Pattern pattern = Pattern.compile("[a\\s]\\W*\\("); 
 		Optional<String> replaced = Optional.ofNullable(
-				StringUtils.replaceFirst(userSchema, 
-						pattern.toString(), 
+				userSchema.replaceFirst(pattern.toString(), 
 						String.format("( %s Map,", CommonSchema.EVENT.flowFileAttributes)));
 		//TODO: check by propertyDescriptor validator instead
 		return replaced.orElseThrow(() -> new RuntimeException(""));
 	}
 
 	public static String modifyUserDefinedEPStatement(String userStmt) {
-		Optional<String> stmt = Optional.of(userStmt); //apply functional interface
-		//TODO: make with patterns and matcher conditional (functional)
+		final Optional<String> funcStmt = Optional.of(userStmt); //apply functional interface
 		//TODO: validator -> only UPPPERCASE for ESPER KEYWORDS
-		//quick dummy solution -> patterns should be considered
-		String result = "";
-		if (!userStmt.contains("PATTERN")) {
-			if (userStmt.contains("SELECT RSTREAM")) {
-				result = StringUtils.replaceFirst(userStmt, "SELECT RSTREAM", 
-						String.format("SELECT RSTREAM %s,", CommonSchema.EVENT.flowFileAttributes));
-			} else if (userStmt.contains("SELECT IRSTREAM")) {
-				result = StringUtils.replaceFirst(userStmt, "SELECT IRSTREAM", 
-						String.format("SELECT IRSTREAM %s,", CommonSchema.EVENT.flowFileAttributes));
-			} else if (userStmt.contains("SELECT ISTREAM")) {
-				result = StringUtils.replaceFirst(userStmt, "SELECT ISTREAM", 
-						String.format("SELECT ISTREAM %s,", CommonSchema.EVENT.flowFileAttributes));
-			} else {
-				result = StringUtils.replaceFirst(userStmt, "SELECT", 
-						String.format("SELECT %s,", CommonSchema.EVENT.flowFileAttributes));
-			} 
-		} else { //on Pattern -> initialize flow file attributes ONLY by first event.
-			if (userStmt.contains("SELECT RSTREAM")) {
-				result = StringUtils.replaceFirst(userStmt, "SELECT RSTREAM", 
-						String.format("SELECT RSTREAM a.%s,", CommonSchema.EVENT.flowFileAttributes));
-			} else if (userStmt.contains("SELECT IRSTREAM")) {
-				result = StringUtils.replaceFirst(userStmt, "SELECT IRSTREAM", 
-						String.format("SELECT IRSTREAM a.%s,", CommonSchema.EVENT.flowFileAttributes));
-			} else if (userStmt.contains("SELECT ISTREAM")) {
-				result = StringUtils.replaceFirst(userStmt, "SELECT ISTREAM", 
-						String.format("SELECT ISTREAM a.%s,", CommonSchema.EVENT.flowFileAttributes));
-			} else {
-				result = StringUtils.replaceFirst(userStmt, "SELECT", 
-						String.format("SELECT a.%s,", CommonSchema.EVENT.flowFileAttributes));
-			}
-		}
-		return result;
+		final List<String> patterns = new ArrayList<>();
+		patterns.add("select rstream".toUpperCase());
+		patterns.add("select irstream".toUpperCase());
+		patterns.add("select istream".toUpperCase());
+		Predicate<String> isPatternStmt = (stm) -> stm.contains("pattern".toUpperCase());
+		BiFunction<String,String,Optional<String>> replaceForPattern = (stm,pattern) -> {
+			return  Optional.of(stm.replace(pattern, String.format("%s a.%s as %s,",
+					pattern, 
+					CommonSchema.EVENT.flowFileAttributes, 
+					CommonSchema.EVENT.flowFileAttributes)));
+		};
+		BiFunction<String,String,Optional<String>> replaceForNotPattern = (stm,pattern) -> {
+			return Optional.of(stm.replace(pattern, 
+					String.format("%s %s,", pattern, CommonSchema.EVENT.flowFileAttributes)));
+		};
+	    String pattern =
+			    patterns.stream()
+			   .filter(p -> userStmt.contains(p))
+			   .findFirst()
+			   .orElse("select".toUpperCase());
+	    Optional<String> optResult = funcStmt.filter(isPatternStmt)
+	    		.map(stmt -> replaceForPattern.apply(stmt,pattern))
+	    		.orElse(replaceForNotPattern.apply(funcStmt.get(),pattern));
+		return optResult.get();
 	}
-
 }

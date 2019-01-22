@@ -2,6 +2,7 @@ package nw104;
 
 import org.junit.Test;
 
+import de.e2security.processors.e2esper.utilities.CommonPropertyDescriptor;
 import de.e2security.processors.e2esper.utilities.SupportUtility;
 import junit.framework.Assert;
 
@@ -49,5 +50,11 @@ public class SupportUtilityTest {
 				+ "FROM "
 				+ "T_50005_0008_01_02(event_id=4720 or event_id=4726)";
 		Assert.assertEquals(expectedQueryStmt, SupportUtility.modifyUserDefinedEPStatement(userQueryStmt));
+		String patternStmt = "@Name(ESPER_DEBUGGER) @Audit SELECT '50005-0008-01' AS alert_uc_scenario FROM PATTERN [ every a=T_50005_0008_01_02(event_id=4720) -> b=T_50005_0008_01_02(event_id=4726) ]";
+		String expectedPatternStmt = "@Name(ESPER_DEBUGGER) @Audit SELECT a.flowFileAttributes as flowFileAttributes, '50005-0008-01' AS alert_uc_scenario FROM PATTERN [ every a=T_50005_0008_01_02(event_id=4720) -> b=T_50005_0008_01_02(event_id=4726) ]"; 
+		Assert.assertEquals(expectedPatternStmt, SupportUtility.modifyUserDefinedEPStatement(patternStmt));
+		String rstreamPatternStmt = "@Name(ESPER_DEBUGGER) @Audit SELECT RSTREAM '50005-0008-01' AS alert_uc_scenario FROM PATTERN [ every a=T_50005_0008_01_02(event_id=4720) -> b=T_50005_0008_01_02(event_id=4726) ]";
+		String expectedRstreamPatternStmt = "@Name(ESPER_DEBUGGER) @Audit SELECT RSTREAM a.flowFileAttributes as flowFileAttributes, '50005-0008-01' AS alert_uc_scenario FROM PATTERN [ every a=T_50005_0008_01_02(event_id=4720) -> b=T_50005_0008_01_02(event_id=4726) ]";
+		
 	}
 }
