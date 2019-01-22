@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "materialize-css": "^1.0.0-rc.2",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-scripts": "2.1.2"
@@ -24,12 +23,15 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "@material-ui/core": "^3.9.0",
+    "@material-ui/icons": "^3.0.2",
     "axios": "^0.18.0",
     "history": "^4.7.2",
     "moment": "^2.23.0",
     "react-redux": "^6.0.0",
     "react-router-dom": "^4.3.1",
     "redux": "^4.0.1",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "typeface-roboto": "0.0.54"
   }
 }
