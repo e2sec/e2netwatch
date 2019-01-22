@@ -49,8 +49,10 @@ public class EsperConsumer extends AbstractProcessor {
 		esperEngine = esperService.execute(); //instantiated on controller's ENABLEMENT. execute() returns the shared instance back; 
 		String modifiedEventSchema = SupportUtility.modifyUserDefinedSchema(context.getProperty(EVENT_SCHEMA).getValue());
 		esperEngine.getEPAdministrator().createEPL(modifiedEventSchema);
+		getLogger().debug(String.format("initialized schema [%s]", modifiedEventSchema));
 		String modifiedEPStatement = SupportUtility.modifyUserDefinedEPStatement(context.getProperty(EPL_STATEMENT).getValue());
 		esperEngine.getEPAdministrator().createEPL(modifiedEPStatement);
+		getLogger().debug(String.format("initialized stmt [%s]", modifiedEPStatement));
 		eventName.compareAndSet(null, SupportUtility.retrieveClassNameFromSchemaEPS(context.getProperty(EVENT_SCHEMA).getValue()));
 	}
 

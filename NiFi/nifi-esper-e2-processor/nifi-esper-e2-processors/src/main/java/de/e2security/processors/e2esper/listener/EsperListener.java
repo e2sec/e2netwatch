@@ -24,11 +24,18 @@ public class EsperListener implements UpdateListener {
 	private final ComponentLog logger;
 	private AtomicReference<ProcessSessionFactory> sessionFactory;
 	private final Relationship rel;
+	/*
+	 * in order to address the retantion of flow file attributes within pattern, 
+	 * they should be temporary keeped within esper listener instance
+	 * and don't be overwritten of the following events since we fetch only attributes of the FIRST one
+	 */
+	private final AtomicReference<Map> flowFileAttributes;
 
 	public EsperListener(ComponentLog logger, Relationship rel) {
 		this.logger = logger;
 		this.rel = rel;
 		this.sessionFactory = new AtomicReference<>();
+		this.flowFileAttributes = new AtomicReference<Map>();
 	} 
 
 	@Override
@@ -41,8 +48,13 @@ public class EsperListener implements UpdateListener {
 			final Map<?,?> eventAsMap = (Map<?,?>) event.getUnderlying();
 			//apply flow file attributes sent by EsperConsumer to session/current FF 
 			{
-				Optional<Map<String,String>> attrEvent = Optional.ofNullable((Map<String,String>) eventAsMap.get(CommonSchema.EVENT.flowFileAttributes.toString()));
-				attrEvent.ifPresent((map) -> session.putAllAttributes(file.get(), map));
+				Optional<Map<String,String>> attrEvent = Optional.of((Map<String,String>) eventAsMap.get(CommonSchema.EVENT.flowFileAttributes.toString()));
+				flowFileAttributes.compareAndSet(null, attrEvent.get()); //initial setup
+				attrEvent.filter( map -> map.size() >= flowFileAttributes.get().size()) //the follow file cannot contain less attributes as initially. However, in pattern it should be checked, in order the followed event doesn't overwrite the the FF attributes of a(=first) event
+						 .ifPresent( map -> {
+					session.putAllAttributes(file.get(), map);
+					eventAsMap.remove(CommonSchema.EVENT.flowFileAttributes.toString()); //do not need them in json event
+				});
 				logger.debug(String.format("[%s]:[%s]", CommonSchema.EVENT.flowFileAttributes.toString(),
 										  SupportUtility.transformEventMapToJson(attrEvent.orElse(new HashMap<String,String>()))));
 			}

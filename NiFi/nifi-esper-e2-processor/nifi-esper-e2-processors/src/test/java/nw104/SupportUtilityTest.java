@@ -36,7 +36,7 @@ public class SupportUtilityTest {
 				+ "target_user_name_hash AS target_user_name_hash "
 				+ "FROM "
 				+ "T_50005_0008_01_02(event_id=4720 or event_id=4726)";
-		String expectedQueryStmt = "@Name(T_50005_0008_01_02_filter) SELECT flowFileAttributes,'50005-0008-01' AS alert_uc_scenario, "
+		String expectedQueryStmt = "@Name(T_50005_0008_01_02_filter) SELECT flowFileAttributes, '50005-0008-01' AS alert_uc_scenario, "
 				+ "'ip_hash' AS enrichment_field,"
 				+ "'50005_inv_ip2ci' AS enrichment_index, "
 				+ "host_hash AS enrichment_key, "
