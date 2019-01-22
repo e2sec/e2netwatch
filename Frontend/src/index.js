@@ -38,6 +38,13 @@ const theme = createMuiTheme({
                 transform: 'translate(0, -5px) scale(0.9)',
             },
         },
+        MuiSelect: {
+            select: {
+                '&:focus': {
+                    background: 'none'
+                }
+            }
+        }
     }
 });
 

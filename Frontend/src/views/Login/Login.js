@@ -1,7 +1,7 @@
 import React, { Component} from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { userActions } from '../../store/actions/userActions';
+import {authActions} from "../../store/actions/authActions";
 import { helpers } from './../../helpers/helpers'
 
 import { withStyles } from '@material-ui/core/styles';
@@ -115,7 +115,7 @@ class Login extends Component {
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        login: (user) => dispatch(userActions.login(user))
+        login: (user) => dispatch(authActions.login(user))
     }
 }
 

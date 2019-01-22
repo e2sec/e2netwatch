@@ -1,22 +1,21 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { NavLink, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-import { userActions } from '../../../store/actions/userActions';
+import { authActions}  from '../../../store/actions/authActions';
 import { helpers } from './../../../helpers/helpers'
 
 import { withStyles } from '@material-ui/core/styles';
-import {AppBar, Toolbar, Typography, IconButton, Menu, MenuItem, ListItemText, ListItemIcon } from '@material-ui/core';
+import {AppBar, Toolbar, IconButton, Menu, MenuItem, ListItemText, ListItemIcon } from '@material-ui/core';
 
 import MenuIcon from '@material-ui/icons/Menu';
-import More from '@material-ui/icons/MoreVert';
-import Notification from '@material-ui/icons/NotificationsNone';
-import Account from '@material-ui/icons/AccountCircle';
-import Logout from '@material-ui/icons/ExitToApp';
-import Administration from '@material-ui/icons/Settings';
+
+import NotificationIcon from '@material-ui/icons/NotificationsNone';
+import AccountIcon from '@material-ui/icons/AccountCircle';
+import LogoutIcon from '@material-ui/icons/ExitToApp';
+import AdministrationIcon from '@material-ui/icons/Settings';
 
 import Fab from "@material-ui/core/es/Fab/Fab";
-
 
 
 const styles = theme => ({
@@ -101,12 +100,10 @@ class Header extends Component {
                         <MenuIcon />
                     </IconButton>
                     <div className={classes.grow}></div>
-                    {/*<Typography variant="h5" color="inherit">
-                        Tomislav Bobinac
-                    </Typography>*/}
+
                     <Fragment>
                         <IconButton color="inherit">
-                            <Notification className={classes.notification} />
+                            <NotificationIcon className={classes.notification} />
                         </IconButton>
                         <Fab
                              color="inherit"
@@ -115,16 +112,9 @@ class Header extends Component {
                              aria-haspopup="true"
                              onClick={this.openDropdown}
                         >
-                            TB
+                            UU
                         </Fab>
-                        {/*<IconButton color="inherit"
-                                    className={classes.profileButton}
-                                    aria-owns={anchorEl ? 'dropdown' : undefined}
-                                    aria-haspopup="true"
-                                    onClick={this.openDropdown}
-                        >
-                            <More />
-                        </IconButton>*/}
+
                         <Menu id="dropdown"
                               anchorEl={anchorEl}
                               open={Boolean(anchorEl)}
@@ -132,16 +122,16 @@ class Header extends Component {
                         >
                             <MenuItem component={Link} to="/profile" onClick={this.closeDropdown}>
                                 <ListItemIcon>
-                                    <Account />
+                                    <AccountIcon />
                                 </ListItemIcon>
                                 <ListItemText primary="Profile" />
                             </MenuItem>
 
                             {
-                                helpers.getRole() === 'admin' ? (
+                                helpers.getRole() === 'ROLE_ADMIN' ? (
                                     <MenuItem component={Link} to="/administration" onClick={this.closeDropdown}>
                                         <ListItemIcon>
-                                            <Administration />
+                                            <AdministrationIcon />
                                         </ListItemIcon>
                                         <ListItemText primary="Administrator" />
                                     </MenuItem>) : ''
@@ -149,7 +139,7 @@ class Header extends Component {
 
                             <MenuItem component={Link} to="/login" onClick={this.logout}>
                                 <ListItemIcon>
-                                    <Logout />
+                                    <LogoutIcon />
                                 </ListItemIcon>
                                 <ListItemText primary="Logout" />
                             </MenuItem>
@@ -164,7 +154,7 @@ class Header extends Component {
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        logout: () => dispatch(userActions.logout())
+        logout: () => dispatch(authActions.logout())
     }
 }
 

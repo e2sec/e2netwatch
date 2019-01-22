@@ -1,98 +1,119 @@
+import {
+
+    GET_USER_BEGIN,
+    GET_USER_SUCCESS,
+    GET_USER_FAILURE,
+    GET_USER_PREFERENCES_BEGIN,
+    GET_USER_PREFERENCES_SUCCESS,
+    GET_USER_PREFERENCES_FAILURE,
+
+    UPDATE_USER_BEGIN,
+    UPDATE_USER_SUCCESS,
+    UPDATE_USER_FAILURE,
+    UPDATE_USER_PREFERENCES_BEGIN,
+    UPDATE_USER_PREFERENCES_SUCCESS,
+    UPDATE_USER_PREFERENCES_FAILURE,
+
+    CHANGE_PASSWORD_BEGIN,
+    CHANGE_PASSWORD_SUCCESS,
+    CHANGE_PASSWORD_FAILURE
+
+} from '../config'
+
 import { userServices } from '../../services/api/userServices';
-import { helpers } from './../../helpers/helpers';
 
 export const userActions = {
-    login,
-    logout,
-    getUsers,
-    getUserProfile,
-    updateUserProfile,
-    changeUserPass
-}
+    getUser,
+    updateUser,
+    changePassword,
+    getUserPreferences,
+    updateUserPreferences,
+};
 
-
-function login(user) {
+function getUser() {
     return (dispatch) => {
 
-        dispatch({ type: 'LOGIN_REQUEST', user: user.username });
+        dispatch({ type: GET_USER_BEGIN })
 
-        userServices.login(user)
+        userServices.getUser()
             .then(
                 user => {
-                    dispatch({ type: 'LOGIN_SUCCESS', user: user.username })
-                    helpers.browserHistory().push('/');
+                    dispatch({ type: GET_USER_SUCCESS, user })
                 },
                 error => {
-                    dispatch({ type: 'LOGIN_ERROR', error })
-                }
-            );
-
-    }
-}
-
-function logout() {
-    userServices.logout();
-    return { type: 'LOGOUT_SUCCESS' }
-}
-
-function getUsers() {
-    return (dispatch) => {
-
-        userServices.getUsers()
-            .then(
-                users => {
-                    dispatch({ type: 'GET_USERS', users })
-                },
-                error => {
-                    dispatch({ type: 'GET_USERS', error })
+                    dispatch({ type: GET_USER_FAILURE, error })
                 }
             )
 
     }
 }
 
-function getUserProfile() {
+function updateUser(user) {
     return (dispatch) => {
 
-        userServices.getUserProfile()
+        dispatch({ type: UPDATE_USER_BEGIN })
+
+        userServices.updateUser(user)
             .then(
-                profile => {
-                    dispatch({ type: 'GET_USER_PROFILE', profile })
+                user => {
+                    dispatch({ type: UPDATE_USER_SUCCESS, user })
                 },
                 error => {
-                    dispatch({ type: 'GET_USER_PROFILE_ERROR', error })
+                    dispatch({ type: UPDATE_USER_FAILURE, error })
                 }
             )
 
     }
 }
 
-function updateUserProfile(profile) {
+function changePassword(pass) {
     return (dispatch) => {
 
-        userServices.updateUserProfile(profile)
-            .then(
-                profile => {
-                    dispatch({ type: 'UPDATE_USER_PROFILE', profile })
-                },
-                error => {
-                    dispatch({ type: 'UPDATE_USER_PROFILE_ERROR', error })
-                }
-            )
+        dispatch({ type: CHANGE_PASSWORD_BEGIN })
 
-    }
-}
-
-function changeUserPass(pass) {
-    return (dispatch) => {
-
-        userServices.changeUserPass(pass)
+        userServices.changePassword(pass)
             .then(
                 () => {
-                    dispatch({ type: 'CHANGE_USER_PASS'})
+                    dispatch({ type: CHANGE_PASSWORD_SUCCESS })
                 },
                 error => {
-                    dispatch({ type: 'CHANGE_USER_PASS_ERROR', error })
+                    dispatch({ type: CHANGE_PASSWORD_FAILURE, error })
+                }
+            )
+
+    }
+}
+
+function getUserPreferences() {
+    return (dispatch) => {
+
+        dispatch({ type: GET_USER_PREFERENCES_BEGIN })
+
+        userServices.getUserPreferences()
+            .then(
+                userPreferences => {
+                    dispatch({ type: GET_USER_PREFERENCES_SUCCESS, userPreferences})
+                },
+                error => {
+                    dispatch({ type: GET_USER_PREFERENCES_FAILURE, error })
+                }
+            )
+
+    }
+}
+
+function updateUserPreferences(userPreferences) {
+    return (dispatch) => {
+
+        dispatch({ type: UPDATE_USER_PREFERENCES_BEGIN })
+
+        userServices.updateUserPreferences(userPreferences)
+            .then(
+                userPreferences => {
+                    dispatch({ type: UPDATE_USER_PREFERENCES_SUCCESS, userPreferences })
+                },
+                error => {
+                    dispatch({ type: UPDATE_USER_PREFERENCES_FAILURE, error })
                 }
             )
 

@@ -5,7 +5,6 @@ import Authorization from './components/Authorization/Authorization';
 
 import Login from './views/Login/Login';
 import Header from './views/Layout/Header/Header';
-import PrivateRoute from './components/PrivateRoute/PrivateRoute'
 import Sidebar from './views/Layout/Sidebar/Sidebar';
 import Dashboard from './views/Dashboard/Dashboard';
 import Profile from './views/Profile/Profile';
@@ -16,8 +15,8 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Administration from "./views/Administration/Administration";
 
 
-const User = Authorization(['user', 'admin']);
-const Admin = Authorization(['admin']);
+const User = Authorization(['ROLE_USER', 'ROLE_ADMIN']);
+const Admin = Authorization(['ROLE_ADMIN']);
 
 
 const styles =  theme => ({
