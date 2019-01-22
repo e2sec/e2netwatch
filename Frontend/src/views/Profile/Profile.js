@@ -1,8 +1,14 @@
 import React, { Component} from 'react';
 import { connect } from 'react-redux';
 
-import M from 'materialize-css/dist/js/materialize';
 import {userActions} from "../../store/actions/userActions";
+
+import { withStyles } from '@material-ui/core/styles';
+import { Paper, Typography } from '@material-ui/core'
+
+const styles = theme => ({
+
+})
 
 class Profile extends Component {
 
@@ -10,76 +16,25 @@ class Profile extends Component {
         name : 'Tom'
     };
 
-    tabs = () => {
-        const elems = document.querySelectorAll('.tabs');
-        M.Tabs.init(elems)
-    };
-
     componentDidMount() {
-        this.tabs();
         this.props.userDetails();
     }
 
     render(){
 
+        const { classes } = this.props;
+
         return(
 
+            <Paper className={classes.root} elevation={1}>
+                <Typography variant="h5" component="h3">
+                    This is a sheet of paper.
+                </Typography>
+                <Typography component="p">
+                    Paper can be used to build surface or other elements for your application.
+                </Typography>
+            </Paper>
 
-            <div className="profile">
-                {/*<span> { this.state.name } </span>*/}
-                <div className="user-details">
-                    <p className="user-avatar">UU</p>
-                    <h2 className="user-name">User User</h2>
-                    <h4 className="user-privilege">Administrator</h4>
-                </div>
-
-                <div>
-                    <div>
-                        <ul className="tabs">
-                            <li className="tab"><a href="#account" className="active">Account</a></li>
-                            <li className="tab"><a href="#notifications">Notifications</a></li>
-                            <li className="tab"><a href="#test">Basic Title</a></li>
-                        </ul>
-                    </div>
-
-                    <div id="account">
-
-                        <div className="form-wrapper">
-                            <p className="form-title">Account</p>
-                            <form>
-                                <div className="row">
-                                    <div className="input-field col s6">
-                                        <input id="first_name" type="text" className="validate"/>
-                                        <label htmlFor="first_name">First Name</label>
-                                    </div>
-                                    <div className="input-field col s6">
-                                        <input id="last_name" type="text" className="validate"/>
-                                        <label htmlFor="last_name">Last Name</label>
-                                    </div>
-                                    <div className="input-field col s12">
-                                        <input id="email" type="email" className="validate"/>
-                                        <label htmlFor="email">Email</label>
-                                    </div>
-                                    <div className="input-field col s12">
-                                        <input id="passwordNew" type="password" className="validate"/>
-                                        <label htmlFor="passwordNew">New password</label>
-                                    </div>
-                                    <div className="input-field col s9">
-                                        <input id="password" type="password" className="validate"/>
-                                        <label htmlFor="password">Enter Current Password</label>
-                                    </div>
-                                    <div className="input-field col s3">
-                                        <button className="btn btn-primary">Update account</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-
-                    </div>
-                    <div id="notifications">Test 2</div>
-                    <div id="test">Test 3</div>
-                </div>
-            </div>
         )
     }
 
@@ -99,4 +54,4 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Profile));
