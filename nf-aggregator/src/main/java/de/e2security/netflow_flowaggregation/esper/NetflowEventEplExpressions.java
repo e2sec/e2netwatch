@@ -28,7 +28,7 @@ public final class NetflowEventEplExpressions {
 				+ ",in_pkts"
 				+ ",first_switched"
 				+ ",last_switched"
-				+ " from NetflowEvent.ext:time_order(last_switched.toMilliSec(), 60 sec)";
+				+ " from NetflowEvent#time(60 sec) order by last_switched, first_switched";
 	}
 	
 	public static abstract class NetflowEventEplSupporter {

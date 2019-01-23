@@ -33,6 +33,114 @@ import junit.framework.Assert;
 
 public class WrongOrderConnectionTest extends EsperTestSupporter {
 	
+	@Test public void testSortByLastSwitchedEplStatementTimeAndOrderStmtOnSameLastSwitchedWithFirstFirstSwitchedOrder() throws NetflowEventException {
+		NetflowEvent testEvent1 = new NetflowEvent();
+		testEvent1.setLast_switched("2018-12-22T00:00:00.999Z");
+		testEvent1.setFirst_switched("2018-12-21T23:59:00.999Z");
+		NetflowEvent testEvent2 = new NetflowEvent();
+		testEvent2.setLast_switched("2018-12-22T00:00:00.999Z");
+		testEvent2.setFirst_switched("2018-12-21T23:59:10.999Z");
+		EPStatement stmt = admin.createEPL("insert rstream into NetflowEventOrdered"
+				+ " select rstream receivedTimeStamp"
+				+ ",host"
+				+ ",ipv4_src_addr"
+				+ ",ipv4_dst_addr"
+				+ ",l4_src_port"
+				+ ",l4_dst_port"
+				+ ",tcp_flags"
+				+ ",protocol"
+				+ ",version"
+				+ ",flow_seq_num"
+				+ ",flow_records"
+				+ ",in_bytes"
+				+ ",in_pkts"
+				+ ",first_switched"
+				+ ",last_switched"
+				+ " from NetflowEvent#time(60 sec) order by last_switched, first_switched");
+		AtomicReference<NetflowEventOrdered> neoReference = new AtomicReference<>();
+		stmt.addListener((newEvents, oldEvents) ->  {
+			NetflowEventOrdered neo = (NetflowEventOrdered) newEvents[0].getUnderlying();
+			neoReference.compareAndSet(null, neo);
+		});
+		runtime.sendEvent(new CurrentTimeEvent(TestUtil.getCurrentTimeEvent("2018-12-22T00:00:00.999Z"))); //+ 60 seconds to lastSwitched
+		runtime.sendEvent(testEvent2);
+		runtime.sendEvent(testEvent1);
+		runtime.sendEvent(new CurrentTimeEvent(TestUtil.getCurrentTimeEvent("2018-12-22T00:01:20.999Z")));
+		Assert.assertEquals(testEvent1.convertToOrderedType().toString(), neoReference.get().toString());
+	}
+	
+	@Test public void testSortByLastSwitchedEplStatementTimeAndOrderStmtOnSameLastSwitchedWithoutFirstSwitchedOrderShouldFail() throws NetflowEventException {
+		NetflowEvent testEvent1 = new NetflowEvent();
+		testEvent1.setLast_switched("2018-12-22T00:00:00.999Z");
+		testEvent1.setFirst_switched("2018-12-21T23:59:00.999Z");
+		NetflowEvent testEvent2 = new NetflowEvent();
+		testEvent2.setLast_switched("2018-12-22T00:00:00.999Z");
+		testEvent2.setFirst_switched("2018-12-21T23:59:10.999Z");
+		EPStatement stmt = admin.createEPL("insert rstream into NetflowEventOrdered"
+				+ " select rstream receivedTimeStamp"
+				+ ",host"
+				+ ",ipv4_src_addr"
+				+ ",ipv4_dst_addr"
+				+ ",l4_src_port"
+				+ ",l4_dst_port"
+				+ ",tcp_flags"
+				+ ",protocol"
+				+ ",version"
+				+ ",flow_seq_num"
+				+ ",flow_records"
+				+ ",in_bytes"
+				+ ",in_pkts"
+				+ ",first_switched"
+				+ ",last_switched"
+				+ " from NetflowEvent#time(60 sec) order by last_switched");
+		AtomicReference<NetflowEventOrdered> neoReference = new AtomicReference<>();
+		stmt.addListener((newEvents, oldEvents) ->  {
+			NetflowEventOrdered neo = (NetflowEventOrdered) newEvents[0].getUnderlying();
+			neoReference.compareAndSet(null, neo);
+		});
+		runtime.sendEvent(new CurrentTimeEvent(TestUtil.getCurrentTimeEvent("2018-12-22T00:00:00.999Z"))); //+ 60 seconds to lastSwitched
+		runtime.sendEvent(testEvent2);
+		runtime.sendEvent(testEvent1);
+		runtime.sendEvent(new CurrentTimeEvent(TestUtil.getCurrentTimeEvent("2018-12-22T00:01:20.999Z")));
+		Assert.assertNotSame(testEvent1.convertToOrderedType().toString(), neoReference.get().toString());
+	}
+	
+	@Test public void testSortByLastSwitchedEplStatementTimeAndOrderStmt() throws NetflowEventException {
+		NetflowEvent testEvent1 = new NetflowEvent();
+		testEvent1.setLast_switched("2018-12-22T00:00:00.999Z");
+		testEvent1.setFirst_switched("2018-12-21T23:59:00.999Z");
+		NetflowEvent testEvent2 = new NetflowEvent();
+		testEvent2.setLast_switched("2018-12-22T00:00:20.999Z");
+		testEvent2.setFirst_switched("2018-12-21T23:59:10.999Z");
+		EPStatement stmt = admin.createEPL("insert rstream into NetflowEventOrdered"
+				+ " select rstream receivedTimeStamp"
+				+ ",host"
+				+ ",ipv4_src_addr"
+				+ ",ipv4_dst_addr"
+				+ ",l4_src_port"
+				+ ",l4_dst_port"
+				+ ",tcp_flags"
+				+ ",protocol"
+				+ ",version"
+				+ ",flow_seq_num"
+				+ ",flow_records"
+				+ ",in_bytes"
+				+ ",in_pkts"
+				+ ",first_switched"
+				+ ",last_switched"
+				+ " from NetflowEvent#time(60 sec) order by last_switched");
+		AtomicReference<NetflowEventOrdered> neoReference = new AtomicReference<>();
+		stmt.addListener((newEvents, oldEvents) ->  {
+			NetflowEventOrdered neo = (NetflowEventOrdered) newEvents[0].getUnderlying();
+			neoReference.compareAndSet(null, neo);
+		});
+		runtime.sendEvent(new CurrentTimeEvent(TestUtil.getCurrentTimeEvent("2018-12-22T00:00:00.999Z"))); //+ 60 seconds to lastSwitched
+		runtime.sendEvent(testEvent2);
+		runtime.sendEvent(testEvent1);
+		runtime.sendEvent(new CurrentTimeEvent(TestUtil.getCurrentTimeEvent("2018-12-22T00:01:20.999Z")));
+		Assert.assertEquals(testEvent1.convertToOrderedType().toString(), neoReference.get().toString());
+	}
+	
 	@Test public void testSortByLastSwitchedEplStatement() throws NetflowEventException {
 		NetflowEvent testEvent1 = new NetflowEvent();
 		testEvent1.setLast_switched("2018-12-22T00:00:00.999Z");
