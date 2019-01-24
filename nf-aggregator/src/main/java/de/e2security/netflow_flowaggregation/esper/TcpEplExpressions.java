@@ -16,7 +16,7 @@ public final class TcpEplExpressions extends NetflowEventEplSupporter {
 				+ fields()
 				+ " from pattern [every a=NetflowEventOrdered(protocol=6 and (tcp_flags&1)=1) ->"
 				+ " b=NetflowEventOrdered(protocol=6 and (tcp_flags&1)=1 and host=a.host and "
-				+ rightOrderChecker() + " and "
+				+ timeIntervalLastSwitchedChecker() + " and "
 				+ connectionXReferenceChecker() + ")" 
 				+ " where timer:within(60 sec)]";
 	}
@@ -35,7 +35,7 @@ public final class TcpEplExpressions extends NetflowEventEplSupporter {
 				+ " 'Rejected TCP' as description"
 				+ fields()
 				+ " from pattern " + pattern + " and "
-				+ rightOrderChecker() + " and "
+				+ timeIntervalLastSwitchedChecker() + " and "
 				+ connectionXReferenceChecker() + ")"
 				+ " where timer:within(60 sec)]";
 	}

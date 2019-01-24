@@ -39,8 +39,13 @@ public final class NetflowEventEplExpressions {
 					+ " and l4_dst_port   = a.l4_src_port";
 		}
 		
+		@Deprecated
 		static String rightOrderChecker() {
 			return "first_switched_as_long >= a.first_switched_as_long";
+		}
+		
+		static String timeIntervalLastSwitchedChecker() {
+			return "last_switched.toMillisec() - a.last_switched.toMillisec() <= 60000 ";
 		}
 		
 		// @formatter:off
