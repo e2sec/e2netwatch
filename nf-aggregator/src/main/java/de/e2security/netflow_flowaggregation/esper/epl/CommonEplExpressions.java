@@ -1,16 +1,7 @@
-package de.e2security.netflow_flowaggregation.esper;
+package de.e2security.netflow_flowaggregation.esper.epl;
 
-public final class NetflowEventEplExpressions {
-	/**
-	 * Get events into correct order
-	 * @see http://esper.espertech.com/release-5.5.0/esper-reference/html/epl-views.html#view-time-order
-	 */
+public final class CommonEplExpressions {
 	
-	/* 
-	 * From Esper Reference 7.1 to (ext:)time_order:
-	 * Note the statement above uses the rstream keyword in both the  insert into clause and the select clause to select ordered events only. 
-	 * It uses the insert into clause to makes such ordered stream available for subsequent statements to use.
-	 */
 	public static String eplSortByLastSwitched() {
 		return "insert rstream into NetflowEventOrdered"
 				+ " select rstream receivedTimeStamp"
@@ -31,7 +22,10 @@ public final class NetflowEventEplExpressions {
 				+ " from NetflowEvent#time(60 sec) order by last_switched, first_switched";
 	}
 	
+	@Deprecated
 	public static abstract class NetflowEventEplSupporter {
+		
+		@Deprecated
 		static String connectionXReferenceChecker() {
 			return    " ipv4_src_addr = a.ipv4_dst_addr"
 					+ " and l4_src_port   = a.l4_dst_port"
@@ -44,19 +38,13 @@ public final class NetflowEventEplExpressions {
 			return "first_switched_as_long >= a.first_switched_as_long";
 		}
 		
+		@Deprecated
 		static String timeIntervalLastSwitchedChecker() {
 			return "last_switched.toMillisec() - a.last_switched.toMillisec() <= 60000 ";
 		}
 		
-		// @formatter:off
-		/*
-		 * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		 * ! -- CAUTION --
-		 * ! inserted fields need to match constructor arguments
-		 * ! in type and order
-		 * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		 */
 		
+		@Deprecated
 		static String fields() {
 			return ",a.receivedTimeStamp as in_receivedTimeStamp"
 					+ ",b.receivedTimeStamp as out_receivedTimeStamp"
@@ -86,6 +74,7 @@ public final class NetflowEventEplExpressions {
 					+ ",a.last_switched as in_last_switched"
 					+ ",b.last_switched as out_last_switched";
 		}
+
 	}
 	
 }

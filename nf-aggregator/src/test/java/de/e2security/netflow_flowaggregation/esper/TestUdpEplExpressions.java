@@ -21,6 +21,8 @@ import com.espertech.esper.client.scopetest.EPAssertionUtil;
 import com.espertech.esper.client.scopetest.SupportUpdateListener;
 import com.espertech.esper.client.time.CurrentTimeEvent;
 
+import de.e2security.netflow_flowaggregation.esper.epl.CommonEplExpressions;
+import de.e2security.netflow_flowaggregation.esper.epl.UdpEplExpressions;
 import de.e2security.netflow_flowaggregation.esper.utils.EplExpressionTestSupporter;
 import de.e2security.netflow_flowaggregation.esper.utils.EsperTestSupporter;
 import de.e2security.netflow_flowaggregation.model.protocols.NetflowEvent;
@@ -60,7 +62,7 @@ public class TestUdpEplExpressions extends EsperTestSupporter {
 		List<NetflowEvent> events = getHistoricalEvents(TestUtil.readSampleDataFile("nf_gen.udp.sample"), numberOfTestEvents);
 		SupportUpdateListener supportListener = new SupportUpdateListener();
 		EPStatement stmt0 = admin.createEPL(EplExpressionTestSupporter.selectNetStreamOrdered());
-		EPStatement stmt1 = admin.createEPL(NetflowEventEplExpressions.eplSortByLastSwitched());
+		EPStatement stmt1 = admin.createEPL(CommonEplExpressions.eplSortByLastSwitched());
 		stmt0.addListener(listener);
 		Pair<Long,Long> timer = getTimeFrameForCurrentTimer(events);
 		engine.getEPRuntime().sendEvent(new CurrentTimeEvent(timer.getLeft()));

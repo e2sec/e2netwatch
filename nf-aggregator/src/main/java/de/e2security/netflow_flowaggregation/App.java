@@ -10,16 +10,18 @@ import java.util.Properties;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.time.CurrentTimeEvent;
 
-import de.e2security.netflow_flowaggregation.esper.NetflowEventEplExpressions;
 import de.e2security.netflow_flowaggregation.esper.ProtocolRegisterListener;
 import de.e2security.netflow_flowaggregation.esper.ProtocolRegisterTrigger;
-import de.e2security.netflow_flowaggregation.esper.TcpEplExpressions;
-import de.e2security.netflow_flowaggregation.esper.UdpEplExpressions;
+import de.e2security.netflow_flowaggregation.esper.epl.CommonEplExpressions;
+import de.e2security.netflow_flowaggregation.esper.epl.TcpEplExpressions;
+import de.e2security.netflow_flowaggregation.esper.epl.UdpEplExpressions;
 import de.e2security.netflow_flowaggregation.kafka.CustomKafkaProducer;
 import de.e2security.netflow_flowaggregation.kafka.KafkaConsumerMaster;
 import de.e2security.netflow_flowaggregation.model.protocols.NetflowEvent;
@@ -30,10 +32,9 @@ import de.e2security.netflow_flowaggregation.utils.PropertiesUtil;
 import de.e2security.netflow_flowaggregation.utils.ThreadUtil;
 import de.e2security.netflow_flowaggregation.utils.UpstartUtil;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class App {
+	
+	
 	private static final Logger LOG = LoggerFactory.getLogger(App.class);
 	
 	private Properties configs = new Properties();
@@ -53,7 +54,6 @@ public class App {
 	}
 	
 	public void doMain(String[] args) {
-	
 		//read Default Configuration and Parse Arguments
 		configs = new PropertiesUtil(configs).read("application.properties");
 		
@@ -80,7 +80,7 @@ public class App {
 		
 		LOG.info("Starting version {} ({})", configs.getProperty("application.version"), configs.getProperty("application.builddate"));
 
-		//check kafka server's availability before establishingn conn
+		//check kafka server availability before establishing connection
 		new UpstartUtil(configs).statusKafka();
 		
 		//start KafkaProducer
@@ -90,7 +90,7 @@ public class App {
 		EPServiceProvider epService = EsperUtil.registerEvents(NetflowEvent.class, NetflowEventOrdered.class, ProtocolRegister.class, CurrentTimeEvent.class);
 
 		//register TCP EPLs @see description in TcpEplExpressions
-		epService.getEPAdministrator().createEPL(NetflowEventEplExpressions.eplSortByLastSwitched());
+		epService.getEPAdministrator().createEPL(CommonEplExpressions.eplSortByLastSwitched());
 		epService.getEPAdministrator().createEPL(TcpEplExpressions.eplFinishedFlows());
 		epService.getEPAdministrator().createEPL(TcpEplExpressions.eplRejectedFlows(TcpEplExpressions.eplRejectedPatternSyn2Ack16()));
 		epService.getEPAdministrator().createEPL(TcpEplExpressions.eplRejectedFlows(TcpEplExpressions.eplRejectedPatternRst4()));
@@ -99,16 +99,13 @@ public class App {
 		epService.getEPAdministrator().createEPL(UdpEplExpressions.eplFinishedUDPFlows());
 
 		//monitor incoming tcp/udp flows for debugging
-		String eplGetTCPFlowsMonitor = "select * from NetflowEvent(protocol=6)";  //* in order to cast to NetflowEvent object in Listener -> less error-prone
-		String eplGetUDPFlowsMonitor = "select * from NetflowEvent(protocol=17)"; //* in order to cast to NetflowEvent object in Listener -> less error-prone
-		EPStatement statementGetTCPFlowsMonitor = epService.getEPAdministrator().createEPL(eplGetTCPFlowsMonitor);
-		EPStatement statementGetUDPFlowsMonitor = epService.getEPAdministrator().createEPL(eplGetUDPFlowsMonitor);
+		EPStatement statementGetTCPFlowsMonitor = epService.getEPAdministrator().createEPL("select * from NetflowEvent(protocol=6)");
+		EPStatement statementGetUDPFlowsMonitor = epService.getEPAdministrator().createEPL("select * from NetflowEvent(protocol=17)");
 		statementGetTCPFlowsMonitor.addListener(new ProtocolRegisterListener());
 		statementGetUDPFlowsMonitor.addListener(new ProtocolRegisterListener());
 
 		//send processed output to kafka
-		String protocolRegisterTrigger = "select * from ProtocolRegister";
-		EPStatement statementTcpConnectionTrigger = epService.getEPAdministrator().createEPL(protocolRegisterTrigger);
+		EPStatement statementTcpConnectionTrigger = epService.getEPAdministrator().createEPL("select * from ProtocolRegister");
 		statementTcpConnectionTrigger.addListener(new ProtocolRegisterTrigger(producer));
 		
 		//start KafkaConsumer with prepared EPService after checking topics' availability within consumerMaster 

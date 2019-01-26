@@ -61,6 +61,7 @@ public class NetflowEventOrdered implements Serializable {
 		this.first_switched_as_long = first_switched.toEpochSecond();
 	}
 	
+	@Deprecated
 	public long getFirst_switched_as_long() {
 		return this.first_switched_as_long;
 	}

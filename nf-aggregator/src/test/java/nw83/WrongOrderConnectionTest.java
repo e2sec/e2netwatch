@@ -4,10 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.rmi.UnexpectedException;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Queue;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.Test;
@@ -17,12 +14,12 @@ import org.slf4j.LoggerFactory;
 import com.espertech.esper.client.EPException;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EventBean;
+import com.espertech.esper.client.UpdateListener;
 import com.espertech.esper.client.scopetest.SupportUpdateListener;
 import com.espertech.esper.client.time.CurrentTimeEvent;
 
-import de.e2security.netflow_flowaggregation.esper.NetflowEventEplExpressions;
-import de.e2security.netflow_flowaggregation.esper.TcpEplExpressions;
-import de.e2security.netflow_flowaggregation.esper.utils.EplExpressionTestSupporter;
+import de.e2security.netflow_flowaggregation.esper.epl.CommonEplExpressions;
+import de.e2security.netflow_flowaggregation.esper.epl.TcpEplExpressions;
 import de.e2security.netflow_flowaggregation.esper.utils.EsperTestSupporter;
 import de.e2security.netflow_flowaggregation.exceptions.NetflowEventException;
 import de.e2security.netflow_flowaggregation.model.protocols.NetflowEvent;
@@ -32,6 +29,64 @@ import de.e2security.netflow_flowaggregation.utils.TestUtil;
 import junit.framework.Assert;
 
 public class WrongOrderConnectionTest extends EsperTestSupporter {
+	
+	@Test public void realCaseTest() {
+		NetflowEvent testEvent1 = new NetflowEvent();
+		testEvent1.setFirst_switched("2018-12-22T11:18:55.544Z");
+		testEvent1.setLast_switched("2018-12-22T11:18:56.664Z");
+		testEvent1.setProtocol(6);
+		testEvent1.setIpv4_src_addr("172.22.0.3");
+		testEvent1.setIpv4_dst_addr("90.130.70.73");
+		testEvent1.setL4_src_port(56114);
+		testEvent1.setL4_dst_port(21);
+		testEvent1.setTcp_flags(1);
+		testEvent1.setHost("host");
+		NetflowEvent testEvent2 = new NetflowEvent();
+		testEvent2.setFirst_switched("2018-12-22T11:18:55.567Z");
+		testEvent2.setLast_switched("2018-12-22T11:18:56.663Z");
+		testEvent2.setProtocol(6);
+		testEvent2.setIpv4_src_addr("90.130.70.73");
+		testEvent2.setIpv4_dst_addr("172.22.0.3");
+		testEvent2.setL4_src_port(21);
+		testEvent2.setL4_dst_port(56114);
+		testEvent2.setTcp_flags(1);
+		testEvent2.setHost("host");
+		admin.createEPL(CommonEplExpressions.eplSortByLastSwitched());
+		EPStatement stmt = admin.createEPL("select * from NetflowEventOrdered");
+		final AtomicReference<NetflowEventOrdered> firstRemovedFromWindow = new AtomicReference<>();
+		final AtomicReference<NetflowEventOrdered> secondRemovedFromWindow = new AtomicReference<>();
+		stmt.addListener(new UpdateListener() {
+			@Override
+			public void update(EventBean[] newEvents, EventBean[] oldEvents) {
+				firstRemovedFromWindow.compareAndSet(null, (NetflowEventOrdered) newEvents[0].getUnderlying());
+				secondRemovedFromWindow.set((NetflowEventOrdered) newEvents[0].getUnderlying());
+			}
+		});
+		runtime.sendEvent(new CurrentTimeEvent(TestUtil.getCurrentTimeEvent("2018-12-22T11:18:56.663Z")));
+		runtime.sendEvent(testEvent1);
+		runtime.sendEvent(testEvent2);
+		runtime.sendEvent(new CurrentTimeEvent(TestUtil.getCurrentTimeEvent("2018-12-22T11:19:59.663Z")));
+		
+		admin.destroyAllStatements(); //destroy stmt in order to prevent repeat of triggering listener on 'stmt' since we are listening on NetflowEventOrdered and eplSortByLastSwitched set on time(60 sec) -> that is, each time the NetflowEventOrdered comes in, the listener will be triggered and thus overwrite secondRemovedFromWindow
+		//assert the first REMOVED event (the most oldest) from the window is the second one due to its last_switched.
+		Assert.assertEquals(testEvent2.getFirst_switched(), firstRemovedFromWindow.get().getFirst_switched());
+		final AtomicReference<ProtocolRegister> prot = new AtomicReference<>();
+		admin.createEPL(TcpEplExpressions.eplFinishedFlows());
+		admin.createEPL("select * from ProtocolRegister").addListener(new UpdateListener() {
+
+			@Override
+			public void update(EventBean[] newEvents, EventBean[] oldEvents) {
+				prot.set((ProtocolRegister) newEvents[0].getUnderlying());
+			}
+			
+		});
+		runtime.sendEvent(new CurrentTimeEvent(TestUtil.getCurrentTimeEvent("2018-12-22T11:20:59.663Z")));
+		runtime.sendEvent(firstRemovedFromWindow.get());
+		runtime.sendEvent(new CurrentTimeEvent(TestUtil.getCurrentTimeEvent("2018-12-22T11:21:30.663Z")));
+		runtime.sendEvent(secondRemovedFromWindow.get());
+		runtime.sendEvent(new CurrentTimeEvent(TestUtil.getCurrentTimeEvent("2018-12-22T11:21:59.663Z")));
+		Assert.assertNull(prot.get()); //pattern should be not evaluated
+	}
 	
 	@Test public void testSortByLastSwitchedEplStatementTimeAndOrderStmtOnSameLastSwitchedWithFirstFirstSwitchedOrder() throws NetflowEventException {
 		NetflowEvent testEvent1 = new NetflowEvent();
@@ -148,7 +203,7 @@ public class WrongOrderConnectionTest extends EsperTestSupporter {
 		NetflowEvent testEvent2 = new NetflowEvent();
 		testEvent2.setLast_switched("2018-12-22T00:00:20.999Z");
 		testEvent2.setFirst_switched("2018-12-21T23:59:10.999Z");
-		EPStatement stmt = admin.createEPL(NetflowEventEplExpressions.eplSortByLastSwitched());
+		EPStatement stmt = admin.createEPL(CommonEplExpressions.eplSortByLastSwitched());
 		AtomicReference<NetflowEventOrdered> neoReference = new AtomicReference<>();
 		stmt.addListener((newEvents, oldEvents) ->  {
 			NetflowEventOrdered neo = (NetflowEventOrdered) newEvents[0].getUnderlying();
@@ -182,7 +237,7 @@ public class WrongOrderConnectionTest extends EsperTestSupporter {
 		testEvent2.setIpv4_src_addr("hostB");
 		testEvent2.setL4_src_port(5353);
 		testEvent2.setL4_dst_port(9191);
-		EPStatement ordered = admin.createEPL(NetflowEventEplExpressions.eplSortByLastSwitched());
+		EPStatement ordered = admin.createEPL(CommonEplExpressions.eplSortByLastSwitched());
 		EPStatement finished = admin.createEPL(TcpEplExpressions.eplFinishedFlows());
 		SupportUpdateListener supportListener = new SupportUpdateListener();
 		finished.addListener(supportListener);

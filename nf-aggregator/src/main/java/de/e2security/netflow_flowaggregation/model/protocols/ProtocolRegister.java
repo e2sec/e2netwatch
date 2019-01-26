@@ -217,7 +217,8 @@ public class ProtocolRegister implements Serializable {
 				+ "in_l4_src_port=" + in_l4_src_port + " - " + in_l4_dst_port + "=in_l4_dst_port \n" 
 				+ "out_14_src_port=" + out_14_src_port + " - " + out_14_dst_port + "=out_14_dst_port \n"  
 				+ "in_tcp_flags=" + in_tcp_flags + " - " + out_tcp_flags + "=out_tcp_flags \n" 
-				+ "out_last_switched=" + out_last_switched + " - " + in_last_switched + "=in_last_switched \n";
+				+ "out_last_switched=" + out_last_switched + " - " + in_last_switched + "=in_last_switched \n" 
+				+ "out_first_switched=" + out_first_switched + " - " + in_first_switched + "=in_first_switched\n";
 	}
 
 	//setters for test purpose
