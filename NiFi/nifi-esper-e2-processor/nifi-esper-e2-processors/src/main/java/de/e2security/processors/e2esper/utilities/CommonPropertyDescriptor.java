@@ -23,7 +23,6 @@ public class CommonPropertyDescriptor {
 			.displayName("EplStatement")
 			.description("epl statement. @Name('<NAME>') anno should be provided. Events can be retrieved with Esper Producer by provided name")
 			.required(true)
-			.expressionLanguageSupported(ExpressionLanguageScope.VARIABLE_REGISTRY)
 			.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
 			.expressionLanguageSupported(ExpressionLanguageScope.VARIABLE_REGISTRY)
 			.build();
@@ -34,7 +33,6 @@ public class CommonPropertyDescriptor {
 			//TODO: write validator regarding stmt pattern
 			.description("define schema with EPL regarding the following pattern: 'create schema <NAME> as (<property_name> <property_type>,...)'. Please consider do not use ['] sign in the name ")
 			.required(true)
-			.expressionLanguageSupported(ExpressionLanguageScope.VARIABLE_REGISTRY)
 			.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
 			.expressionLanguageSupported(ExpressionLanguageScope.VARIABLE_REGISTRY)
 			.build();

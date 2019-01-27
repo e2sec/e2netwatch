@@ -47,13 +47,13 @@ public class EsperConsumer extends AbstractProcessor {
 	@OnScheduled public void start(final ProcessContext context) {
 		final EsperService esperService = context.getProperty(ESPER_ENGINE).asControllerService(EsperService.class);
 		esperEngine = esperService.execute(); //instantiated on controller's ENABLEMENT. execute() returns the shared instance back; 
-		String modifiedEventSchema = SupportUtility.modifyUserDefinedSchema(context.getProperty(EVENT_SCHEMA).getValue());
+		String modifiedEventSchema = SupportUtility.modifyUserDefinedSchema(context.getProperty(EVENT_SCHEMA).evaluateAttributeExpressions().getValue());
 		esperEngine.getEPAdministrator().createEPL(modifiedEventSchema);
 		getLogger().debug(String.format("initialized schema [%s]", modifiedEventSchema));
-		String modifiedEPStatement = SupportUtility.modifyUserDefinedEPStatement(context.getProperty(EPL_STATEMENT).getValue());
+		String modifiedEPStatement = SupportUtility.modifyUserDefinedEPStatement(context.getProperty(EPL_STATEMENT).evaluateAttributeExpressions().getValue());
 		esperEngine.getEPAdministrator().createEPL(modifiedEPStatement);
 		getLogger().debug(String.format("initialized stmt [%s]", modifiedEPStatement));
-		eventName.compareAndSet(null, SupportUtility.retrieveClassNameFromSchemaEPS(context.getProperty(EVENT_SCHEMA).getValue()));
+		eventName.compareAndSet(null, SupportUtility.retrieveClassNameFromSchemaEPS(context.getProperty(EVENT_SCHEMA).evaluateAttributeExpressions().getValue()));
 	}
 
 	@Override public void onTrigger(ProcessContext context, ProcessSession session) throws ProcessException {

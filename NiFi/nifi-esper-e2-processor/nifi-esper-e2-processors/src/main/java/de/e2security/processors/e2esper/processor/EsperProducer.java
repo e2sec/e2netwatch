@@ -69,7 +69,7 @@ public class EsperProducer extends AbstractSessionFactoryProcessor {
 		 */
 		final EsperService esperService = context.getProperty(ESPER_ENGINE).asControllerService(EsperService.class);
 		final EPServiceProvider esperEngine = esperService.execute();
-		final String stmtName = context.getProperty(EPSTMT_NAME).getValue();
+		final String stmtName = context.getProperty(EPSTMT_NAME).evaluateAttributeExpressions().getValue();
 		
 		/*
 		 * if producer and consumer haven been started simultaneously (as pair in Process Group) or 
