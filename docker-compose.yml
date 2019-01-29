@@ -203,7 +203,7 @@ services:
     image: e2nw/nf-aggregator
     depends_on:
       - kafka
-    command: 'java -jar netflow-flowaggregation-1.0-SNAPSHOT-jar-with-dependencies.jar'
+    command: 'java -jar netflow-flowaggregation-1.0.1-jar-with-dependencies.jar'
     networks:
       - e2netwatch-net
 

@@ -50,6 +50,9 @@ public class NetflowEvent implements Serializable {
 				this.first_switched, 
 				this.last_switched);
 	}
+	
+	//constructor for test purpose
+	public NetflowEvent() {}
 
 	public NetflowEvent(String jsonString) throws NetflowEventException {
         JSONObject jsonObject;
@@ -147,24 +150,48 @@ public class NetflowEvent implements Serializable {
         return ipv4_src_addr;
     }
     
+    public void setIpv4_src_addr(String src_addr) {
+    	this.ipv4_src_addr = src_addr;
+    }
+    
     public String getIpv4_dst_addr() {
         return ipv4_dst_addr;
+    }
+    
+    public void setIpv4_dst_addr(String dst_addr) {
+    	this.ipv4_dst_addr = dst_addr;
     }
     
     public Integer getL4_src_port() {
         return l4_src_port;
     }
     
+    public void setL4_src_port(int src_port) {
+    	this.l4_src_port = src_port;
+    }
+    
     public Integer getL4_dst_port() {
         return l4_dst_port;
+    }
+    
+    public void setL4_dst_port(int dst_port) {
+    	this.l4_dst_port = dst_port;
     }
     
     public Integer getTcp_flags() {
         return tcp_flags;
     }
     
+    public void setTcp_flags(int tcp_flags) {
+    	this.tcp_flags = tcp_flags;
+    }
+    
     public Integer getProtocol() {
         return protocol;
+    }
+    
+    public void setProtocol(int protocol) {
+    	this.protocol = protocol;
     }
     
     public Integer getVersion() {
@@ -191,7 +218,19 @@ public class NetflowEvent implements Serializable {
         return first_switched;
     }
     
+    public void setFirst_switched(String first_switched) {
+    	this.first_switched = ZonedDateTime.parse(first_switched);
+    }
+    
     public ZonedDateTime getLast_switched() {
         return last_switched;
     }
+    
+    public void setLast_switched(String last_switched) {
+    	this.last_switched = ZonedDateTime.parse(last_switched);
+    }
+
+	public void setHost(String host) {
+		this.host = host;
+	}
 }
