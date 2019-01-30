@@ -15,6 +15,8 @@ public final class Mappings {
     public static final String USERGROUPS = USER_MANAGEMENT + "/usergroups";
     public static final String TIMEZONES = USER_MANAGEMENT + "/timezones";
     public static final String PROFILE_PREFERENCES = USER_MANAGEMENT + "/profilepreferences";
+    
+    public static final String CLUSTER = ELASTICSEARCH + "/cluster";
 
     private Mappings() {
         throw new AssertionError();
