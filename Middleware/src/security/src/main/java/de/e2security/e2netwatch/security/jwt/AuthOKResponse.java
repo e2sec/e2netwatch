@@ -4,10 +4,12 @@ public class AuthOKResponse {
 
 	private String token;
 	private long expireTimeInS;
+	private String role;
 	
-	public AuthOKResponse(String token, long expireTimeInS) {
+	public AuthOKResponse(String token, long expireTimeInS, String role) {
 		this.token = token;
 		this.expireTimeInS = expireTimeInS;
+		this.setRole(role);
 	}
 	
 	public String getToken() {
@@ -21,6 +23,12 @@ public class AuthOKResponse {
 	}
 	public void setExpireTimeInS(long expireTimeInS) {
 		this.expireTimeInS = expireTimeInS;
+	}
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
 	}
 	
 }
