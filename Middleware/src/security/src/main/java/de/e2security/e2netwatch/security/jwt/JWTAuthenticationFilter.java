@@ -114,7 +114,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .sign(HMAC512(SECRET.getBytes()));
         
         // Create response body object with: token and expiration time
-        AuthOKResponse authOKResponse = new AuthOKResponse(token, EXPIRATION_TIME);
+        AuthOKResponse authOKResponse = new AuthOKResponse(token, EXPIRATION_TIME, roles.get(0));
         
         // Update response based on created JWT data
         res.setContentType("application/json;charset=UTF-8");
