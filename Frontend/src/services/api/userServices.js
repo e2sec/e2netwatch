@@ -6,7 +6,10 @@ import { helpers } from './../../helpers/helpers'
 export const userServices = {
     login,
     logout,
-    userDetails,
+    getUsers,
+    getUserProfile,
+    updateUserProfile,
+    changeUserPass
 };
 
 function login (user) {
@@ -22,6 +25,7 @@ function login (user) {
 
                 const data = {
                     'user': user.username,
+                    'role': 'admin',
                     'token': res.data.token,
                     'startTime': startTime,
                     'endTime': endTime,
@@ -55,22 +59,77 @@ function logout() {
     api.auth.logout();
 }
 
-function userDetails() {
+function getUserProfile() {
 
-    const token = helpers.getToken();
-
-    return axios.get('http://localhost:8080/api/um/users',
-        {headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer '+ token }})
+    return api.actions.getUserProfile()
         .then(res => {
-
-            console.log(res.data)
-
+            return res.data;
         }).catch( error => {
+
+            console.log(error)
             if (error.response) {
 
+            }else if (error.request) {
+
+            } else {
 
             }
 
+            return Promise.reject(error.message);
+        });
+}
+
+function getUsers() {
+
+    return api.actions.getUsers()
+        .then(res => {
+            return res.data;
+        }).catch( error => {
+
+            console.log(error)
+            if (error.response) {
+
+            }else if (error.request) {
+
+            } else {
+
+            }
+
+            return Promise.reject(error.message);
+        });
+}
+
+function updateUserProfile(profile) {
+
+    return api.actions.updateUserProfile(profile)
+        .then((res) => {
+            return res.data
+        }).catch( error => {
+            if (error.response) {
+
+            }else if (error.request) {
+
+            } else {
+
+            }
+            return Promise.reject(error.message);
+        });
+}
+
+function changeUserPass(pass) {
+
+    return api.actions.changeUserPass(pass)
+        .then((res) => {
+            console.log(res.data)
+            return res.data
+        }).catch( error => {
+            if (error.response) {
+
+            }else if (error.request) {
+
+            } else {
+
+            }
             return Promise.reject(error.message);
         });
 }
