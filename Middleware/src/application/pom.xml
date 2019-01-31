@@ -41,6 +41,12 @@
         
         <dependency>
             <groupId>de.e2security.e2netwatch</groupId>
+            <artifactId>elasticsearch</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>de.e2security.e2netwatch</groupId>
             <artifactId>security</artifactId>
             <version>${project.version}</version>
         </dependency>

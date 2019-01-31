@@ -32,13 +32,17 @@
         <guava.version>23.0</guava.version>
         <commons-lang.version>2.6</commons-lang.version>
         <commons-validator.version>1.6</commons-validator.version>
+        <elasticsearchVersion>6.2.4</elasticsearchVersion>
+        <powermock.version>2.0.0-beta.5</powermock.version>
+        <mockito.version>2.23.4</mockito.version>
+        <surefire.plugin.version>2.22.1</surefire.plugin.version>
     </properties>
 
     <modules>
         <module>utils</module>
         <module>usermanagement</module>
         <module>security</module>
-        <!-- <module>elasticsearch</module> -->
+        <module>elasticsearch</module>
         <module>application</module>
     </modules>
 

@@ -42,7 +42,6 @@ public class ProtocolRegisterTrigger implements UpdateListener {
 		this.producer = producer;
 	}
 	
-	//public visibility due to tests
 	public static class Host {
 		private String addr;
 		private Integer port;
@@ -55,35 +54,30 @@ public class ProtocolRegisterTrigger implements UpdateListener {
 	}
 
 	//NW-76 distinguish traffic direction by port numbers.
-	//public visibility due to tests
-	public Pair<Host,Host> defineByPort(ProtocolRegister prtcl) {
+	//higher port = source host; lower port = dst hosts
+	public Pair<Host,Host> defineTrafficDirectionByPortOnEqualFirstSwitched(ProtocolRegister prtcl) {
 		String srcaddr = prtcl.getIn_ipv4_src_addr();
 		Integer srcport = prtcl.getIn_l4_src_port();
 		String dstaddr = prtcl.getOut_ipv4_src_addr();
 		Integer dstport = prtcl.getOut_14_src_port();
-		ZonedDateTime in_last_switched = prtcl.getIn_last_switched();
-		ZonedDateTime out_last_switched = prtcl.getOut_last_switched();
-
+		
 		Host src = new Host(srcaddr, srcport);
 		Host dst = new Host(dstaddr, dstport);
-
-		//higher port = source host; lower port = dst hosts
-		int switchCmp = in_last_switched.compareTo(out_last_switched);	
-		if (switchCmp == 0) {
-			int portCmp = srcport.compareTo(dstport);
-			//exchange only in the following case
-			if (portCmp < 0) {
+		
+		if (prtcl.getIn_first_switched().compareTo(prtcl.getOut_first_switched()) == 0) {
+			if (srcport < dstport) {
 				dst = new Host(srcaddr,srcport);
 				src = new Host(dstaddr,dstport);
 			} 
 		}
+
 		return new ImmutablePair<>(src, dst);
 	}
 
 	//setting method in order to make it possible for test
 	public JSONObject prepareJson(ProtocolRegister prtcl) {
 		JSONObject jsonObject = new JSONObject();
-		Pair<Host,Host> pair = defineByPort(prtcl);
+		Pair<Host,Host> pair = defineTrafficDirectionByPortOnEqualFirstSwitched(prtcl);
 
 		String srcaddr = pair.getLeft().getAddr();
 		Integer srcport = pair.getLeft().getPort();
@@ -91,6 +85,7 @@ public class ProtocolRegisterTrigger implements UpdateListener {
 		Integer dstport = pair.getRight().getPort();	
 
 		String description = prtcl.getDescription();
+		
 		String host = prtcl.getIn_host();
 		Integer protocol = prtcl.getProtocol();
 		Integer in_flow_seq_num = prtcl.getIn_flow_seq_num();

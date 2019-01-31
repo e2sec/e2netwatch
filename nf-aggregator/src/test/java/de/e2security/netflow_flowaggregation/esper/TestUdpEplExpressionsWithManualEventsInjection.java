@@ -18,6 +18,7 @@ import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.scopetest.SupportUpdateListener;
 import com.espertech.esper.client.time.CurrentTimeEvent;
 
+import de.e2security.netflow_flowaggregation.esper.epl.UdpEplExpressions;
 import de.e2security.netflow_flowaggregation.esper.utils.EplExpressionTestSupporter;
 import de.e2security.netflow_flowaggregation.esper.utils.EsperTestSupporter;
 import de.e2security.netflow_flowaggregation.exceptions.NetflowEventException;
