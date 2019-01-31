@@ -1,5 +1,8 @@
 package de.e2security.e2netwatch.security;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -80,8 +83,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
      */
     @Bean
 	CorsConfigurationSource corsConfigurationSource() {
+    	CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
+    	configuration.setAllowedMethods(Collections.unmodifiableList(Arrays.asList("*")));
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+		source.registerCorsConfiguration("/**", configuration);
 		return source;
 	}
 	
