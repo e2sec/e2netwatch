@@ -1,4 +1,9 @@
 {
+  "order": 0,
+  "version": 1,
+  "index_patterns": [
+    "syslog-*"
+  ],
   "aliases": {},
   "mappings": {
     "doc": {
