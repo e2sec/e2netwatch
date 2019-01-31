@@ -18,8 +18,30 @@ import App from './App';
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
 const theme = createMuiTheme({
-
+    typography: {
+        useNextVariants: true,
+    },
+    overrides: {
+        MuiFormControl: {
+           marginDense: {
+               marginTop: 10,
+               marginBottom: 8,
+           }
+        },
+        MuiFormLabel: {
+            root: {
+                fontSize: '1.1rem'
+            }
+        },
+        MuiInputLabel: {
+            shrink: {
+                transform: 'translate(0, -5px) scale(0.9)',
+            },
+        },
+    }
 });
+
+console.log(theme)
 
 ReactDOM.render(
     <Provider store={store}>
