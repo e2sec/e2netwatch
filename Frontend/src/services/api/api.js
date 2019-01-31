@@ -3,7 +3,6 @@ import {helpers} from "../../helpers/helpers";
 
 const token = helpers.getToken();
 
-
 const apiAuth = axios.create({
     baseURL: 'http://localhost:8080/api/',
 });
@@ -12,7 +11,7 @@ const apiActions = axios.create({
     baseURL: 'http://localhost:8080/api/',
     headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer '+ token,
+        'Authorization': 'Bearer ' + token,
     }
 });
 
@@ -29,8 +28,20 @@ export default {
     },
 
     actions: {
-        userDetails(data) {
-            return apiActions.post('/auth/login', data)
+        getUsers() {
+            return apiActions.get('/um/users')
+        },
+        getUserProfile() {
+            return apiActions.get('/um/users/profile')
+        },
+        updateUserProfile(data) {
+            return apiActions.put('um/users', data)
+        },
+        changeUserPass(data) {
+            return apiActions.put('um/users/resetPassword', data)
         },
     }
 };
+
+
+

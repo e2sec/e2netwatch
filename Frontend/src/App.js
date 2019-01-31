@@ -1,6 +1,8 @@
 import React, {Component, Fragment} from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
+import Authorization from './components/Authorization/Authorization';
+
 import Login from './views/Login/Login';
 import Header from './views/Layout/Header/Header';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute'
@@ -11,18 +13,22 @@ import Page404 from './views/Page404/Page404';
 
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import Administration from "./views/Administration/Administration";
+
+
+const User = Authorization(['user', 'admin']);
+const Admin = Authorization(['admin']);
+
 
 const styles =  theme => ({
     root: {
         display: 'flex',
     },
-    toolbar: {
-        marginTop: 24,
-        ...theme.mixins.toolbar
-    },
+    toolbar: theme.mixins.toolbar,
     content: {
         flexGrow: 1,
         padding: theme.spacing.unit * 3,
+        paddingTop: theme.spacing.unit * 12
     },
 });
 
@@ -62,12 +68,11 @@ class App extends Component{
 
                             <main className={classes.content}>
 
-                                <div className={classes.toolbar} />
-
                                 <Switch>
-                                    <PrivateRoute exact path='/' component={Dashboard}/>
-                                    <PrivateRoute path='/profile' component={Profile}/>
-                                    <PrivateRoute component={Page404}/>
+                                    <Route exact path='/' component={User(Dashboard)}/>
+                                    <Route path='/profile' component={User(Profile)}/>
+                                    <Route path='/administration' component={Admin(Administration)}/>
+                                    <Route component={User(Page404)}/>
                                 </Switch>
 
                             </main>
