@@ -8,6 +8,7 @@ export const helpers = {
     localStorageSave,
     getToken,
     getUser,
+    getRole
 }
 
 
@@ -49,4 +50,8 @@ function getToken (){
 
 function getUser (){
     return localStorage.getItem('user');
+}
+
+function getRole (){
+    return localStorage.getItem('role');
 }

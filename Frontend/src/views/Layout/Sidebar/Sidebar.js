@@ -7,7 +7,7 @@ import DashboardIcon from '@material-ui/icons/Dashboard';
 import ListIcon from '@material-ui/icons/List';
 
 
-import logo from '../../../assets/images/logo-white.png';
+import logo from '../../../assets/images/logo.png';
 
 
 const styles = theme => ({
@@ -21,7 +21,11 @@ const styles = theme => ({
         width: '20%',
     },
     logo: {
-        minHeight: '64px'
+        '& > img': {
+            height: 60,
+            display: 'block',
+            margin: '8px auto'
+        }
     },
     list: {
         paddingTop: theme.spacing.unit * 3,
@@ -79,13 +83,15 @@ class Sidebar extends Component{
                         paper: classes.drawerPaper,
                     }}
                 >
-                    <div className={classes.logo}> </div>
+                    <div className={classes.logo}>
+                        <img src={logo} alt="logo"/>
+                    </div>
                     <Divider/>
 
 
                     <List className={classes.list}>
 
-                        <ListItem component={NavLink} to='/dashboard' className={classes.listItem}>
+                        <ListItem component={NavLink} to='/' className={classes.listItem}>
                             <ListItemIcon><DashboardIcon/></ListItemIcon>
                             <ListItemText primary="Dashboard" className={classes.linkText}/>
                         </ListItem>

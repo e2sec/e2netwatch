@@ -3,6 +3,7 @@ import { Route, Redirect } from 'react-router-dom';
 import { helpers } from "../../helpers/helpers";
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
+
     <Route {...rest} render={props => (
         helpers.getToken()
             ? <Component {...props} />
