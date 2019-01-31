@@ -19,7 +19,7 @@ services:
     volumes:
       - ./Capture/filesystem/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
       - ./Capture/filesystem/logstash.yml:/usr/share/logstash/config/logstash.yml
-      - /etc/localtime:/etc/localtime:ro
+      #- /etc/localtime:/etc/localtime:ro
 
 
   middleware:
@@ -36,8 +36,8 @@ services:
       - "8080:8080"
     expose:
       - "8080"
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
+    #volumes:
+      #- /etc/localtime:/etc/localtime:ro
     networks:
       - e2netwatch-net
   
@@ -52,8 +52,8 @@ services:
       - "80:80"
     networks:
       - e2netwatch-net
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
+    #volumes:
+      #- /etc/localtime:/etc/localtime:ro
     
     
   elasticsearch:
@@ -77,7 +77,7 @@ services:
       - IPC_LOCK
     volumes:
       - ElasticData:/usr/share/elasticsearch/data
-      - /etc/localtime:/etc/localtime:ro
+      #- /etc/localtime:/etc/localtime:ro
     networks:
       - e2netwatch-net
   
@@ -96,8 +96,8 @@ services:
       ELASTICSEARCH_URL: http://elasticsearch:9200
     networks:
       - e2netwatch-net
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
+    #volumes:
+      #- /etc/localtime:/etc/localtime:ro
 
     
   mysql:
@@ -108,7 +108,7 @@ services:
      - "3306:3306"
     volumes:
       - MysqlData:/var/lib/mysql
-      - /etc/localtime:/etc/localtime:ro
+      #- /etc/localtime:/etc/localtime:ro
     networks:
       - e2netwatch-net
 
@@ -123,8 +123,8 @@ services:
       - "2181"
     ports:
       - "2181:2181"
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
+    #volumes:
+      #- /etc/localtime:/etc/localtime:ro
     networks:
       - e2netwatch-net
 
@@ -152,8 +152,8 @@ services:
       # zookeeper to connect to
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_CREATE_TOPICS: "syslog:1:1, netflow:1:1, nf_raw:1:1, nifi-debug:1:1, nifi-error:1:1, connection_raw:1:1"
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
+    #volumes:
+      #- /etc/localtime:/etc/localtime:ro
     networks:
       - e2netwatch-net
 
@@ -178,7 +178,7 @@ services:
       - NIFI_ELECTION_MAX_WAIT=1 min
     volumes:
       - ./NiFi/conf:/opt/nifi/nifi-current/conf/:rw
-      - /etc/localtime:/etc/localtime:ro
+      #- /etc/localtime:/etc/localtime:ro
     networks:
       - e2netwatch-net
 
@@ -192,7 +192,7 @@ services:
       - "26571:26571"
     volumes:
       - Norikra:/var/tmp/norikra:rw
-      - /etc/localtime:/etc/localtime:ro
+      #- /etc/localtime:/etc/localtime:ro
     command: "norikra start --stats /var/tmp/norikra/stats.json -l /var/tmp/norikra"
     networks:
       - e2netwatch-net
