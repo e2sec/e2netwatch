@@ -9,11 +9,11 @@ import { withStyles } from '@material-ui/core/styles';
 import {AppBar, Toolbar, Typography, IconButton, Menu, MenuItem, ListItemText, ListItemIcon } from '@material-ui/core';
 
 import MenuIcon from '@material-ui/icons/Menu';
-import More from '@material-ui/icons/MoreVert';
-import Notification from '@material-ui/icons/NotificationsNone';
-import Account from '@material-ui/icons/AccountCircle';
-import Logout from '@material-ui/icons/ExitToApp';
-import Administration from '@material-ui/icons/Settings';
+import MoreIcon from '@material-ui/icons/MoreVert';
+import NotificationIcon from '@material-ui/icons/NotificationsNone';
+import AccountIcon from '@material-ui/icons/AccountCircle';
+import LogoutIcon from '@material-ui/icons/ExitToApp';
+import AdministrationIcon from '@material-ui/icons/Settings';
 
 import Fab from "@material-ui/core/es/Fab/Fab";
 
@@ -106,7 +106,7 @@ class Header extends Component {
                     </Typography>*/}
                     <Fragment>
                         <IconButton color="inherit">
-                            <Notification className={classes.notification} />
+                            <NotificationIcon className={classes.notification} />
                         </IconButton>
                         <Fab
                              color="inherit"
@@ -115,7 +115,7 @@ class Header extends Component {
                              aria-haspopup="true"
                              onClick={this.openDropdown}
                         >
-                            TB
+                            UU
                         </Fab>
                         {/*<IconButton color="inherit"
                                     className={classes.profileButton}
@@ -132,16 +132,16 @@ class Header extends Component {
                         >
                             <MenuItem component={Link} to="/profile" onClick={this.closeDropdown}>
                                 <ListItemIcon>
-                                    <Account />
+                                    <AccountIcon />
                                 </ListItemIcon>
                                 <ListItemText primary="Profile" />
                             </MenuItem>
 
                             {
-                                helpers.getRole() === 'admin' ? (
+                                helpers.getRole() === 'ROLE_ADMIN' ? (
                                     <MenuItem component={Link} to="/administration" onClick={this.closeDropdown}>
                                         <ListItemIcon>
-                                            <Administration />
+                                            <AdministrationIcon />
                                         </ListItemIcon>
                                         <ListItemText primary="Administrator" />
                                     </MenuItem>) : ''
@@ -149,7 +149,7 @@ class Header extends Component {
 
                             <MenuItem component={Link} to="/login" onClick={this.logout}>
                                 <ListItemIcon>
-                                    <Logout />
+                                    <LogoutIcon />
                                 </ListItemIcon>
                                 <ListItemText primary="Logout" />
                             </MenuItem>

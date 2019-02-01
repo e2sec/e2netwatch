@@ -16,8 +16,8 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Administration from "./views/Administration/Administration";
 
 
-const User = Authorization(['user', 'admin']);
-const Admin = Authorization(['admin']);
+const User = Authorization(['ROLE_USER', 'ROLE_ADMIN']);
+const Admin = Authorization(['ROLE_ADMIN']);
 
 
 const styles =  theme => ({
