@@ -44,7 +44,7 @@ export default {
             return apiActions.get('/um/profilepreferences/current')
         },
         updateUserPreferences(data) {
-            return apiActions.put('/um/profilepreferences', {id: 1, name: data})
+            return apiActions.put('/um/profilepreferences', {id: 1, timezone: data})
         },
         getTimezones() {
             return apiActions.get('/um/timezones')
