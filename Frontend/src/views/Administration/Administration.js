@@ -1,12 +1,17 @@
 import React, { Component, Fragment } from 'react';
 
-import { withStyles } from '@material-ui/core/styles';
-import Heading from '../../components/Heading/Heading';
-import TablePaginationActions from '../../components/TablePaginationActions/TablePaginationActions'
-import { Paper, Tab, Tabs, Table, TableHead, TableBody, TableRow, TableCell, TableFooter, TablePagination } from '@material-ui/core';
-import TabContainer from '../../components/TabContainer/TabContainer';
-import {userActions} from "../../store/actions/userActions";
+
 import connect from "react-redux/es/connect/connect";
+import { withStyles } from '@material-ui/core/styles';
+
+import Heading from '../../components/Heading/Heading';
+import TabContainer from '../../components/TabContainer/TabContainer';
+import TablePaginationActions from '../../components/TablePaginationActions/TablePaginationActions'
+import {userActions} from "../../store/actions/userActions";
+
+import { Paper, Tab, Tabs, Table, TableHead, TableBody, TableRow, TableCell, TableFooter, TablePagination, IconButton } from '@material-ui/core';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 
 const styles = theme => ({
@@ -23,6 +28,12 @@ const styles = theme => ({
     },
     table: {
         minWidth: 500,
+        '& th':{
+            paddingRight: theme.spacing.unit * 3
+        },
+        '& td':{
+            paddingRight: theme.spacing.unit * 3
+        }
     },
     tableWrapper: {
         overflowX: 'auto',
@@ -103,17 +114,25 @@ class Administration extends Component {
                                             <TableCell>Email</TableCell>
                                             <TableCell>User group</TableCell>
                                             <TableCell>User status</TableCell>
-                                            <TableCell>Action</TableCell>
+                                            <TableCell></TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
                                         {users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(user => (
                                             <TableRow key={user.id}>
-                                                <TableCell component="th" scope="row">{user.firstName + " " + user.lastName}</TableCell>
+                                                <TableCell>{user.firstName + " " + user.lastName}</TableCell>
                                                 <TableCell>{user.username}</TableCell>
                                                 <TableCell>{user.email}</TableCell>
                                                 <TableCell>{user.userGroups[0].name}</TableCell>
                                                 <TableCell>{user.userStatus.name}</TableCell>
+                                                <TableCell align="right">
+                                                    <IconButton aria-label="Edit">
+                                                        <EditIcon />
+                                                    </IconButton>
+                                                    <IconButton aria-label="Delete">
+                                                        <DeleteIcon/>
+                                                    </IconButton>
+                                                </TableCell>
                                             </TableRow>
                                         ))}
                                         {emptyRows > 0 && (

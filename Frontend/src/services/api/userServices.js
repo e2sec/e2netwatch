@@ -1,4 +1,3 @@
-import axios from 'axios';
 import api from './api';
 import moment from 'moment';
 import { helpers } from './../../helpers/helpers'
@@ -9,7 +8,10 @@ export const userServices = {
     getUsers,
     getUserProfile,
     updateUserProfile,
-    changeUserPass
+    changeUserPass,
+    getUserPreferences,
+    updateUserPreferences,
+    getTimezones
 };
 
 function login (user) {
@@ -25,7 +27,7 @@ function login (user) {
 
                 const data = {
                     'user': user.username,
-                    'role': 'admin',
+                    'role': res.data.role,
                     'token': res.data.token,
                     'startTime': startTime,
                     'endTime': endTime,
@@ -99,9 +101,9 @@ function getUsers() {
         });
 }
 
-function updateUserProfile(profile) {
+function updateUserProfile(userProfile) {
 
-    return api.actions.updateUserProfile(profile)
+    return api.actions.updateUserProfile(userProfile)
         .then((res) => {
             return res.data
         }).catch( error => {
@@ -120,7 +122,57 @@ function changeUserPass(pass) {
 
     return api.actions.changeUserPass(pass)
         .then((res) => {
-            console.log(res.data)
+            return res.data
+        }).catch( error => {
+            if (error.response) {
+
+            }else if (error.request) {
+
+            } else {
+
+            }
+            return Promise.reject(error.message);
+        });
+}
+
+function getUserPreferences() {
+
+    return api.actions.getUserPreferences()
+        .then((res) => {
+            return res.data
+        }).catch( error => {
+            if (error.response) {
+
+            }else if (error.request) {
+
+            } else {
+
+            }
+            return Promise.reject(error.message);
+        });
+}
+
+function updateUserPreferences(userPreferences) {
+
+    return api.actions.updateUserPreferences(userPreferences)
+        .then((res) => {
+            return res.data
+        }).catch( error => {
+            if (error.response) {
+
+            }else if (error.request) {
+
+            } else {
+
+            }
+            return Promise.reject(error.message);
+        });
+}
+
+function getTimezones() {
+
+    return api.actions.getTimezones()
+        .then((res) => {
             return res.data
         }).catch( error => {
             if (error.response) {

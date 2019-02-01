@@ -40,6 +40,15 @@ export default {
         changeUserPass(data) {
             return apiActions.put('um/users/resetPassword', data)
         },
+        getUserPreferences() {
+            return apiActions.get('/um/profilepreferences/current')
+        },
+        updateUserPreferences(data) {
+            return apiActions.put('/um/profilepreferences', {id: 1, name: data})
+        },
+        getTimezones() {
+            return apiActions.get('/um/timezones')
+        }
     }
 };
 
