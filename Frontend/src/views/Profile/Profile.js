@@ -194,7 +194,7 @@ class Profile extends Component {
 
     // update userProfile preferences
     updateUserPreferences = () => {
-        // this.props.updateUserPreferences(this.state.userTimezone)
+        this.props.updateUserPreferences(this.state.userTimezone)
     };
 
     handleTimezoneChange = (e) => {
