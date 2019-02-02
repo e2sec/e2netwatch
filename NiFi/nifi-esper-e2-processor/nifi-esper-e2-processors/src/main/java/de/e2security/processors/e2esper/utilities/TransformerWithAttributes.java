@@ -9,11 +9,11 @@ import org.apache.nifi.flowfile.FlowFile;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class TransformerWithMetrics implements EventTransformer {
+public class TransformerWithAttributes implements EventTransformer {
 	
 	final FlowFile ff;
 	
-	public TransformerWithMetrics(FlowFile ff) {
+	public TransformerWithAttributes(FlowFile ff) {
 		this.ff = ff;
 	}
 

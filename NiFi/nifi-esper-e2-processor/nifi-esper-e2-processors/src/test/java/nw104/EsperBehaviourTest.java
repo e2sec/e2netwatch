@@ -27,7 +27,7 @@ import de.e2security.processors.e2esper.listener.EsperListener;
 import de.e2security.processors.e2esper.processor.EsperProducer;
 import de.e2security.processors.e2esper.utilities.CommonSchema;
 import de.e2security.processors.e2esper.utilities.EventTransformer;
-import de.e2security.processors.e2esper.utilities.TransformerWithMetrics;
+import de.e2security.processors.e2esper.utilities.TransformerWithAttributes;
 import junit.framework.Assert;
 import nw101.EplPatternProcessingTest.TestEvent;
 
@@ -60,7 +60,7 @@ public class EsperBehaviourTest {
 		event1.setEvent_id(4720);
 		TestEvent event2 = event1.clone();
 		event2.setTarget_user_name_hash("79957b8bf053a695e62603c1f81bb48");
-		EventTransformer transformer = new TransformerWithMetrics(new MockFlowFile(1));
+		EventTransformer transformer = new TransformerWithAttributes(new MockFlowFile(1));
 		//define esper generic tuple for attributes
 //		engine.getEPAdministrator().createEPL("create schema FlowFileAttributes()");
 		//test schemas

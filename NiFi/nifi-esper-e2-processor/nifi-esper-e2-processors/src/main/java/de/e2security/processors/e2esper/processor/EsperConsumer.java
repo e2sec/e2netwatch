@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -32,7 +33,7 @@ import com.espertech.esper.client.EPServiceProvider;
 import de.e2security.nifi.controller.esper.EsperService;
 import de.e2security.processors.e2esper.utilities.EventTransformer;
 import de.e2security.processors.e2esper.utilities.SupportUtility;
-import de.e2security.processors.e2esper.utilities.TransformerWithMetrics;
+import de.e2security.processors.e2esper.utilities.TransformerWithAttributes;
 
 @Tags({"E2EsperProcessor"})
 @CapabilityDescription("Sending incoming events to esper engine)")
@@ -40,9 +41,12 @@ public class EsperConsumer extends AbstractProcessor {
 	
 	private volatile EPServiceProvider esperEngine;
 	
-	@OnStopped public void stop(final ProcessContext context) {}
-	
 	final private AtomicReference<String> eventName = new AtomicReference<String>();
+	
+	@OnStopped public void stop(final ProcessContext context) {
+		eventName.set(null); //since schema can be changed by the user.
+	}
+	
 	
 	@OnScheduled public void start(final ProcessContext context) {
 		final EsperService esperService = context.getProperty(ESPER_ENGINE).asControllerService(EsperService.class);
@@ -60,7 +64,6 @@ public class EsperConsumer extends AbstractProcessor {
 		final FlowFile flowFile = session.get();
 		if (flowFile == null) { return ; }
 		final AtomicReference<String> input = new AtomicReference<>();
-		//send event with EVENT_NAME_ATTR
 		session.read(flowFile, (inputStream) -> {
 			try {
 				input.set(IOUtils.toString(inputStream, StandardCharsets.UTF_8)); 
@@ -68,8 +71,12 @@ public class EsperConsumer extends AbstractProcessor {
 				ex.printStackTrace();
 			}
 		});
-		EventTransformer transformer = new TransformerWithMetrics(flowFile);
-		try { esperEngine.getEPRuntime().sendEvent(transformer.transform(input.get()), eventName.get());
+		//send event with flow file attribute properties
+		final EventTransformer transformer = new TransformerWithAttributes(flowFile);
+		try { 
+			final Map<String,Object> eventAsMap = transformer.transform(input.get());
+			esperEngine.getEPRuntime().sendEvent(eventAsMap, eventName.get());
+			getLogger().debug(String.format("sent event [%s]:[%s]", eventName.get(), SupportUtility.transformEventMapToJson(eventAsMap)));
 		} catch (IOException e) { e.printStackTrace(); }
 		
 		session.remove(flowFile);
