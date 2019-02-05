@@ -1,17 +1,16 @@
 import api from './config';
 
-export const userServices = {
-    getUser,
-    updateUser,
-    changePassword,
-    getUserPreferences,
-    updateUserPreferences,
+export const adminServices = {
+    getUsers,
+    getUserGroups,
+    activateUser,
+    deactivateUser,
+    deleteUser
 };
 
+function getUsers() {
 
-function getUser() {
-
-    return api.user.getUser()
+    return api.admin.getUsers()
         .then(res => {
             return res.data;
         }).catch( error => {
@@ -29,12 +28,14 @@ function getUser() {
         });
 }
 
-function updateUser(user) {
+function getUserGroups() {
 
-    return api.user.updateUser(user)
-        .then((res) => {
-            return res.data
+    return api.admin.getUserGroups()
+        .then(res => {
+            return res.data;
         }).catch( error => {
+
+            console.log(error)
             if (error.response) {
 
             }else if (error.request) {
@@ -42,16 +43,19 @@ function updateUser(user) {
             } else {
 
             }
+
             return Promise.reject(error.message);
         });
 }
 
-function changePassword(pass) {
+function activateUser(userId) {
 
-    return api.user.changePassword(pass)
-        .then((res) => {
-            return res.data
+    return api.admin.activateUser(userId)
+        .then(res => {
+            return res.data;
         }).catch( error => {
+
+            console.log(error)
             if (error.response) {
 
             }else if (error.request) {
@@ -59,16 +63,19 @@ function changePassword(pass) {
             } else {
 
             }
+
             return Promise.reject(error.message);
         });
 }
 
-function getUserPreferences() {
+function deactivateUser(userId) {
 
-    return api.user.getUserPreferences()
-        .then((res) => {
-            return res.data
+    return api.admin.deactivateUser(userId)
+        .then(res => {
+            return res.data;
         }).catch( error => {
+
+            console.log(error)
             if (error.response) {
 
             }else if (error.request) {
@@ -76,16 +83,19 @@ function getUserPreferences() {
             } else {
 
             }
+
             return Promise.reject(error.message);
         });
 }
 
-function updateUserPreferences(userPreferences) {
+function deleteUser(userId) {
 
-    return api.user.updateUserPreferences(userPreferences)
-        .then((res) => {
-            return res.data
+    return api.admin.deleteUser(userId)
+        .then(res => {
+            return res.data;
         }).catch( error => {
+
+            console.log(error)
             if (error.response) {
 
             }else if (error.request) {
@@ -93,6 +103,7 @@ function updateUserPreferences(userPreferences) {
             } else {
 
             }
+
             return Promise.reject(error.message);
         });
 }

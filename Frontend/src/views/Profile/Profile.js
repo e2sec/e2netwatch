@@ -2,11 +2,12 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 
 import { userActions } from '../../store/actions/userActions';
+import { helpersActions } from '../../store/actions/helpersActions';
 
 import TabContainer from '../../components/TabContainer/TabContainer'
 
 import { withStyles } from '@material-ui/core/styles';
-import { Grid, Paper, TextField, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Switch, Typography, Button, Tabs, Tab, Fab, Avatar, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@material-ui/core'
+import { Grid, Paper, TextField, FormControl, InputLabel, MenuItem, Select, Switch, Typography, Button, Tabs, Tab, Avatar, Dialog,  DialogContent,  DialogTitle} from '@material-ui/core'
 import Toolbar from "@material-ui/core/es/Toolbar/Toolbar";
 
 import profilePlaceholder from '../../assets/images/profile-placeholder.png';
@@ -93,7 +94,7 @@ const styles = theme => ({
         }
     },
     dialogButtons: {
-        marginTop: theme.spacing.unit * 3,
+        marginTop: theme.spacing.unit * 4,
         display: 'flex',
         justifyContent: 'flex-end',
         '& > button': {
@@ -109,31 +110,31 @@ class Profile extends Component {
         tabValue: 0,
         isEditProfileOpened: false,
         isChangePassOpened: false,
-        dataToUpdateProfile: {
+        userProfileState: {
             email: "",
             firstName: "",
-            lastName: ""
+            lastName: "",
         },
-        pass: {
+        passState: {
             password: "",
             repeatedPassword: ""
         },
-        userTimezone: "",
+        userTimezoneState: "",
     };
 
     componentDidMount() {
-        this.props.getUserProfile();
+        this.props.getUser();
         this.props.getUserPreferences();
         this.props.getTimezones();
     }
 
     componentDidUpdate(prevProps, prevState, snapshot){
-        if (this.props.userProfile !== prevProps.userProfile) {
-            this.setState({ dataToUpdateProfile: this.props.userProfile});
+        if (this.props.userProfile.data !== prevProps.userProfile.data) {
+            this.setState({ userProfileState: this.props.userProfile.data});
         }
 
-        if (this.props.userPreferences !== prevProps.userPreferences) {
-            this.setState({ userTimezone: this.props.userPreferences.timezone});
+        if (this.props.userPreferences.data !== prevProps.userPreferences.data) {
+            this.setState({ userTimezoneState: this.props.userPreferences.data.timezone});
         }
     }
 
@@ -145,24 +146,24 @@ class Profile extends Component {
     closeEditProfile = () => {
         this.setState({
             isEditProfileOpened: false,
-            dataToUpdateProfile: this.props.userProfile
+            userProfileState: this.props.userProfile.data
         });
     };
 
-    editUserProfile = (e) => {
+    editProfile = (e) => {
         this.setState({
-            dataToUpdateProfile: {
-                ...this.state.dataToUpdateProfile,
+            userProfileState: {
+                ...this.state.userProfileState,
                 [e.target.id]: e.target.value
             }
         })
     };
 
-    updateUserProfile = (e) => {
+    updateUser = (e) => {
         e.preventDefault();
-        this.props.updateUserProfile(this.state.dataToUpdateProfile);
+        this.props.updateUser(this.state.userProfileState);
         this.closeEditProfile();
-    }
+    };
 
 
     // change pass
@@ -170,35 +171,32 @@ class Profile extends Component {
         this.setState({ isChangePassOpened: true });
     };
 
-    closeChangePass = (e) => {
-        this.setState({
-            isChangePassOpened: false,
-            stateUser: this.props.user
-        });
+    closeChangePass = () => {
+        this.setState({ isChangePassOpened: false });
     };
 
     editPass = (e) => {
         this.setState({
-            pass: {
-                ...this.state.pass,
+            passState: {
+                ...this.state.passState,
                 [e.target.id]: e.target.value
             }
         })
     };
 
-    changeUserPass = (e) => {
+    changePassword = (e) => {
         e.preventDefault();
-        this.props.changeUserPass(this.state.pass)
+        this.props.changePassword(this.state.passState)
         this.closeChangePass();
     }
 
     // update userProfile preferences
     updateUserPreferences = () => {
-        this.props.updateUserPreferences(this.state.userTimezone)
+        this.props.updateUserPreferences(this.state.userTimezoneState)
     };
 
-    handleTimezoneChange = (e) => {
-        this.setState({ userTimezone: e.target.value });
+    editTimezone = (e) => {
+        this.setState({ userTimezoneState: e.target.value });
     };
 
     // tab changing
@@ -209,17 +207,12 @@ class Profile extends Component {
 
     render(){
 
-        const { classes, userProfile, timezones } = this.props;
-        const { tabValue, dataToUpdateProfile, userTimezone } = this.state;
+        const { classes, userProfile, timezones, userPreferences } = this.props;
+        const { tabValue, userProfileState, userTimezoneState } = this.state;
 
-        if (!this.props.userProfile || !this.props.timezones || !this.props.userPreferences) return null;
+        if (userProfile.loading === true || timezones.loading === true || userPreferences.loading === true || userProfile.data.hasOwnProperty('userStatus') === false) return null
 
         else {
-
-            console.log(this.props.userPreferences)
-            console.log(this.props.timezones)
-            console.log(this.state.userTimezone)
-
             return(
                 <Fragment>
 
@@ -232,8 +225,8 @@ class Profile extends Component {
                                 <Toolbar className={classes.toolbar}>
                                     <Avatar  src={profilePlaceholder} className={classes.avatar} />
                                     <div>
-                                        <Typography color="inherit" variant="subtitle1">{userProfile.userGroups[0].name}</Typography>
-                                        <Typography color="inherit" variant="h5">{userProfile.username}</Typography>
+                                        <Typography color="inherit" variant="subtitle1">Administrator</Typography>
+                                        <Typography color="inherit" variant="h5">{userProfile.data.username}</Typography>
                                     </div>
 
                                 </Toolbar>
@@ -241,27 +234,14 @@ class Profile extends Component {
                                 <div className={classes.gutter}>
 
                                     <Typography variant="subtitle1" className={classes.profileLabel}>Email</Typography>
-                                    <Typography variant="body1" className={classes.profileDetail}>{userProfile.email}</Typography>
+                                    <Typography variant="body1" className={classes.profileDetail}>{userProfile.data.email}</Typography>
                                     <Typography variant="subtitle1" className={classes.profileLabel}>First name</Typography>
-                                    <Typography variant="body1" className={classes.profileDetail}>{userProfile.firstName}</Typography>
+                                    <Typography variant="body1" className={classes.profileDetail}>{userProfile.data.firstName}</Typography>
                                     <Typography variant="subtitle1" className={classes.profileLabel}>Last name</Typography>
-                                    <Typography variant="body1" className={classes.profileDetail}>{userProfile.lastName}</Typography>
+                                    <Typography variant="body1" className={classes.profileDetail}>{userProfile.data.lastName}</Typography>
                                     <Typography variant="subtitle1" className={classes.profileLabel}>Status</Typography>
-                                    <Typography variant="body1" className={classes.profileDetail}>{userProfile.userStatus.name}</Typography>
+                                    <Typography variant="body1" className={classes.profileDetail}>{userProfile.data.userStatus.name}</Typography>
 
-                                    {/*<FormControlLabel
-                                    control={
-                                        <Switch
-                                            value="checkedC"
-                                            classes={{
-                                                switchBase: classes.switchBase,
-                                                bar: classes.switchBar,
-                                                icon: classes.switchIcon,
-                                                checked: classes.switchChecked
-                                            }}
-                                        />
-                                    }
-                                />*/}
                                     <Button color="primary"
                                             size="large"
                                             className={`${classes.button} ${classes.linkButton}`}
@@ -279,6 +259,21 @@ class Profile extends Component {
                                     >
                                         Edit Profile
                                     </Button>
+
+                                    {/*<FormControlLabel
+                                    control={
+                                        <Switch
+                                            value="checkedC"
+                                            classes={{
+                                                switchBase: classes.switchBase,
+                                                bar: classes.switchBar,
+                                                icon: classes.switchIcon,
+                                                checked: classes.switchChecked
+                                            }}
+                                        />
+                                    }
+                                />*/}
+
                                 </div>
 
                             </Paper>
@@ -300,19 +295,19 @@ class Profile extends Component {
                                     {tabValue === 0 &&
                                     <TabContainer>
 
-                                        <FormControl className={classes.formControl}>
+                                        <FormControl>
                                             <InputLabel htmlFor="timezone">Timezone</InputLabel>
                                             <Select
-                                                value={userTimezone}
+                                                value={userTimezoneState}
                                                 autoWidth={true}
-                                                onChange={this.handleTimezoneChange}
+                                                onChange={this.editTimezone}
                                                 inputProps={{
                                                     name: 'timezone',
                                                     id: 'timezone',
                                                 }}
                                             >
-                                                { timezones.map( timezone => (
-                                                    <MenuItem key={timezone.id} value={timezone.id}>{timezone.name}</MenuItem>
+                                                {timezones.data && timezones.data.map( (timezone, index) => (
+                                                        <MenuItem key={index} value={timezone.id}>{timezone.name}</MenuItem>
                                                     )
                                                 )}
                                             </Select>
@@ -341,20 +336,20 @@ class Profile extends Component {
                     >
                         <DialogTitle id="form-dialog-title" className={classes.dialogTitle}>Edit profile</DialogTitle>
                         <DialogContent>
-                            <form onSubmit={this.updateUserProfile}>
+                            <form onSubmit={this.updateUser}>
                                 <TextField
                                     id="email"
                                     label="Email"
                                     fullWidth={true}
                                     required={true}
                                     margin="dense"
-                                    value={dataToUpdateProfile.email}
+                                    value={userProfileState.email}
                                     InputProps={{
                                         classes: {
                                             root: classes.input,
                                         }
                                     }}
-                                    onChange={this.editUserProfile}
+                                    onChange={this.editProfile}
                                 />
                                 <TextField
                                     id="firstName"
@@ -362,13 +357,13 @@ class Profile extends Component {
                                     fullWidth={true}
                                     required={true}
                                     margin="dense"
-                                    value={dataToUpdateProfile.firstName}
+                                    value={userProfileState.firstName}
                                     InputProps={{
                                         classes: {
                                             root: classes.input,
                                         }
                                     }}
-                                    onChange={this.editUserProfile}
+                                    onChange={this.editProfile}
                                 />
                                 <TextField
                                     id="lastName"
@@ -376,13 +371,13 @@ class Profile extends Component {
                                     fullWidth={true}
                                     required={true}
                                     margin="dense"
-                                    value={dataToUpdateProfile.lastName}
+                                    value={userProfileState.lastName}
                                     InputProps={{
                                         classes: {
                                             root: classes.input,
                                         }
                                     }}
-                                    onChange={this.editUserProfile}
+                                    onChange={this.editProfile}
                                 />
                                 <div className={classes.dialogButtons}>
                                     <Button type="submit" variant="contained" color="primary">
@@ -405,7 +400,7 @@ class Profile extends Component {
                     >
                         <DialogTitle id="form-dialog-title" className={classes.dialogTitle}>Change password</DialogTitle>
                         <DialogContent>
-                            <form onSubmit={this.changeUserPass}>
+                            <form onSubmit={this.changePassword}>
                                 <TextField
                                     id="password"
                                     label="New password"
@@ -418,7 +413,7 @@ class Profile extends Component {
                                             root: classes.input,
                                         }
                                     }}
-                                    inputProps={{minlength:"8"}}
+                                    inputProps={{minLength:"8"}}
                                     onChange={this.editPass}
                                 />
 
@@ -434,7 +429,7 @@ class Profile extends Component {
                                             root: classes.input,
                                         }
                                     }}
-                                    inputProps={{minlength:"8"}}
+                                    inputProps={{minLength:"8"}}
                                     onChange={this.editPass}
                                 />
 
@@ -460,9 +455,9 @@ class Profile extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        userProfile: state.user.userProfile,
-        userPreferences: state.user.userPreferences,
-        timezones: state.user.timezones
+        userProfile: state.user.profile,
+        userPreferences: state.user.preferences,
+        timezones: state.helpers.timezones
     }
 }
 
@@ -470,15 +465,15 @@ const mapDispatchToProps = (dispatch) => {
 
     return {
 
-        getUserProfile: () => dispatch(userActions.getUserProfile()),
-        updateUserProfile: (userProfile) => dispatch(userActions.updateUserProfile(userProfile)),
+        getUser: () => dispatch(userActions.getUser()),
+        updateUser: (userProfile) => dispatch(userActions.updateUser(userProfile)),
 
         getUserPreferences: () => dispatch(userActions.getUserPreferences()),
         updateUserPreferences: (userPreferences) => dispatch(userActions.updateUserPreferences(userPreferences)),
 
-        changeUserPass: (pass) => dispatch(userActions.changeUserPass(pass)),
+        changePassword: (pass) => dispatch(userActions.changePassword(pass)),
 
-        getTimezones: () => dispatch(userActions.getTimezones()),
+        getTimezones: () => dispatch(helpersActions.getTimezones()),
     }
 }
 
