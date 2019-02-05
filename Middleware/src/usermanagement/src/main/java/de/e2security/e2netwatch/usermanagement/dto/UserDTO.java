@@ -2,6 +2,8 @@ package de.e2security.e2netwatch.usermanagement.dto;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class UserDTO {
 	
     private Integer id;
@@ -54,6 +56,7 @@ public class UserDTO {
 		this.email = email;
 	}
 
+	@JsonIgnore
 	public List<UserGroupDTO> getUserGroups() {
 		return userGroups;
 	}
@@ -84,6 +87,10 @@ public class UserDTO {
 
 	public void setGeneratedPassword(String generatedPassword) {
 		this.generatedPassword = generatedPassword;
+	}
+	
+	public UserGroupDTO getUserGroup() {
+		return userGroups.get(0);
 	}
     
 }
