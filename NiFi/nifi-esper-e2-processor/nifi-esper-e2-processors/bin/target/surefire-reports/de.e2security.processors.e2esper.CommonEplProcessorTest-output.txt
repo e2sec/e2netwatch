@@ -1,0 +1,887 @@
+21:35:22.728 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.Configuration id -220881974438617882 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.731 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class java.util.ArrayList id 8683452581122892189 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.732 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class java.util.HashMap id 362498820763181265 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.733 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults id -528835191586154300 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.736 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$AlternativeContext id 4488861684585251042 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.738 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$ByteCodeGeneration id -4582655217918634675 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.739 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$ConditionHandling id -708367341332718634 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.740 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$EventMeta id -6091772368103140370 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.742 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$EventMeta$AvroSettings id 2977645210525767203 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.747 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.Configuration$PropertyResolutionStyle id 0 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.749 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class java.lang.Enum id 0 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.750 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEventTypeLegacy$AccessorStyle id 0 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.753 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.util.EventUnderlyingType id 0 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.754 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$ExceptionHandling id -708367341332718634 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.754 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$ExceptionHandling$UndeployRethrowPolicy id 0 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.756 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$Execution id 0 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.757 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$FilterServiceProfile id 0 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.761 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$ThreadingProfile id 0 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.762 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$Expression id 3192205923560011213 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.763 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class sun.util.calendar.ZoneInfo id 2653134537216586139 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.763 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class java.util.TimeZone id 3581463369166924961 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.764 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class [I id 5600894804908749477 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.769 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class [J id 8655923659555304851 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.770 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$Language id -6237674558477894392 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.771 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$Logging id -8129836306582810327 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.773 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$MatchRecognize id 4541565245238216789 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.774 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationMetricsReporting id -7265780298667075895 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.774 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class java.util.LinkedHashMap id 3801124242820219131 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.774 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$Patterns id -7596853289989573800 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.775 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$Scripts id -3111856398932434323 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.775 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$StreamSelection id -7943748323859161674 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.775 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.soda.StreamSelector id 0 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.776 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$Threading id 6504606101119059962 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.776 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$Threading$Locking id 0 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.777 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$TimeSource id 2075039404763313824 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.781 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$TimeSourceType id 0 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.782 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class java.util.concurrent.TimeUnit id 0 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.782 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$Variables id 8276015152830052323 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.783 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$ViewResources id 2527853225433208362 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.784 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class java.util.LinkedHashSet id -2851667679971038690 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.784 [pool-2-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class java.util.HashSet id -5024744406713321676 classloader class sun.misc.Launcher$AppClassLoader
+21:35:22.788 [pool-2-thread-1] INFO com.espertech.esper.core.service.EPServiceProviderImpl - Initializing engine URI 'default' version 7.1.0
+21:35:22.788 [pool-2-thread-1] DEBUG com.espertech.esper.epl.metric.MetricReportingPath - Metrics reporting has been disabled, this setting takes affect for all engine instances at engine initialization time.
+21:35:22.789 [pool-2-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Adding import java.lang.*
+21:35:22.789 [pool-2-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Adding import java.math.*
+21:35:22.789 [pool-2-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Adding import java.text.*
+21:35:22.790 [pool-2-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Adding import java.util.*
+21:35:22.794 [pool-2-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Adding import com.espertech.esper.client.annotation.*
+21:35:22.795 [pool-2-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Adding import com.espertech.esper.dataflow.ops.*
+21:35:22.796 [pool-2-thread-1] DEBUG com.espertech.esper.core.service.EPServicesContextFactoryDefault - Avro provider com.espertech.esper.avro.core.EventAdapterAvroHandlerImpl not instantiated, not enabling Avro support: Unable to load class 'com.espertech.esper.avro.core.EventAdapterAvroHandlerImpl', class not found
+21:35:22.800 [pool-2-thread-1] DEBUG com.espertech.esper.timer.TimerServiceImpl - .startInternalClock Starting internal clock daemon thread, resolution=100
+21:35:22.902 [pool-2-thread-1] DEBUG com.espertech.esper.core.service.EPAdministratorHelper - .createEPLStmt statementName=null eplStatement=create map schema Netflow as (source.port int,destination.port int,network.iana_number int)
+21:35:22.902 [pool-2-thread-1] DEBUG com.espertech.esper.epl.parse.ParseHelper - .parse Parsing expr=create map schema Netflow as (source.port int,destination.port int,network.iana_number int)
+21:35:22.905 [pool-2-thread-1] DEBUG com.espertech.esper.epl.parse.Antlr4ErrorListener - reportAttemptingFullContext
+21:35:22.906 [pool-2-thread-1] DEBUG com.espertech.esper.epl.parse.Antlr4ErrorListener - reportContextSensitivity
+21:35:22.906 [pool-2-thread-1] DEBUG com.espertech.esper.epl.parse.Antlr4ErrorListener - reportAttemptingFullContext
+21:35:22.906 [pool-2-thread-1] DEBUG com.espertech.esper.epl.parse.Antlr4ErrorListener - reportContextSensitivity
+21:35:22.907 [pool-2-thread-1] DEBUG com.espertech.esper.epl.parse.Antlr4ErrorListener - reportAttemptingFullContext
+21:35:22.907 [pool-2-thread-1] DEBUG com.espertech.esper.epl.parse.Antlr4ErrorListener - reportContextSensitivity
+21:35:22.907 [pool-2-thread-1] DEBUG com.espertech.esper.epl.parse.ParseHelper - .parse Dumping AST...
+21:35:22.908 [pool-2-thread-1] DEBUG com.espertech.esper.epl.parse.ParseHelper - .walk Walking AST using walker com.espertech.esper.epl.parse.EPLTreeWalkerListener
+21:35:22.909 [pool-2-thread-1] DEBUG com.espertech.esper.core.service.StatementResultServiceImpl - .ctor
+21:35:22.909 [pool-2-thread-1] DEBUG com.espertech.esper.event.EventAdapterServiceImpl - .addBeanType Adding java.lang.Object for type java.lang.Object
+21:35:22.910 [pool-2-thread-1] DEBUG com.espertech.esper.core.service.speccompiled.StreamSpecCompiler - .resolveType Event type named 'java.lang.Object' not resolved by plug-in event representations
+21:35:22.911 [pool-2-thread-1] DEBUG com.espertech.esper.filter.FilterSpecCompiler - .makeFilterSpec spec=FilterSpecCompiled type=BeanEventType name=java.lang.Object clazz=java.lang.Object parameters=[]
+21:35:22.911 [pool-2-thread-1] DEBUG com.espertech.esper.core.service.StatementLifecycleSvcImpl - .start Starting statement 1 from desc=com.espertech.esper.core.service.StatementLifecycleSvcImpl$EPStatementDesc@7fb94ecb
+21:35:22.912 [pool-2-thread-1] DEBUG com.espertech.esper.core.service.StatementLifecycleSvcImpl - .startInternal Starting statement 1 from desc=com.espertech.esper.core.service.StatementLifecycleSvcImpl$EPStatementDesc@7fb94ecb
+21:35:22.913 [pool-2-thread-1] DEBUG com.espertech.esper.epl.named.NamedWindowConsumerMgmtServiceImpl - Statement 'stmt_1 starts consuming
+21:35:22.917 [pool-2-thread-1] DEBUG com.espertech.esper.core.service.EPAdministratorImpl - .createEPLStmt Statement created and started
+21:35:22.917 [pool-2-thread-1] DEBUG com.espertech.esper.core.service.EPAdministratorHelper - .createEPLStmt statementName=null eplStatement=create map schema ProtocolRegister as (netflow Netflow, version int)
+21:35:22.917 [pool-2-thread-1] DEBUG com.espertech.esper.epl.parse.ParseHelper - .parse Parsing expr=create map schema ProtocolRegister as (netflow Netflow, version int)
+21:35:22.919 [pool-2-thread-1] DEBUG com.espertech.esper.epl.parse.ParseHelper - .parse Dumping AST...
+21:35:22.920 [pool-2-thread-1] DEBUG com.espertech.esper.epl.parse.ParseHelper - .walk Walking AST using walker com.espertech.esper.epl.parse.EPLTreeWalkerListener
+21:35:22.921 [pool-2-thread-1] DEBUG com.espertech.esper.core.service.StatementResultServiceImpl - .ctor
+21:35:22.921 [pool-2-thread-1] DEBUG com.espertech.esper.filter.FilterSpecCompiler - .makeFilterSpec spec=FilterSpecCompiled type=BeanEventType name=java.lang.Object clazz=java.lang.Object parameters=[]
+21:35:22.922 [pool-2-thread-1] DEBUG com.espertech.esper.core.service.StatementLifecycleSvcImpl - .start Starting statement 2 from desc=com.espertech.esper.core.service.StatementLifecycleSvcImpl$EPStatementDesc@1c143fdf
+21:35:22.922 [pool-2-thread-1] DEBUG com.espertech.esper.core.service.StatementLifecycleSvcImpl - .startInternal Starting statement 2 from desc=com.espertech.esper.core.service.StatementLifecycleSvcImpl$EPStatementDesc@1c143fdf
+21:35:22.924 [pool-2-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Class not found for resolving from name as-is 'Netflow'
+21:35:22.925 [pool-2-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Class not found for resolving from name 'java.lang.Netflow'
+21:35:22.927 [pool-2-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Class not found for resolving from name 'java.math.Netflow'
+21:35:22.928 [pool-2-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Class not found for resolving from name 'java.text.Netflow'
+21:35:22.929 [pool-2-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Class not found for resolving from name 'java.util.Netflow'
+21:35:22.931 [pool-2-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Class not found for resolving from name 'com.espertech.esper.client.annotation.Netflow'
+21:35:22.933 [pool-2-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Class not found for resolving from name 'com.espertech.esper.dataflow.ops.Netflow'
+21:35:22.939 [pool-2-thread-1] DEBUG com.espertech.esper.epl.named.NamedWindowConsumerMgmtServiceImpl - Statement 'stmt_2 starts consuming
+21:35:22.940 [pool-2-thread-1] DEBUG com.espertech.esper.core.service.EPAdministratorImpl - .createEPLStmt Statement created and started
+21:35:22.940 [pool-2-thread-1] DEBUG com.espertech.esper.core.service.EPAdministratorHelper - .createEPLStmt statementName=null eplStatement=select * from ProtocolRegister(netflow.network.iana_number=6)
+21:35:22.940 [pool-2-thread-1] DEBUG com.espertech.esper.epl.parse.ParseHelper - .parse Parsing expr=select * from ProtocolRegister(netflow.network.iana_number=6)
+21:35:22.944 [pool-2-thread-1] DEBUG com.espertech.esper.epl.parse.Antlr4ErrorListener - reportAttemptingFullContext
+21:35:22.951 [pool-2-thread-1] DEBUG com.espertech.esper.epl.parse.Antlr4ErrorListener - reportAmbiguity
+21:35:22.952 [pool-2-thread-1] DEBUG com.espertech.esper.epl.parse.ParseHelper - .parse Dumping AST...
+21:35:22.953 [pool-2-thread-1] DEBUG com.espertech.esper.epl.parse.ParseHelper - .walk Walking AST using walker com.espertech.esper.epl.parse.EPLTreeWalkerListener
+21:35:22.954 [pool-2-thread-1] DEBUG com.espertech.esper.core.service.StatementResultServiceImpl - .ctor
+21:35:22.961 [pool-2-thread-1] DEBUG com.espertech.esper.filter.FilterSpecCompiler - .makeFilterSpec spec=FilterSpecCompiled type=com.espertech.esper.event.map.MapEventType@5fdaf9b8 parameters=[[Lcom.espertech.esper.filterspec.FilterSpecParam;@5876df2b]
+21:35:22.962 [pool-2-thread-1] DEBUG com.espertech.esper.core.service.StatementLifecycleSvcImpl - .start Starting statement 3 from desc=com.espertech.esper.core.service.StatementLifecycleSvcImpl$EPStatementDesc@6029f134
+21:35:22.962 [pool-2-thread-1] DEBUG com.espertech.esper.core.service.StatementLifecycleSvcImpl - .startInternal Starting statement 3 from desc=com.espertech.esper.core.service.StatementLifecycleSvcImpl$EPStatementDesc@6029f134
+21:35:22.962 [pool-2-thread-1] DEBUG com.espertech.esper.view.ViewServiceHelper - .addMergeViews Incoming specifications=[]
+21:35:22.962 [pool-2-thread-1] DEBUG com.espertech.esper.view.ViewServiceHelper - .addMergeViews Outgoing specifications=[]
+21:35:22.962 [pool-2-thread-1] DEBUG com.espertech.esper.epl.core.select.SelectExprProcessorFactory - .getProcessor Using wildcard processor
+21:35:22.964 [pool-2-thread-1] DEBUG com.espertech.esper.epl.core.orderby.OrderByProcessorFactoryFactory - .getProcessor Using no OrderByProcessor
+21:35:22.964 [pool-2-thread-1] DEBUG com.espertech.esper.epl.core.resultset.core.ResultSetProcessorFactoryFactory - .getProcessor Using no result processor
+21:35:22.973 [pool-2-thread-1] DEBUG com.espertech.esper.codegen.compile.CodegenCompilerJanino - Compiling class for statement 'stmt_3' result-set-processor requestor-class 'ResultSetProcessorFactoryFactory' includeDebugSymbols=false classloader=sun.misc.Launcher$AppClassLoader@135fbaa4 code: 
+   1  package com.espertech.esper.generated.uri_default;
+   2  import com.espertech.esper.view.Viewable;
+   3  import com.espertech.esper.event.EventAdapterServiceImpl;
+   4  import com.espertech.esper.epl.core.resultset.core.ResultSetProcessorFactory;
+   5  import com.espertech.esper.epl.agg.service.common.AggregationService;
+   6  import com.espertech.esper.client.EventType;
+   7  import com.espertech.esper.epl.agg.service.common.AggregationServiceFactory;
+   8  import com.espertech.esper.core.context.util.AgentInstanceContext;
+   9  import com.espertech.esper.epl.core.engineimport.EngineImportService;
+  10  import com.espertech.esper.collection.UniformPair;
+  11  import com.espertech.esper.epl.core.resultset.core.ResultSetProcessor;
+  12  import com.espertech.esper.epl.core.orderby.OrderByProcessor;
+  13  import com.espertech.esper.collection.TransformEventIterator;
+  14  import com.espertech.esper.event.NaturalEventBean;
+  15  import com.espertech.esper.epl.core.orderby.OrderByProcessorFactory;
+  16  import com.espertech.esper.epl.agg.service.common.AggregationServiceVisitor;
+  17  import com.espertech.esper.epl.core.resultset.core.ResultSetProcessorOutputHelperVisitor;
+  18  import com.espertech.esper.epl.agg.service.common.AggregationGroupByRollupLevel;
+  19  import com.espertech.esper.epl.core.resultset.handthru.ResultSetProcessorHandtruTransform;
+  20  import java.util.Collection;
+  21  import com.espertech.esper.client.EventBean;
+  22  import com.espertech.esper.epl.agg.service.common.AggregationServiceNull;
+  23  import com.espertech.esper.event.map.MapEventType;
+  24  import java.util.Set;
+  25  import com.espertech.esper.epl.agg.service.common.AggregationRowRemovedCallback;
+  26  import com.espertech.esper.core.service.StatementResultServiceImpl;
+  27  import java.util.Iterator;
+  28  import com.espertech.esper.epl.core.resultset.codegen.ResultSetProcessorFactoryProvider;
+  29  import com.espertech.esper.epl.core.resultset.handthru.ResultSetProcessorHandThroughUtil;
+  30  import java.util.Map;
+  31  import java.util.List;
+  32  import com.espertech.esper.epl.core.select.SelectExprProcessor;
+  33  import com.espertech.esper.epl.expression.core.ExprEvaluatorContext;
+  34  import com.espertech.esper.epl.agg.service.common.AggregationServiceVisitorWGroupDetail;
+  35  public class ResultSetProcessorFactoryProvider_cb2f29ac256dc4365bc19b9fe449e7ed8 implements ResultSetProcessorFactoryProvider {
+  36    final EventAdapterServiceImpl mb1;
+  37    final MapEventType mb0;
+  38    final StatementResultServiceImpl mb2;
+  39    final ResultSetProcessorFactory rspFactory;
+  40    final OrderByProcessorFactory orderByFactory;
+  41    final AggregationServiceFactory aggFactory;
+  42    final SelectExprProcessor selectExprProcessor;
+  43  
+  44    public ResultSetProcessorFactoryProvider_cb2f29ac256dc4365bc19b9fe449e7ed8(EventAdapterServiceImpl p1,MapEventType p0,StatementResultServiceImpl p2){
+  45      this.mb1=p1;
+  46      this.mb0=p0;
+  47      this.mb2=p2;
+  48      rspFactory=new RSPFactory(this);
+  49      orderByFactory=null;
+  50      aggFactory=new AggFactory(this);
+  51      selectExprProcessor=new SelectExprProcessorImpl(this);
+  52    }
+  53  
+  54    // ResultSetProcessorHandThroughFactoryForge
+  55    public ResultSetProcessorFactory getResultSetProcessorFactory(){
+  56      return rspFactory;
+  57    }
+  58  
+  59    // ResultSetProcessorHandThroughFactoryForge
+  60    public AggregationServiceFactory getAggregationServiceFactory(){
+  61      return aggFactory;
+  62    }
+  63  
+  64    // ResultSetProcessorHandThroughFactoryForge
+  65    public OrderByProcessorFactory getOrderByProcessorFactory(){
+  66      return orderByFactory;
+  67    }
+  68  
+  69    static class RSPFactory implements ResultSetProcessorFactory {
+  70      final ResultSetProcessorFactoryProvider_cb2f29ac256dc4365bc19b9fe449e7ed8 o;
+  71  
+  72      public RSPFactory(ResultSetProcessorFactoryProvider_cb2f29ac256dc4365bc19b9fe449e7ed8 o){
+  73        this.o=o;
+  74      }
+  75  
+  76      // ResultSetProcessorFactoryCompiler
+  77      public ResultSetProcessor instantiate(OrderByProcessor orderByProcessor,AggregationService aggregationService,AgentInstanceContext agentInstanceContext){
+  78        return new RSP(o,orderByProcessor,aggregationService,agentInstanceContext);
+  79      }
+  80    }
+  81  
+  82    static class RSP implements ResultSetProcessor {
+  83      final ResultSetProcessorFactoryProvider_cb2f29ac256dc4365bc19b9fe449e7ed8 o;
+  84      final OrderByProcessor orderByProcessor;
+  85      final AggregationService aggregationService;
+  86      final AgentInstanceContext agentInstanceContext;
+  87  
+  88      public RSP(ResultSetProcessorFactoryProvider_cb2f29ac256dc4365bc19b9fe449e7ed8 o,OrderByProcessor orderByProcessor,AggregationService aggregationService,AgentInstanceContext agentInstanceContext){
+  89        this.o=o;
+  90        this.orderByProcessor=orderByProcessor;
+  91        this.aggregationService=aggregationService;
+  92        this.agentInstanceContext=agentInstanceContext;
+  93      }
+  94  
+  95      // ResultSetProcessorHandThroughFactoryForge
+  96      public EventType getResultEventType(){
+  97        return o.mb0;
+  98      }
+  99  
+ 100      // ResultSetProcessorHandThroughFactoryForge
+ 101      public UniformPair processViewResult(EventBean[] newData,EventBean[] oldData,boolean isSynthesize){
+ 102        EventBean[] selectOldEvents=null;
+ 103        EventBean[] selectNewEvents=ResultSetProcessorHandThroughUtil.getSelectEventsNoHavingHandThruView(o.selectExprProcessor,newData,true,isSynthesize,agentInstanceContext);
+ 104        return new UniformPair(selectNewEvents,selectOldEvents);
+ 105      }
+ 106  
+ 107      // ResultSetProcessorHandThroughFactoryForge
+ 108      public UniformPair processJoinResult(Set newData,Set oldData,boolean isSynthesize){
+ 109        throw new UnsupportedOperationException();
+ 110      }
+ 111  
+ 112      // ResultSetProcessorHandThroughFactoryForge
+ 113      public Iterator getIterator(Viewable viewable){
+ 114        return new TransformEventIterator(viewable.iterator(),new ResultSetProcessorHandtruTransform(this));
+ 115      }
+ 116  
+ 117      // ResultSetProcessorHandThroughFactoryForge
+ 118      public Iterator getIterator(Set joinset){
+ 119        throw new UnsupportedOperationException();
+ 120      }
+ 121  
+ 122      // ResultSetProcessorHandThroughFactoryForge
+ 123      public void clear(){
+ 124      }
+ 125  
+ 126      // ResultSetProcessorHandThroughFactoryForge
+ 127      public void stop(){
+ 128      }
+ 129  
+ 130      // ResultSetProcessorHandThroughFactoryForge
+ 131      public UniformPair processOutputLimitedJoin(List joinEventsSet,boolean isSynthesize){
+ 132        throw new UnsupportedOperationException();
+ 133      }
+ 134  
+ 135      // ResultSetProcessorHandThroughFactoryForge
+ 136      public UniformPair processOutputLimitedView(List viewEventsList,boolean isSynthesize){
+ 137        throw new UnsupportedOperationException();
+ 138      }
+ 139  
+ 140      // ResultSetProcessorHandThroughFactoryForge
+ 141      public void setAgentInstanceContext(AgentInstanceContext context){
+ 142        throw new UnsupportedOperationException();
+ 143      }
+ 144  
+ 145      // ResultSetProcessorHandThroughFactoryForge
+ 146      public void applyViewResult(EventBean[] newData,EventBean[] oldData){
+ 147        throw new UnsupportedOperationException();
+ 148      }
+ 149  
+ 150      // ResultSetProcessorHandThroughFactoryForge
+ 151      public void applyJoinResult(Set newData,Set oldData){
+ 152        throw new UnsupportedOperationException();
+ 153      }
+ 154  
+ 155      // ResultSetProcessorHandThroughFactoryForge
+ 156      public void processOutputLimitedLastAllNonBufferedView(EventBean[] newData,EventBean[] oldData,boolean isSynthesize){
+ 157        throw new UnsupportedOperationException();
+ 158      }
+ 159  
+ 160      // ResultSetProcessorHandThroughFactoryForge
+ 161      public void processOutputLimitedLastAllNonBufferedJoin(Set newData,Set oldData,boolean isSynthesize){
+ 162        throw new UnsupportedOperationException();
+ 163      }
+ 164  
+ 165      // ResultSetProcessorHandThroughFactoryForge
+ 166      public UniformPair continueOutputLimitedLastAllNonBufferedView(boolean isSynthesize){
+ 167        throw new UnsupportedOperationException();
+ 168      }
+ 169  
+ 170      // ResultSetProcessorHandThroughFactoryForge
+ 171      public UniformPair continueOutputLimitedLastAllNonBufferedJoin(boolean isSynthesize){
+ 172        throw new UnsupportedOperationException();
+ 173      }
+ 174  
+ 175      // ResultSetProcessorHandThroughFactoryForge
+ 176      public void acceptHelperVisitor(ResultSetProcessorOutputHelperVisitor visitor){
+ 177      }
+ 178    }
+ 179  
+ 180    static class AggFactory implements AggregationServiceFactory {
+ 181      final ResultSetProcessorFactoryProvider_cb2f29ac256dc4365bc19b9fe449e7ed8 o;
+ 182  
+ 183      public AggFactory(ResultSetProcessorFactoryProvider_cb2f29ac256dc4365bc19b9fe449e7ed8 o){
+ 184        this.o=o;
+ 185      }
+ 186  
+ 187      // AggregationServiceFactoryCompiler
+ 188      public AggregationService makeService(AgentInstanceContext agentInstanceContext,EngineImportService engineImportService,boolean isSubquery,Integer subqueryNumber){
+ 189        return AggregationServiceNull.INSTANCE;
+ 190      }
+ 191    }
+ 192  
+ 193    static class AggSvc implements AggregationService {
+ 194      final ResultSetProcessorFactoryProvider_cb2f29ac256dc4365bc19b9fe449e7ed8 o;
+ 195  
+ 196      public AggSvc(ResultSetProcessorFactoryProvider_cb2f29ac256dc4365bc19b9fe449e7ed8 o){
+ 197        this.o=o;
+ 198      }
+ 199  
+ 200      // AggregationServiceNullFactory
+ 201      public void applyEnter(EventBean[] eventsPerStream,Object groupKey,ExprEvaluatorContext exprEvalCtx){
+ 202      }
+ 203  
+ 204      // AggregationServiceNullFactory
+ 205      public void applyLeave(EventBean[] eventsPerStream,Object groupKey,ExprEvaluatorContext exprEvalCtx){
+ 206      }
+ 207  
+ 208      // AggregationServiceNullFactory
+ 209      public void setCurrentAccess(Object groupKey,int agentInstanceId,AggregationGroupByRollupLevel rollupLevel){
+ 210      }
+ 211  
+ 212      // AggregationServiceNullFactory
+ 213      public void clearResults(ExprEvaluatorContext exprEvalCtx){
+ 214      }
+ 215  
+ 216      // AggregationServiceNullFactory
+ 217      public void setRemovedCallback(AggregationRowRemovedCallback callback){
+ 218      }
+ 219  
+ 220      // AggregationServiceNullFactory
+ 221      public void accept(AggregationServiceVisitor visitor){
+ 222      }
+ 223  
+ 224      // AggregationServiceNullFactory
+ 225      public void acceptGroupDetail(AggregationServiceVisitorWGroupDetail visitor){
+ 226      }
+ 227  
+ 228      // AggregationServiceNullFactory
+ 229      public boolean isGrouped(){
+ 230        return false;
+ 231      }
+ 232  
+ 233      // AggregationServiceNullFactory
+ 234      public AggregationService getContextPartitionAggregationService(int agentInstanceId){
+ 235        return this;
+ 236      }
+ 237  
+ 238      // AggregationServiceNullFactory
+ 239      public Object getValue(int column,int agentInstanceId,EventBean[] eventsPerStream,boolean isNewData,ExprEvaluatorContext exprEvalCtx){
+ 240        return null;
+ 241      }
+ 242  
+ 243      // AggregationServiceNullFactory
+ 244      public Collection getCollectionOfEvents(int column,EventBean[] eventsPerStream,boolean isNewData,ExprEvaluatorContext exprEvalCtx){
+ 245        return null;
+ 246      }
+ 247  
+ 248      // AggregationServiceNullFactory
+ 249      public EventBean getEventBean(int column,EventBean[] eventsPerStream,boolean isNewData,ExprEvaluatorContext exprEvalCtx){
+ 250        return null;
+ 251      }
+ 252  
+ 253      // AggregationServiceNullFactory
+ 254      public Object getGroupKey(int agentInstanceId){
+ 255        return null;
+ 256      }
+ 257  
+ 258      // AggregationServiceNullFactory
+ 259      public Collection getGroupKeys(ExprEvaluatorContext exprEvalCtx){
+ 260        return null;
+ 261      }
+ 262  
+ 263      // AggregationServiceNullFactory
+ 264      public Collection getCollectionScalar(int column,EventBean[] eventsPerStream,boolean isNewData,ExprEvaluatorContext exprEvalCtx){
+ 265        return null;
+ 266      }
+ 267  
+ 268      // AggregationServiceNullFactory
+ 269      public void stop(){
+ 270      }
+ 271    }
+ 272  
+ 273    static class SelectExprProcessorImpl implements SelectExprProcessor {
+ 274      final ResultSetProcessorFactoryProvider_cb2f29ac256dc4365bc19b9fe449e7ed8 o;
+ 275  
+ 276      public SelectExprProcessorImpl(ResultSetProcessorFactoryProvider_cb2f29ac256dc4365bc19b9fe449e7ed8 o){
+ 277        this.o=o;
+ 278      }
+ 279  
+ 280      // SelectExprProcessorCompiler
+ 281      public EventBean process(EventBean[] eventsPerStream,boolean isNewData,boolean isSynthesize,ExprEvaluatorContext exprEvalCtx){
+ 282        return m0(eventsPerStream,isSynthesize);
+ 283      }
+ 284  
+ 285      // SelectExprResultProcessor
+ 286      EventBean m0(EventBean[] eventsPerStream,boolean isSynthesize){
+ 287        boolean makeNatural=(o.mb2).isMakeNatural();
+ 288        boolean synthesize=(o.mb2).isMakeSynthetic()||isSynthesize;
+ 289        if (!(makeNatural)) {
+ 290          if (synthesize) {
+ 291            return m1(eventsPerStream);
+ 292          }
+ 293          return null;
+ 294        }
+ 295        EventBean syntheticEvent=null;
+ 296        if (synthesize) {
+ 297          syntheticEvent=m1(eventsPerStream);
+ 298        }
+ 299        Object[] parameters=m2(eventsPerStream);
+ 300        return new NaturalEventBean(o.mb0,parameters,syntheticEvent);
+ 301      }
+ 302  
+ 303      // SelectExprWildcardProcessor
+ 304      EventBean m1(EventBean[] eventsPerStream){
+ 305        return eventsPerStream[0];
+ 306      }
+ 307  
+ 308      // BindProcessor
+ 309      Object[] m2(EventBean[] eventsPerStream){
+ 310        Object[] parameters=new Object[1];
+ 311        parameters[0]=m3(eventsPerStream);
+ 312        return parameters;
+ 313      }
+ 314  
+ 315      // BindProcessorStream
+ 316      Map m3(EventBean[] eventsPerStream){
+ 317        EventBean event=eventsPerStream[0];
+ 318        if (event == null) {return null;}
+ 319        return ((Map)event.getUnderlying());
+ 320      }
+ 321    }
+ 322  }
+
+21:35:23.146 [pool-2-thread-1] DEBUG com.espertech.esper.view.stream.StreamFactorySvcImpl - .createStream hashCode=1582179873 filter=FilterSpecCompiled type=com.espertech.esper.event.map.MapEventType@5fdaf9b8 parameters=[[Lcom.espertech.esper.filterspec.FilterSpecParam;@5876df2b]
+21:35:23.147 [pool-2-thread-1] DEBUG com.espertech.esper.filter.IndexTreeBuilder - .add (15) Adding filter callback,   topNode=com.espertech.esper.filter.FilterHandleSetNode@36ae56e9  filterCallback=com.espertech.esper.core.service.EPStatementHandleCallback@667948f9
+21:35:23.148 [pool-2-thread-1] DEBUG com.espertech.esper.filter.IndexTreeBuilder - .addToNode (15) Adding filterCallback, node=com.espertech.esper.filter.FilterHandleSetNode@36ae56e9  remainingParameters=  param(0) property=expression='netflow.network.iana_number' operator=EQUAL value=6
+21:35:23.148 [pool-2-thread-1] DEBUG com.espertech.esper.filter.IndexTreeBuilder - .addToIndex (15) Adding to index filterOperator=EQUAL lookupable=expression='netflow.network.iana_number'  expressionValue=6
+21:35:23.149 [pool-2-thread-1] DEBUG com.espertech.esper.filter.IndexTreeBuilder - .addToNode (15) Adding filterCallback, node=com.espertech.esper.filter.FilterHandleSetNode@3ee35855  remainingParameters=
+21:35:23.149 [pool-2-thread-1] DEBUG com.espertech.esper.view.ViewServiceImpl - .createView No new views created, dumping stream ... com.espertech.esper.view.ZeroDepthStreamNoIterate@3e559b2b
+21:35:23.152 [pool-2-thread-1] DEBUG com.espertech.esper.epl.named.NamedWindowConsumerMgmtServiceImpl - Statement 'stmt_3 starts consuming
+21:35:23.152 [pool-2-thread-1] DEBUG com.espertech.esper.core.service.EPAdministratorImpl - .createEPLStmt Statement created and started
+21:35:23.158 [pool-2-thread-1] DEBUG com.espertech.esper.core.service.StatementLifecycleSvcImpl - .updatedListeners No action for base implementation
+21:35:23.166 [pool-2-thread-1] DEBUG com.espertech.esper.core.service.EPRuntimeImpl - .sendMap Processing event {netflow={source.port=23, destination.port=21, network.iana_number=6}, version=1}
+21:35:23.168 [pool-2-thread-1] INFO de.e2security.processors.e2esper.CommonEplProcessor - CommonEplProcessor[id=94c82beb-8939-443e-bbec-e24b72beb85a] Esper listener has detected a new incoming event...
+21:35:23.169 [pool-2-thread-1] INFO com.espertech.esper.core.service.EPServiceProviderImpl - Destroying engine URI 'default'
+21:35:23.169 [pool-2-thread-1] DEBUG com.espertech.esper.timer.TimerServiceImpl - .stopInternalClock Stopping internal clock daemon thread
+21:35:23.370 [pool-2-thread-1] DEBUG com.espertech.esper.epl.metric.MetricScheduleService - Clearing scheduling service
+21:35:23.373 [pool-2-thread-1] DEBUG com.espertech.esper.epl.named.NamedWindowConsumerMgmtServiceImpl - Statement 'stmt_1 destroyed
+21:35:23.373 [pool-2-thread-1] DEBUG com.espertech.esper.epl.named.NamedWindowConsumerMgmtServiceImpl - Statement 'stmt_2 destroyed
+21:35:23.374 [pool-2-thread-1] DEBUG com.espertech.esper.filter.IndexTreeBuilder - .remove (15) Removing filterCallback  type ProtocolRegister topNode=com.espertech.esper.filter.FilterHandleSetNode@36ae56e9 filterCallback=com.espertech.esper.core.service.EPStatementHandleCallback@667948f9
+21:35:23.374 [pool-2-thread-1] DEBUG com.espertech.esper.epl.named.NamedWindowConsumerMgmtServiceImpl - Statement 'stmt_3 destroyed
+21:35:23.374 [pool-2-thread-1] DEBUG com.espertech.esper.filter.FilterServiceBase - Destroying filter service
+21:35:23.374 [pool-2-thread-1] DEBUG com.espertech.esper.schedule.SchedulingServiceImpl - Destroying scheduling service
+21:35:23.374 [pool-2-thread-1] DEBUG com.espertech.esper.schedule.SchedulingMgmtServiceImpl - Destroying scheduling management service
+21:35:23.378 [pool-2-thread-1] INFO de.e2security.processors.e2esper.CommonEplProcessor - CommonEplProcessor[id=94c82beb-8939-443e-bbec-e24b72beb85a] trying to write output...
+21:35:23.394 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.Configuration id -220881974438617882 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.395 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class java.util.ArrayList id 8683452581122892189 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.395 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class java.util.HashMap id 362498820763181265 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.396 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults id -528835191586154300 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.397 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$AlternativeContext id 4488861684585251042 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.398 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$ByteCodeGeneration id -4582655217918634675 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.398 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$ConditionHandling id -708367341332718634 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.399 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$EventMeta id -6091772368103140370 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.400 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$EventMeta$AvroSettings id 2977645210525767203 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.400 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.Configuration$PropertyResolutionStyle id 0 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.401 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class java.lang.Enum id 0 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.401 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEventTypeLegacy$AccessorStyle id 0 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.401 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.util.EventUnderlyingType id 0 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.402 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$ExceptionHandling id -708367341332718634 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.402 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$ExceptionHandling$UndeployRethrowPolicy id 0 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.402 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$Execution id 0 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.403 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$FilterServiceProfile id 0 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.403 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$ThreadingProfile id 0 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.404 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$Expression id 3192205923560011213 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.405 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class sun.util.calendar.ZoneInfo id 2653134537216586139 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.406 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class java.util.TimeZone id 3581463369166924961 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.407 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class [I id 5600894804908749477 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.421 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class [J id 8655923659555304851 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.425 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$Language id -6237674558477894392 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.426 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$Logging id -8129836306582810327 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.427 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$MatchRecognize id 4541565245238216789 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.427 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationMetricsReporting id -7265780298667075895 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.428 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class java.util.LinkedHashMap id 3801124242820219131 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.433 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$Patterns id -7596853289989573800 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.434 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$Scripts id -3111856398932434323 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.434 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$StreamSelection id -7943748323859161674 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.435 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.soda.StreamSelector id 0 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.436 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$Threading id 6504606101119059962 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.436 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$Threading$Locking id 0 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.437 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$TimeSource id 2075039404763313824 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.441 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$TimeSourceType id 0 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.441 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class java.util.concurrent.TimeUnit id 0 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.442 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$Variables id 8276015152830052323 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.443 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class com.espertech.esper.client.ConfigurationEngineDefaults$ViewResources id 2527853225433208362 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.443 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class java.util.LinkedHashSet id -2851667679971038690 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.444 [pool-3-thread-1] DEBUG com.espertech.esper.util.ObjectInputStreamWithTCCL - Resolving class java.util.HashSet id -5024744406713321676 classloader class sun.misc.Launcher$AppClassLoader
+21:35:23.446 [pool-3-thread-1] INFO com.espertech.esper.core.service.EPServiceProviderImpl - Initializing engine URI 'default' version 7.1.0
+21:35:23.452 [pool-3-thread-1] DEBUG com.espertech.esper.epl.metric.MetricReportingPath - Metrics reporting has been disabled, this setting takes affect for all engine instances at engine initialization time.
+21:35:23.453 [pool-3-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Adding import java.lang.*
+21:35:23.454 [pool-3-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Adding import java.math.*
+21:35:23.455 [pool-3-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Adding import java.text.*
+21:35:23.455 [pool-3-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Adding import java.util.*
+21:35:23.457 [pool-3-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Adding import com.espertech.esper.client.annotation.*
+21:35:23.458 [pool-3-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Adding import com.espertech.esper.dataflow.ops.*
+21:35:23.463 [pool-3-thread-1] DEBUG com.espertech.esper.core.service.EPServicesContextFactoryDefault - Avro provider com.espertech.esper.avro.core.EventAdapterAvroHandlerImpl not instantiated, not enabling Avro support: Unable to load class 'com.espertech.esper.avro.core.EventAdapterAvroHandlerImpl', class not found
+21:35:23.465 [pool-3-thread-1] DEBUG com.espertech.esper.timer.TimerServiceImpl - .startInternalClock Starting internal clock daemon thread, resolution=100
+21:35:23.567 [pool-3-thread-1] DEBUG com.espertech.esper.core.service.EPAdministratorHelper - .createEPLStmt statementName=null eplStatement=create map schema ProtocolRegister as (source.port int,destination.port int,network.iana_number int)
+21:35:23.567 [pool-3-thread-1] DEBUG com.espertech.esper.epl.parse.ParseHelper - .parse Parsing expr=create map schema ProtocolRegister as (source.port int,destination.port int,network.iana_number int)
+21:35:23.569 [pool-3-thread-1] DEBUG com.espertech.esper.epl.parse.Antlr4ErrorListener - reportAttemptingFullContext
+21:35:23.569 [pool-3-thread-1] DEBUG com.espertech.esper.epl.parse.Antlr4ErrorListener - reportContextSensitivity
+21:35:23.570 [pool-3-thread-1] DEBUG com.espertech.esper.epl.parse.Antlr4ErrorListener - reportAttemptingFullContext
+21:35:23.570 [pool-3-thread-1] DEBUG com.espertech.esper.epl.parse.Antlr4ErrorListener - reportContextSensitivity
+21:35:23.570 [pool-3-thread-1] DEBUG com.espertech.esper.epl.parse.Antlr4ErrorListener - reportAttemptingFullContext
+21:35:23.570 [pool-3-thread-1] DEBUG com.espertech.esper.epl.parse.Antlr4ErrorListener - reportContextSensitivity
+21:35:23.570 [pool-3-thread-1] DEBUG com.espertech.esper.epl.parse.ParseHelper - .parse Dumping AST...
+21:35:23.571 [pool-3-thread-1] DEBUG com.espertech.esper.epl.parse.ParseHelper - .walk Walking AST using walker com.espertech.esper.epl.parse.EPLTreeWalkerListener
+21:35:23.571 [pool-3-thread-1] DEBUG com.espertech.esper.core.service.StatementResultServiceImpl - .ctor
+21:35:23.572 [pool-3-thread-1] DEBUG com.espertech.esper.event.EventAdapterServiceImpl - .addBeanType Adding java.lang.Object for type java.lang.Object
+21:35:23.572 [pool-3-thread-1] DEBUG com.espertech.esper.core.service.speccompiled.StreamSpecCompiler - .resolveType Event type named 'java.lang.Object' not resolved by plug-in event representations
+21:35:23.572 [pool-3-thread-1] DEBUG com.espertech.esper.filter.FilterSpecCompiler - .makeFilterSpec spec=FilterSpecCompiled type=BeanEventType name=java.lang.Object clazz=java.lang.Object parameters=[]
+21:35:23.573 [pool-3-thread-1] DEBUG com.espertech.esper.core.service.StatementLifecycleSvcImpl - .start Starting statement 1 from desc=com.espertech.esper.core.service.StatementLifecycleSvcImpl$EPStatementDesc@41f14f11
+21:35:23.573 [pool-3-thread-1] DEBUG com.espertech.esper.core.service.StatementLifecycleSvcImpl - .startInternal Starting statement 1 from desc=com.espertech.esper.core.service.StatementLifecycleSvcImpl$EPStatementDesc@41f14f11
+21:35:23.574 [pool-3-thread-1] DEBUG com.espertech.esper.epl.named.NamedWindowConsumerMgmtServiceImpl - Statement 'stmt_1 starts consuming
+21:35:23.574 [pool-3-thread-1] DEBUG com.espertech.esper.core.service.EPAdministratorImpl - .createEPLStmt Statement created and started
+21:35:23.574 [pool-3-thread-1] DEBUG com.espertech.esper.core.service.EPAdministratorHelper - .createEPLStmt statementName=null eplStatement=@Name('ProtocolRegisterDebugger') @Audit select * from ProtocolRegister(network.iana_number=6)
+21:35:23.574 [pool-3-thread-1] DEBUG com.espertech.esper.epl.parse.ParseHelper - .parse Parsing expr=@Name('ProtocolRegisterDebugger') @Audit select * from ProtocolRegister(network.iana_number=6)
+21:35:23.581 [pool-3-thread-1] DEBUG com.espertech.esper.epl.parse.Antlr4ErrorListener - reportAttemptingFullContext
+21:35:23.593 [pool-3-thread-1] DEBUG com.espertech.esper.epl.parse.Antlr4ErrorListener - reportAmbiguity
+21:35:23.594 [pool-3-thread-1] DEBUG com.espertech.esper.epl.parse.ParseHelper - .parse Dumping AST...
+21:35:23.594 [pool-3-thread-1] DEBUG com.espertech.esper.epl.parse.ParseHelper - .walk Walking AST using walker com.espertech.esper.epl.parse.EPLTreeWalkerListener
+21:35:23.599 [pool-3-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Class not found for resolving from name as-is 'Name'
+21:35:23.600 [pool-3-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Class not found for resolving from name 'java.lang.Name'
+21:35:23.601 [pool-3-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Class not found for resolving from name 'java.math.Name'
+21:35:23.603 [pool-3-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Class not found for resolving from name 'java.text.Name'
+21:35:23.604 [pool-3-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Class not found for resolving from name 'java.util.Name'
+21:35:23.626 [pool-3-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Class not found for resolving from name as-is 'Audit'
+21:35:23.627 [pool-3-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Class not found for resolving from name 'java.lang.Audit'
+21:35:23.628 [pool-3-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Class not found for resolving from name 'java.math.Audit'
+21:35:23.628 [pool-3-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Class not found for resolving from name 'java.text.Audit'
+21:35:23.629 [pool-3-thread-1] DEBUG com.espertech.esper.epl.core.engineimport.EngineImportServiceImpl - Class not found for resolving from name 'java.util.Audit'
+21:35:23.634 [pool-3-thread-1] DEBUG com.espertech.esper.core.service.StatementResultServiceImpl - .ctor
+21:35:23.657 [pool-3-thread-1] DEBUG com.espertech.esper.filter.FilterSpecCompiler - .makeFilterSpec spec=FilterSpecCompiled type=com.espertech.esper.event.map.MapEventType@4094e3e parameters=[[Lcom.espertech.esper.filterspec.FilterSpecParam;@6475dc87]
+21:35:23.658 [pool-3-thread-1] DEBUG com.espertech.esper.core.service.StatementLifecycleSvcImpl - .start Starting statement 2 from desc=com.espertech.esper.core.service.StatementLifecycleSvcImpl$EPStatementDesc@1ba23c74
+21:35:23.658 [pool-3-thread-1] DEBUG com.espertech.esper.core.service.StatementLifecycleSvcImpl - .startInternal Starting statement 2 from desc=com.espertech.esper.core.service.StatementLifecycleSvcImpl$EPStatementDesc@1ba23c74
+21:35:23.658 [pool-3-thread-1] DEBUG com.espertech.esper.view.ViewServiceHelper - .addMergeViews Incoming specifications=[]
+21:35:23.659 [pool-3-thread-1] DEBUG com.espertech.esper.view.ViewServiceHelper - .addMergeViews Outgoing specifications=[]
+21:35:23.659 [pool-3-thread-1] DEBUG com.espertech.esper.epl.core.select.SelectExprProcessorFactory - .getProcessor Using wildcard processor
+21:35:23.659 [pool-3-thread-1] DEBUG com.espertech.esper.epl.core.orderby.OrderByProcessorFactoryFactory - .getProcessor Using no OrderByProcessor
+21:35:23.659 [pool-3-thread-1] DEBUG com.espertech.esper.epl.core.resultset.core.ResultSetProcessorFactoryFactory - .getProcessor Using no result processor
+21:35:23.667 [pool-3-thread-1] DEBUG com.espertech.esper.codegen.compile.CodegenCompilerJanino - Compiling class for statement 'ProtocolRegisterDebugger' result-set-processor requestor-class 'ResultSetProcessorFactoryFactory' includeDebugSymbols=false classloader=sun.misc.Launcher$AppClassLoader@135fbaa4 code: 
+   1  package com.espertech.esper.generated.uri_default;
+   2  import com.espertech.esper.view.Viewable;
+   3  import com.espertech.esper.event.EventAdapterServiceImpl;
+   4  import com.espertech.esper.epl.core.resultset.core.ResultSetProcessorFactory;
+   5  import com.espertech.esper.epl.agg.service.common.AggregationService;
+   6  import com.espertech.esper.client.EventType;
+   7  import com.espertech.esper.epl.agg.service.common.AggregationServiceFactory;
+   8  import com.espertech.esper.core.context.util.AgentInstanceContext;
+   9  import com.espertech.esper.epl.core.engineimport.EngineImportService;
+  10  import com.espertech.esper.collection.UniformPair;
+  11  import com.espertech.esper.epl.core.resultset.core.ResultSetProcessor;
+  12  import com.espertech.esper.epl.core.orderby.OrderByProcessor;
+  13  import com.espertech.esper.collection.TransformEventIterator;
+  14  import com.espertech.esper.event.NaturalEventBean;
+  15  import com.espertech.esper.epl.core.orderby.OrderByProcessorFactory;
+  16  import com.espertech.esper.epl.agg.service.common.AggregationServiceVisitor;
+  17  import com.espertech.esper.epl.core.resultset.core.ResultSetProcessorOutputHelperVisitor;
+  18  import com.espertech.esper.epl.agg.service.common.AggregationGroupByRollupLevel;
+  19  import com.espertech.esper.epl.core.resultset.handthru.ResultSetProcessorHandtruTransform;
+  20  import java.util.Collection;
+  21  import com.espertech.esper.client.EventBean;
+  22  import com.espertech.esper.epl.agg.service.common.AggregationServiceNull;
+  23  import com.espertech.esper.event.map.MapEventType;
+  24  import java.util.Set;
+  25  import com.espertech.esper.epl.agg.service.common.AggregationRowRemovedCallback;
+  26  import com.espertech.esper.core.service.StatementResultServiceImpl;
+  27  import java.util.Iterator;
+  28  import com.espertech.esper.epl.core.resultset.codegen.ResultSetProcessorFactoryProvider;
+  29  import com.espertech.esper.epl.core.resultset.handthru.ResultSetProcessorHandThroughUtil;
+  30  import java.util.Map;
+  31  import java.util.List;
+  32  import com.espertech.esper.epl.core.select.SelectExprProcessor;
+  33  import com.espertech.esper.epl.expression.core.ExprEvaluatorContext;
+  34  import com.espertech.esper.epl.agg.service.common.AggregationServiceVisitorWGroupDetail;
+  35  public class ResultSetProcessorFactoryProvider_ca18ccb4d221748e3894df3bd9bbd11ef implements ResultSetProcessorFactoryProvider {
+  36    final StatementResultServiceImpl mb2;
+  37    final EventAdapterServiceImpl mb1;
+  38    final MapEventType mb0;
+  39    final ResultSetProcessorFactory rspFactory;
+  40    final OrderByProcessorFactory orderByFactory;
+  41    final AggregationServiceFactory aggFactory;
+  42    final SelectExprProcessor selectExprProcessor;
+  43  
+  44    public ResultSetProcessorFactoryProvider_ca18ccb4d221748e3894df3bd9bbd11ef(StatementResultServiceImpl p2,EventAdapterServiceImpl p1,MapEventType p0){
+  45      this.mb2=p2;
+  46      this.mb1=p1;
+  47      this.mb0=p0;
+  48      rspFactory=new RSPFactory(this);
+  49      orderByFactory=null;
+  50      aggFactory=new AggFactory(this);
+  51      selectExprProcessor=new SelectExprProcessorImpl(this);
+  52    }
+  53  
+  54    // ResultSetProcessorHandThroughFactoryForge
+  55    public ResultSetProcessorFactory getResultSetProcessorFactory(){
+  56      return rspFactory;
+  57    }
+  58  
+  59    // ResultSetProcessorHandThroughFactoryForge
+  60    public AggregationServiceFactory getAggregationServiceFactory(){
+  61      return aggFactory;
+  62    }
+  63  
+  64    // ResultSetProcessorHandThroughFactoryForge
+  65    public OrderByProcessorFactory getOrderByProcessorFactory(){
+  66      return orderByFactory;
+  67    }
+  68  
+  69    static class RSPFactory implements ResultSetProcessorFactory {
+  70      final ResultSetProcessorFactoryProvider_ca18ccb4d221748e3894df3bd9bbd11ef o;
+  71  
+  72      public RSPFactory(ResultSetProcessorFactoryProvider_ca18ccb4d221748e3894df3bd9bbd11ef o){
+  73        this.o=o;
+  74      }
+  75  
+  76      // ResultSetProcessorFactoryCompiler
+  77      public ResultSetProcessor instantiate(OrderByProcessor orderByProcessor,AggregationService aggregationService,AgentInstanceContext agentInstanceContext){
+  78        return new RSP(o,orderByProcessor,aggregationService,agentInstanceContext);
+  79      }
+  80    }
+  81  
+  82    static class RSP implements ResultSetProcessor {
+  83      final ResultSetProcessorFactoryProvider_ca18ccb4d221748e3894df3bd9bbd11ef o;
+  84      final OrderByProcessor orderByProcessor;
+  85      final AggregationService aggregationService;
+  86      final AgentInstanceContext agentInstanceContext;
+  87  
+  88      public RSP(ResultSetProcessorFactoryProvider_ca18ccb4d221748e3894df3bd9bbd11ef o,OrderByProcessor orderByProcessor,AggregationService aggregationService,AgentInstanceContext agentInstanceContext){
+  89        this.o=o;
+  90        this.orderByProcessor=orderByProcessor;
+  91        this.aggregationService=aggregationService;
+  92        this.agentInstanceContext=agentInstanceContext;
+  93      }
+  94  
+  95      // ResultSetProcessorHandThroughFactoryForge
+  96      public EventType getResultEventType(){
+  97        return o.mb0;
+  98      }
+  99  
+ 100      // ResultSetProcessorHandThroughFactoryForge
+ 101      public UniformPair processViewResult(EventBean[] newData,EventBean[] oldData,boolean isSynthesize){
+ 102        EventBean[] selectOldEvents=null;
+ 103        EventBean[] selectNewEvents=ResultSetProcessorHandThroughUtil.getSelectEventsNoHavingHandThruView(o.selectExprProcessor,newData,true,isSynthesize,agentInstanceContext);
+ 104        return new UniformPair(selectNewEvents,selectOldEvents);
+ 105      }
+ 106  
+ 107      // ResultSetProcessorHandThroughFactoryForge
+ 108      public UniformPair processJoinResult(Set newData,Set oldData,boolean isSynthesize){
+ 109        throw new UnsupportedOperationException();
+ 110      }
+ 111  
+ 112      // ResultSetProcessorHandThroughFactoryForge
+ 113      public Iterator getIterator(Viewable viewable){
+ 114        return new TransformEventIterator(viewable.iterator(),new ResultSetProcessorHandtruTransform(this));
+ 115      }
+ 116  
+ 117      // ResultSetProcessorHandThroughFactoryForge
+ 118      public Iterator getIterator(Set joinset){
+ 119        throw new UnsupportedOperationException();
+ 120      }
+ 121  
+ 122      // ResultSetProcessorHandThroughFactoryForge
+ 123      public void clear(){
+ 124      }
+ 125  
+ 126      // ResultSetProcessorHandThroughFactoryForge
+ 127      public void stop(){
+ 128      }
+ 129  
+ 130      // ResultSetProcessorHandThroughFactoryForge
+ 131      public UniformPair processOutputLimitedJoin(List joinEventsSet,boolean isSynthesize){
+ 132        throw new UnsupportedOperationException();
+ 133      }
+ 134  
+ 135      // ResultSetProcessorHandThroughFactoryForge
+ 136      public UniformPair processOutputLimitedView(List viewEventsList,boolean isSynthesize){
+ 137        throw new UnsupportedOperationException();
+ 138      }
+ 139  
+ 140      // ResultSetProcessorHandThroughFactoryForge
+ 141      public void setAgentInstanceContext(AgentInstanceContext context){
+ 142        throw new UnsupportedOperationException();
+ 143      }
+ 144  
+ 145      // ResultSetProcessorHandThroughFactoryForge
+ 146      public void applyViewResult(EventBean[] newData,EventBean[] oldData){
+ 147        throw new UnsupportedOperationException();
+ 148      }
+ 149  
+ 150      // ResultSetProcessorHandThroughFactoryForge
+ 151      public void applyJoinResult(Set newData,Set oldData){
+ 152        throw new UnsupportedOperationException();
+ 153      }
+ 154  
+ 155      // ResultSetProcessorHandThroughFactoryForge
+ 156      public void processOutputLimitedLastAllNonBufferedView(EventBean[] newData,EventBean[] oldData,boolean isSynthesize){
+ 157        throw new UnsupportedOperationException();
+ 158      }
+ 159  
+ 160      // ResultSetProcessorHandThroughFactoryForge
+ 161      public void processOutputLimitedLastAllNonBufferedJoin(Set newData,Set oldData,boolean isSynthesize){
+ 162        throw new UnsupportedOperationException();
+ 163      }
+ 164  
+ 165      // ResultSetProcessorHandThroughFactoryForge
+ 166      public UniformPair continueOutputLimitedLastAllNonBufferedView(boolean isSynthesize){
+ 167        throw new UnsupportedOperationException();
+ 168      }
+ 169  
+ 170      // ResultSetProcessorHandThroughFactoryForge
+ 171      public UniformPair continueOutputLimitedLastAllNonBufferedJoin(boolean isSynthesize){
+ 172        throw new UnsupportedOperationException();
+ 173      }
+ 174  
+ 175      // ResultSetProcessorHandThroughFactoryForge
+ 176      public void acceptHelperVisitor(ResultSetProcessorOutputHelperVisitor visitor){
+ 177      }
+ 178    }
+ 179  
+ 180    static class AggFactory implements AggregationServiceFactory {
+ 181      final ResultSetProcessorFactoryProvider_ca18ccb4d221748e3894df3bd9bbd11ef o;
+ 182  
+ 183      public AggFactory(ResultSetProcessorFactoryProvider_ca18ccb4d221748e3894df3bd9bbd11ef o){
+ 184        this.o=o;
+ 185      }
+ 186  
+ 187      // AggregationServiceFactoryCompiler
+ 188      public AggregationService makeService(AgentInstanceContext agentInstanceContext,EngineImportService engineImportService,boolean isSubquery,Integer subqueryNumber){
+ 189        return AggregationServiceNull.INSTANCE;
+ 190      }
+ 191    }
+ 192  
+ 193    static class AggSvc implements AggregationService {
+ 194      final ResultSetProcessorFactoryProvider_ca18ccb4d221748e3894df3bd9bbd11ef o;
+ 195  
+ 196      public AggSvc(ResultSetProcessorFactoryProvider_ca18ccb4d221748e3894df3bd9bbd11ef o){
+ 197        this.o=o;
+ 198      }
+ 199  
+ 200      // AggregationServiceNullFactory
+ 201      public void applyEnter(EventBean[] eventsPerStream,Object groupKey,ExprEvaluatorContext exprEvalCtx){
+ 202      }
+ 203  
+ 204      // AggregationServiceNullFactory
+ 205      public void applyLeave(EventBean[] eventsPerStream,Object groupKey,ExprEvaluatorContext exprEvalCtx){
+ 206      }
+ 207  
+ 208      // AggregationServiceNullFactory
+ 209      public void setCurrentAccess(Object groupKey,int agentInstanceId,AggregationGroupByRollupLevel rollupLevel){
+ 210      }
+ 211  
+ 212      // AggregationServiceNullFactory
+ 213      public void clearResults(ExprEvaluatorContext exprEvalCtx){
+ 214      }
+ 215  
+ 216      // AggregationServiceNullFactory
+ 217      public void setRemovedCallback(AggregationRowRemovedCallback callback){
+ 218      }
+ 219  
+ 220      // AggregationServiceNullFactory
+ 221      public void accept(AggregationServiceVisitor visitor){
+ 222      }
+ 223  
+ 224      // AggregationServiceNullFactory
+ 225      public void acceptGroupDetail(AggregationServiceVisitorWGroupDetail visitor){
+ 226      }
+ 227  
+ 228      // AggregationServiceNullFactory
+ 229      public boolean isGrouped(){
+ 230        return false;
+ 231      }
+ 232  
+ 233      // AggregationServiceNullFactory
+ 234      public AggregationService getContextPartitionAggregationService(int agentInstanceId){
+ 235        return this;
+ 236      }
+ 237  
+ 238      // AggregationServiceNullFactory
+ 239      public Object getValue(int column,int agentInstanceId,EventBean[] eventsPerStream,boolean isNewData,ExprEvaluatorContext exprEvalCtx){
+ 240        return null;
+ 241      }
+ 242  
+ 243      // AggregationServiceNullFactory
+ 244      public Collection getCollectionOfEvents(int column,EventBean[] eventsPerStream,boolean isNewData,ExprEvaluatorContext exprEvalCtx){
+ 245        return null;
+ 246      }
+ 247  
+ 248      // AggregationServiceNullFactory
+ 249      public EventBean getEventBean(int column,EventBean[] eventsPerStream,boolean isNewData,ExprEvaluatorContext exprEvalCtx){
+ 250        return null;
+ 251      }
+ 252  
+ 253      // AggregationServiceNullFactory
+ 254      public Object getGroupKey(int agentInstanceId){
+ 255        return null;
+ 256      }
+ 257  
+ 258      // AggregationServiceNullFactory
+ 259      public Collection getGroupKeys(ExprEvaluatorContext exprEvalCtx){
+ 260        return null;
+ 261      }
+ 262  
+ 263      // AggregationServiceNullFactory
+ 264      public Collection getCollectionScalar(int column,EventBean[] eventsPerStream,boolean isNewData,ExprEvaluatorContext exprEvalCtx){
+ 265        return null;
+ 266      }
+ 267  
+ 268      // AggregationServiceNullFactory
+ 269      public void stop(){
+ 270      }
+ 271    }
+ 272  
+ 273    static class SelectExprProcessorImpl implements SelectExprProcessor {
+ 274      final ResultSetProcessorFactoryProvider_ca18ccb4d221748e3894df3bd9bbd11ef o;
+ 275  
+ 276      public SelectExprProcessorImpl(ResultSetProcessorFactoryProvider_ca18ccb4d221748e3894df3bd9bbd11ef o){
+ 277        this.o=o;
+ 278      }
+ 279  
+ 280      // SelectExprProcessorCompiler
+ 281      public EventBean process(EventBean[] eventsPerStream,boolean isNewData,boolean isSynthesize,ExprEvaluatorContext exprEvalCtx){
+ 282        return m0(eventsPerStream,isSynthesize);
+ 283      }
+ 284  
+ 285      // SelectExprResultProcessor
+ 286      EventBean m0(EventBean[] eventsPerStream,boolean isSynthesize){
+ 287        boolean makeNatural=(o.mb2).isMakeNatural();
+ 288        boolean synthesize=(o.mb2).isMakeSynthetic()||isSynthesize;
+ 289        if (!(makeNatural)) {
+ 290          if (synthesize) {
+ 291            return m1(eventsPerStream);
+ 292          }
+ 293          return null;
+ 294        }
+ 295        EventBean syntheticEvent=null;
+ 296        if (synthesize) {
+ 297          syntheticEvent=m1(eventsPerStream);
+ 298        }
+ 299        Object[] parameters=m2(eventsPerStream);
+ 300        return new NaturalEventBean(o.mb0,parameters,syntheticEvent);
+ 301      }
+ 302  
+ 303      // SelectExprWildcardProcessor
+ 304      EventBean m1(EventBean[] eventsPerStream){
+ 305        return eventsPerStream[0];
+ 306      }
+ 307  
+ 308      // BindProcessor
+ 309      Object[] m2(EventBean[] eventsPerStream){
+ 310        Object[] parameters=new Object[1];
+ 311        parameters[0]=m3(eventsPerStream);
+ 312        return parameters;
+ 313      }
+ 314  
+ 315      // BindProcessorStream
+ 316      Map m3(EventBean[] eventsPerStream){
+ 317        EventBean event=eventsPerStream[0];
+ 318        if (event == null) {return null;}
+ 319        return ((Map)event.getUnderlying());
+ 320      }
+ 321    }
+ 322  }
+
+21:35:23.747 [pool-3-thread-1] DEBUG com.espertech.esper.view.stream.StreamFactorySvcImpl - .createStream hashCode=-408960856 filter=FilterSpecCompiled type=com.espertech.esper.event.map.MapEventType@4094e3e parameters=[[Lcom.espertech.esper.filterspec.FilterSpecParam;@6475dc87]
+21:35:23.756 [pool-3-thread-1] DEBUG com.espertech.esper.filter.IndexTreeBuilder - .add (17) Adding filter callback,   topNode=com.espertech.esper.filter.FilterHandleSetNode@6cee7b0c  filterCallback=com.espertech.esper.core.service.EPStatementHandleCallback@7e0311ac
+21:35:23.757 [pool-3-thread-1] DEBUG com.espertech.esper.filter.IndexTreeBuilder - .addToNode (17) Adding filterCallback, node=com.espertech.esper.filter.FilterHandleSetNode@6cee7b0c  remainingParameters=  param(0) property=expression='network.iana_number' operator=EQUAL value=6
+21:35:23.757 [pool-3-thread-1] DEBUG com.espertech.esper.filter.IndexTreeBuilder - .addToIndex (17) Adding to index filterOperator=EQUAL lookupable=expression='network.iana_number'  expressionValue=6
+21:35:23.757 [pool-3-thread-1] DEBUG com.espertech.esper.filter.IndexTreeBuilder - .addToNode (17) Adding filterCallback, node=com.espertech.esper.filter.FilterHandleSetNode@59e30f6c  remainingParameters=
+21:35:23.757 [pool-3-thread-1] DEBUG com.espertech.esper.view.ViewServiceImpl - .createView No new views created, dumping stream ... com.espertech.esper.view.ZeroDepthStreamNoIterate@469ad1a8
+21:35:23.759 [pool-3-thread-1] DEBUG com.espertech.esper.epl.named.NamedWindowConsumerMgmtServiceImpl - Statement 'ProtocolRegisterDebugger starts consuming
+21:35:23.760 [pool-3-thread-1] DEBUG com.espertech.esper.core.service.EPAdministratorImpl - .createEPLStmt Statement created and started
+21:35:23.760 [pool-3-thread-1] DEBUG com.espertech.esper.core.service.StatementLifecycleSvcImpl - .updatedListeners No action for base implementation
+21:35:23.764 [pool-3-thread-1] DEBUG com.espertech.esper.core.service.EPRuntimeImpl - .sendMap Processing event {source.port=23, destination.port=21, network.iana_number=6}
+21:35:23.769 [pool-3-thread-1] INFO com.espertech.esper.audit - Statement ProtocolRegisterDebugger stream ProtocolRegister(network.iana_number=...) inserted ProtocolRegister[{source.port=23, destination.port=21, network.iana_number=6}]
+21:35:23.770 [pool-3-thread-1] INFO de.e2security.processors.e2esper.CommonEplProcessor - CommonEplProcessor[id=93f4f994-c9a2-49d6-be3e-5aa528091fef] Esper listener has detected a new incoming event...
+21:35:23.771 [pool-3-thread-1] INFO com.espertech.esper.core.service.EPServiceProviderImpl - Destroying engine URI 'default'
+21:35:23.771 [pool-3-thread-1] DEBUG com.espertech.esper.timer.TimerServiceImpl - .stopInternalClock Stopping internal clock daemon thread
+21:35:23.972 [pool-3-thread-1] DEBUG com.espertech.esper.epl.metric.MetricScheduleService - Clearing scheduling service
+21:35:23.973 [pool-3-thread-1] DEBUG com.espertech.esper.epl.named.NamedWindowConsumerMgmtServiceImpl - Statement 'stmt_1 destroyed
+21:35:23.973 [pool-3-thread-1] DEBUG com.espertech.esper.filter.IndexTreeBuilder - .remove (17) Removing filterCallback  type ProtocolRegister topNode=com.espertech.esper.filter.FilterHandleSetNode@6cee7b0c filterCallback=com.espertech.esper.core.service.EPStatementHandleCallback@7e0311ac
+21:35:23.973 [pool-3-thread-1] DEBUG com.espertech.esper.epl.named.NamedWindowConsumerMgmtServiceImpl - Statement 'ProtocolRegisterDebugger destroyed
+21:35:23.973 [pool-3-thread-1] DEBUG com.espertech.esper.filter.FilterServiceBase - Destroying filter service
+21:35:23.974 [pool-3-thread-1] DEBUG com.espertech.esper.schedule.SchedulingServiceImpl - Destroying scheduling service
+21:35:23.974 [pool-3-thread-1] DEBUG com.espertech.esper.schedule.SchedulingMgmtServiceImpl - Destroying scheduling management service
+21:35:23.974 [pool-3-thread-1] INFO de.e2security.processors.e2esper.CommonEplProcessor - CommonEplProcessor[id=93f4f994-c9a2-49d6-be3e-5aa528091fef] trying to write output...
