@@ -27,17 +27,14 @@ export default {
         },
     },
 
-    actions: {
-        getUsers() {
-            return apiActions.get('/um/users')
-        },
-        getUserProfile() {
+    user: {
+        getUser() {
             return apiActions.get('/um/users/profile')
         },
-        updateUserProfile(data) {
+        updateUser(data) {
             return apiActions.put('um/users', data)
         },
-        changeUserPass(data) {
+        changePassword(data) {
             return apiActions.put('um/users/resetPassword', data)
         },
         getUserPreferences() {
@@ -46,6 +43,27 @@ export default {
         updateUserPreferences(data) {
             return apiActions.put('/um/profilepreferences', {id: 1, timezone: data})
         },
+    },
+
+    admin: {
+        getUsers() {
+            return apiActions.get('/um/users')
+        },
+        getUserGroups() {
+            return apiActions.get('/um/usergroups')
+        },
+        activateUser(userId) {
+            return apiActions.get('/um/users/activate/' + userId)
+        },
+        deactivateUser(userId) {
+            return apiActions.get('/um/users/deactivate/' + userId)
+        },
+        deleteUser(userId) {
+            return apiActions.delete('/um/users/' + userId)
+        }
+    },
+
+    helpers: {
         getTimezones() {
             return apiActions.get('/um/timezones')
         }
