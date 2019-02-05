@@ -2,12 +2,30 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 
 import { userActions } from '../../store/actions/userActions';
+import { adminActions } from '../../store/actions/adminActions';
 import { helpersActions } from '../../store/actions/helpersActions';
 
 import TabContainer from '../../components/TabContainer/TabContainer'
 
 import { withStyles } from '@material-ui/core/styles';
-import { Grid, Paper, TextField, FormControl, InputLabel, MenuItem, Select, Switch, Typography, Button, Tabs, Tab, Avatar, Dialog,  DialogContent,  DialogTitle} from '@material-ui/core'
+import {
+    Grid,
+    Paper,
+    TextField,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    Switch,
+    Typography,
+    Button,
+    Tabs,
+    Tab,
+    Avatar,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+} from '@material-ui/core'
 import Toolbar from "@material-ui/core/es/Toolbar/Toolbar";
 
 import profilePlaceholder from '../../assets/images/profile-placeholder.png';
@@ -100,6 +118,30 @@ const styles = theme => ({
         '& > button': {
             marginLeft: theme.spacing.unit
         }
+    },
+    listItem: {
+        color: 'rgba(0, 0, 0, 0.87)',
+        width: 'auto',
+        height: '24px',
+        overflow: 'hidden',
+        fontSize: '1rem',
+        boxSizing: 'content-box',
+        fontWeight: '400',
+        fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+        lineHeight: '1.5em',
+        whiteSpace: 'nowrap',
+        paddingLeft: theme.spacing.unit * 2,
+        paddingRight: theme.spacing.unit * 2,
+        paddingTop: '11px',
+        paddingBottom: '11px',
+        cursor: 'pointer',
+        '&:focus': {
+            backgroundColor: 'rgba(0, 0, 0, 0.14)',
+            outline: 'none'
+        },
+        '&:hover': {
+            backgroundColor: 'rgba(0, 0, 0, 0.08)',
+        }
     }
 });
 
@@ -108,9 +150,9 @@ class Profile extends Component {
 
     state = {
         tabValue: 0,
-        isEditProfileOpened: false,
-        isChangePassOpened: false,
-        userProfileState: {
+        isUserEditOpened: false,
+        isPassChangeOpened: false,
+        userState: {
             email: "",
             firstName: "",
             lastName: "",
@@ -125,12 +167,13 @@ class Profile extends Component {
     componentDidMount() {
         this.props.getUser();
         this.props.getUserPreferences();
+        this.props.getUserGroups();
         this.props.getTimezones();
     }
 
     componentDidUpdate(prevProps, prevState, snapshot){
-        if (this.props.userProfile.data !== prevProps.userProfile.data) {
-            this.setState({ userProfileState: this.props.userProfile.data});
+        if (this.props.user.data !== prevProps.user.data) {
+            this.setState({ userState: this.props.user.data});
         }
 
         if (this.props.userPreferences.data !== prevProps.userPreferences.data) {
@@ -138,22 +181,22 @@ class Profile extends Component {
         }
     }
 
-    // edit userProfile
-    openEditProfile = () => {
-        this.setState({ isEditProfileOpened: true });
-    };
-
-    closeEditProfile = () => {
+    // edit user
+    openUserEdit = () => {
         this.setState({
-            isEditProfileOpened: false,
-            userProfileState: this.props.userProfile.data
+            isUserEditOpened: true,
+            userState: this.props.user.data
         });
     };
 
-    editProfile = (e) => {
+    closeUserEdit = () => {
+        this.setState({isUserEditOpened: false });
+    };
+
+    handleUserEdit = (e) => {
         this.setState({
-            userProfileState: {
-                ...this.state.userProfileState,
+            userState: {
+                ...this.state.userState,
                 [e.target.id]: e.target.value
             }
         })
@@ -161,21 +204,21 @@ class Profile extends Component {
 
     updateUser = (e) => {
         e.preventDefault();
-        this.props.updateUser(this.state.userProfileState);
-        this.closeEditProfile();
+        this.props.updateUser(this.state.userState);
+        this.closeUserEdit();
     };
 
 
     // change pass
-    openChangePass = () => {
-        this.setState({ isChangePassOpened: true });
+    openPassChange = () => {
+        this.setState({ isPassChangeOpened: true });
     };
 
-    closeChangePass = () => {
-        this.setState({ isChangePassOpened: false });
+    closePassChange = () => {
+        this.setState({ isPassChangeOpened: false });
     };
 
-    editPass = (e) => {
+    handlePassEdit = (e) => {
         this.setState({
             passState: {
                 ...this.state.passState,
@@ -187,16 +230,16 @@ class Profile extends Component {
     changePassword = (e) => {
         e.preventDefault();
         this.props.changePassword(this.state.passState)
-        this.closeChangePass();
+        this.closePassChange();
     }
 
-    // update userProfile preferences
+    // update user preferences
     updateUserPreferences = () => {
         this.props.updateUserPreferences(this.state.userTimezoneState)
     };
 
-    editTimezone = (e) => {
-        this.setState({ userTimezoneState: e.target.value });
+    handlePreferencesChange = (e) => {
+        this.setState({ [e.target.name]: e.target.value });
     };
 
     // tab changing
@@ -207,10 +250,10 @@ class Profile extends Component {
 
     render(){
 
-        const { classes, userProfile, timezones, userPreferences } = this.props;
-        const { tabValue, userProfileState, userTimezoneState } = this.state;
+        const { classes, user, timezones, userPreferences, userGroups } = this.props;
+        const { tabValue, userState, userTimezoneState } = this.state;
 
-        if (userProfile.loading === true || timezones.loading === true || userPreferences.loading === true || userProfile.data.hasOwnProperty('userStatus') === false) return null
+        if (user.loading === true || timezones.loading === true || userPreferences.loading === true) return null
 
         else {
             return(
@@ -225,8 +268,13 @@ class Profile extends Component {
                                 <Toolbar className={classes.toolbar}>
                                     <Avatar  src={profilePlaceholder} className={classes.avatar} />
                                     <div>
-                                        <Typography color="inherit" variant="subtitle1">Administrator</Typography>
-                                        <Typography color="inherit" variant="h5">{userProfile.data.username}</Typography>
+                                        <Typography color="inherit" variant="subtitle1">
+                                            {userGroups.data.map( (userGroup) => {
+                                                    return  userGroup.id === user.data.userGroupId ? userGroup.name : null
+                                                }
+                                            )}
+                                        </Typography>
+                                        <Typography color="inherit" variant="h5">{user.data.username}</Typography>
                                     </div>
 
                                 </Toolbar>
@@ -234,19 +282,19 @@ class Profile extends Component {
                                 <div className={classes.gutter}>
 
                                     <Typography variant="subtitle1" className={classes.profileLabel}>Email</Typography>
-                                    <Typography variant="body1" className={classes.profileDetail}>{userProfile.data.email}</Typography>
+                                    <Typography variant="body1" className={classes.profileDetail}>{user.data.email}</Typography>
                                     <Typography variant="subtitle1" className={classes.profileLabel}>First name</Typography>
-                                    <Typography variant="body1" className={classes.profileDetail}>{userProfile.data.firstName}</Typography>
+                                    <Typography variant="body1" className={classes.profileDetail}>{user.data.firstName}</Typography>
                                     <Typography variant="subtitle1" className={classes.profileLabel}>Last name</Typography>
-                                    <Typography variant="body1" className={classes.profileDetail}>{userProfile.data.lastName}</Typography>
+                                    <Typography variant="body1" className={classes.profileDetail}>{user.data.lastName}</Typography>
                                     <Typography variant="subtitle1" className={classes.profileLabel}>Status</Typography>
-                                    <Typography variant="body1" className={classes.profileDetail}>{userProfile.data.userStatus.name}</Typography>
+                                    <Typography variant="body1" className={classes.profileDetail}>{user.data.userStatusId === 1 ? "Active" : "No active"}</Typography>
 
                                     <Button color="primary"
                                             size="large"
                                             className={`${classes.button} ${classes.linkButton}`}
                                             disableRipple={true}
-                                            onClick={this.openChangePass}
+                                            onClick={this.openPassChange}
                                     >
                                         Change Password
                                     </Button>
@@ -255,7 +303,7 @@ class Profile extends Component {
                                             color="primary"
                                             size="large"
                                             className={classes.button}
-                                            onClick={this.openEditProfile}
+                                            onClick={this.openUserEdit}
                                     >
                                         Edit Profile
                                     </Button>
@@ -290,24 +338,21 @@ class Profile extends Component {
 
                                 </Tabs>
 
-                                <div className={classes.gutter}>
 
-                                    {tabValue === 0 &&
-                                    <TabContainer>
 
+                                {tabValue === 0 &&
+                                <TabContainer>
+                                    <div className={classes.gutter}>
                                         <FormControl>
                                             <InputLabel htmlFor="timezone">Timezone</InputLabel>
                                             <Select
                                                 value={userTimezoneState}
+                                                name="userTimezoneState"
                                                 autoWidth={true}
-                                                onChange={this.editTimezone}
-                                                inputProps={{
-                                                    name: 'timezone',
-                                                    id: 'timezone',
-                                                }}
+                                                onChange={this.handlePreferencesChange}
                                             >
                                                 {timezones.data && timezones.data.map( (timezone, index) => (
-                                                        <MenuItem key={index} value={timezone.id}>{timezone.name}</MenuItem>
+                                                        <li className={classes.listItem} key={index} value={timezone.id}>{timezone.name}</li>
                                                     )
                                                 )}
                                             </Select>
@@ -317,20 +362,21 @@ class Profile extends Component {
                                         <Button variant="contained" color="primary" onClick={this.updateUserPreferences}>
                                             Save
                                         </Button>
-                                    </TabContainer>
-                                    }
-                                    {tabValue === 1 && <TabContainer>Item Two</TabContainer>}
-                                    {tabValue === 2 && <TabContainer>Item Three</TabContainer>}
+                                    </div>
+                                </TabContainer>}
 
-                                </div>
+                                {tabValue === 1 && <TabContainer>Item Two</TabContainer>}
+                                {tabValue === 2 && <TabContainer>Item Three</TabContainer>}
+
+
                             </Paper>
                         </Grid>
                     </Grid>
 
 
                     <Dialog
-                        open={this.state.isEditProfileOpened}
-                        onClose={this.closeEditProfile}
+                        open={this.state.isUserEditOpened}
+                        onClose={this.closeUserEdit}
                         aria-labelledby="form-dialog-title"
                         maxWidth="xs"
                     >
@@ -343,13 +389,13 @@ class Profile extends Component {
                                     fullWidth={true}
                                     required={true}
                                     margin="dense"
-                                    value={userProfileState.email}
+                                    value={userState.email}
                                     InputProps={{
                                         classes: {
                                             root: classes.input,
                                         }
                                     }}
-                                    onChange={this.editProfile}
+                                    onChange={this.handleUserEdit}
                                 />
                                 <TextField
                                     id="firstName"
@@ -357,13 +403,13 @@ class Profile extends Component {
                                     fullWidth={true}
                                     required={true}
                                     margin="dense"
-                                    value={userProfileState.firstName}
+                                    value={userState.firstName}
                                     InputProps={{
                                         classes: {
                                             root: classes.input,
                                         }
                                     }}
-                                    onChange={this.editProfile}
+                                    onChange={this.handleUserEdit}
                                 />
                                 <TextField
                                     id="lastName"
@@ -371,19 +417,19 @@ class Profile extends Component {
                                     fullWidth={true}
                                     required={true}
                                     margin="dense"
-                                    value={userProfileState.lastName}
+                                    value={userState.lastName}
                                     InputProps={{
                                         classes: {
                                             root: classes.input,
                                         }
                                     }}
-                                    onChange={this.editProfile}
+                                    onChange={this.handleUserEdit}
                                 />
                                 <div className={classes.dialogButtons}>
                                     <Button type="submit" variant="contained" color="primary">
                                         Save
                                     </Button>
-                                    <Button onClick={this.closeEditProfile} variant="contained" color="primary">
+                                    <Button onClick={this.closeUserEdit} variant="contained" color="primary">
                                         Cancel
                                     </Button>
                                 </div>
@@ -393,8 +439,8 @@ class Profile extends Component {
                     </Dialog>
 
                     <Dialog
-                        open={this.state.isChangePassOpened}
-                        onClose={this.closeChangePass}
+                        open={this.state.isPassChangeOpened}
+                        onClose={this.closePassChange}
                         aria-labelledby="form-dialog-title"
                         maxWidth="xs"
                     >
@@ -408,13 +454,13 @@ class Profile extends Component {
                                     fullWidth={true}
                                     required={true}
                                     margin="dense"
-                                    InputProps={{
+                                    inputProps={{
+                                        minLength:"8",
                                         classes: {
                                             root: classes.input,
                                         }
                                     }}
-                                    inputProps={{minLength:"8"}}
-                                    onChange={this.editPass}
+                                    onChange={this.handlePassEdit}
                                 />
 
                                 <TextField
@@ -424,20 +470,20 @@ class Profile extends Component {
                                     fullWidth={true}
                                     required={true}
                                     margin="dense"
-                                    InputProps={{
+                                    inputProps={{
+                                        minLength:"8",
                                         classes: {
                                             root: classes.input,
                                         }
                                     }}
-                                    inputProps={{minLength:"8"}}
-                                    onChange={this.editPass}
+                                    onChange={this.handlePassEdit}
                                 />
 
                                 <div className={classes.dialogButtons}>
                                     <Button type="submit" variant="contained" color="primary">
                                         Save
                                     </Button>
-                                    <Button onClick={this.closeChangePass} variant="contained" color="primary">
+                                    <Button onClick={this.closePassChange} variant="contained" color="primary">
                                         Cancel
                                     </Button>
                                 </div>
@@ -454,10 +500,12 @@ class Profile extends Component {
 }
 
 const mapStateToProps = (state) => {
+
     return {
-        userProfile: state.user.profile,
+        user: state.user.user,
         userPreferences: state.user.preferences,
-        timezones: state.helpers.timezones
+        userGroups: state.admin.userGroups,
+        timezones: state.helpers.timezones,
     }
 }
 
@@ -466,13 +514,11 @@ const mapDispatchToProps = (dispatch) => {
     return {
 
         getUser: () => dispatch(userActions.getUser()),
-        updateUser: (userProfile) => dispatch(userActions.updateUser(userProfile)),
-
+        updateUser: (user) => dispatch(userActions.updateUser(user)),
         getUserPreferences: () => dispatch(userActions.getUserPreferences()),
         updateUserPreferences: (userPreferences) => dispatch(userActions.updateUserPreferences(userPreferences)),
-
         changePassword: (pass) => dispatch(userActions.changePassword(pass)),
-
+        getUserGroups: () => dispatch(adminActions.getUserGroups()),
         getTimezones: () => dispatch(helpersActions.getTimezones()),
     }
 }

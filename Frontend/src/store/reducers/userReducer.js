@@ -24,7 +24,7 @@ import {
 
 
 const initState = {
-    profile: {
+    user: {
         loading: false,
         error: null,
         data: {},
@@ -50,24 +50,28 @@ const userReducer = (state = initState, action ) => {
         case GET_USER_BEGIN:
             return {
                 ...state,
-                profile: {
-                    ...state.profile,
+                user: {
+                    ...state.user,
                     loading: true
                 }
             };
         case GET_USER_SUCCESS:
             return {
                 ...state,
-                profile: {
-                    ...state.profile,
+                user: {
+                    ...state.user,
                     loading: false,
-                    data: action.user,
+                    data: {
+                        ...action.user,
+                        userGroupId: action.user.userGroup.id,
+                        userStatusId: action.user.userStatus.id,
+                    }
                 }
             };
         case GET_USER_FAILURE:
             return {
                 ...state,
-                profile: {
+                user: {
                     loading: false,
                     error: action.error,
                     data: {}
@@ -78,25 +82,29 @@ const userReducer = (state = initState, action ) => {
         case UPDATE_USER_BEGIN:
             return {
                 ...state,
-                profile: {
-                    ...state.profile,
+                user: {
+                    ...state.user,
                     updating: true
                 }
             };
         case UPDATE_USER_SUCCESS:
             return {
                 ...state,
-                profile: {
-                    ...state.profile,
+                user: {
+                    ...state.user,
                     updating: false,
-                    data: action.user,
+                    data: {
+                        ...action.user,
+                        userGroupId: action.user.userGroup.id,
+                        userStatusId: action.user.userStatus.id,
+                    }
                 }
             };
         case UPDATE_USER_FAILURE:
             return {
                 ...state,
-                profile: {
-                    ...state.profile,
+                user: {
+                    ...state.user,
                     updating: false,
                     error: action.error,
                 }
@@ -185,48 +193,6 @@ const userReducer = (state = initState, action ) => {
             };
 
 
-        /*case 'UPDATE_USER_PROFILE':
-            return {
-                ...state,
-                userProfile: {
-                    ...state.userProfile,
-                    email: action.userProfile.email,
-                    firstName: action.userProfile.firstName,
-                    lastName: action.userProfile.lastName,
-                },
-            };
-        case 'UPDATE_USER_PROFILE_ERROR':
-            return state;
-        case 'CHANGE_USER_PASS':
-            return state;
-        case 'CHANGE_USER_PASS_ERROR':
-            return state;
-        case 'GET_USER_PREFERENCES':
-            return {
-                ...state,
-                userPreferences: action.userPreferences
-            };
-        case 'GET_USER_PREFERENCES_ERROR':
-            return state;
-        case 'UPDATE_USER_PREFERENCES':
-            return state;
-        case 'UPDATE_USER_PREFERENCES_ERROR':
-            return state;
-
-
-
-
-
-
-        case 'GET_USERS_ERROR':
-            return state;
-        case 'GET_TIMEZONES':
-            return {
-                ...state,
-                timezones: action.timezones.content
-            };
-        case 'GET_TIMEZONES_ERROR':
-            return state;*/
         default:
             return state;
     }

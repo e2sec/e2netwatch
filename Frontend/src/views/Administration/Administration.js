@@ -12,6 +12,7 @@ import { adminActions } from "../../store/actions/adminActions";
 import { Paper, Tab, Tabs, Table, TableHead, TableBody, TableRow, TableCell, TableFooter, TablePagination, Button, IconButton, Dialog, DialogContent, DialogContentText, DialogTitle, TextField, InputLabel, Select, MenuItem, FormControl } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+import {helpersActions} from "../../store/actions/helpersActions";
 
 
 const styles = theme => ({
@@ -35,13 +36,12 @@ const styles = theme => ({
             paddingRight: theme.spacing.unit * 3
         }
     },
+    gutter: {
+        padding: theme.spacing.unit * 3
+    },
     tableWrapper: {
         overflowX: 'auto',
-        padding: theme.spacing.unit * 3,
         paddingBottom: 0
-    },
-    actionCell: {
-        paddingRight: '0px !important',
     },
     tableButton: {
         marginRight: theme.spacing.unit * 1.5
@@ -56,6 +56,30 @@ const styles = theme => ({
         justifyContent: 'flex-end',
         '& > button': {
             marginLeft: theme.spacing.unit
+        }
+    },
+    listItem: {
+        color: 'rgba(0, 0, 0, 0.87)',
+        width: 'auto',
+        height: '24px',
+        overflow: 'hidden',
+        fontSize: '1rem',
+        boxSizing: 'content-box',
+        fontWeight: '400',
+        fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+        lineHeight: '1.5em',
+        whiteSpace: 'nowrap',
+        paddingLeft: theme.spacing.unit * 2,
+        paddingRight: theme.spacing.unit * 2,
+        paddingTop: '11px',
+        paddingBottom: '11px',
+        cursor: 'pointer',
+        '&:focus': {
+            backgroundColor: 'rgba(0, 0, 0, 0.14)',
+            outline: 'none'
+        },
+        '&:hover': {
+            backgroundColor: 'rgba(0, 0, 0, 0.08)',
         }
     }
 });
@@ -73,22 +97,29 @@ class Administration extends Component {
             email: "",
             firstName: "",
             lastName:"",
-            userGroups: "",
-            userStatus: {}
+            userGroupId: "",
+            userStatusId: ""
         },
+        timezoneState: "",
         page: 0,
         rowsPerPage: 5,
     };
 
 
     componentDidMount() {
-        this.props.getUsers()
-        this.props.getUserGroups()
+        this.props.getUsers();
+        this.props.getUserGroups();
+        this.props.getGlobalPreferences();
+        this.props.getTimezones();
     }
 
     componentDidUpdate(prevProps, prevState, snapshot){
         if (this.props.users.data !== prevProps.users.data) {
-          this.setState({ usersState: this.props.users.data});
+            this.setState({ usersState: this.props.users.data});
+        }
+
+        if (this.props.globalPreferences.data !== prevProps.globalPreferences.data) {
+            this.setState({ timezoneState: this.props.globalPreferences.data.timezone});
         }
     }
 
@@ -122,7 +153,7 @@ class Administration extends Component {
 
     changeUserStatus = () => {
 
-        this.state.selectedUser.userStatus.name === "Active" ?
+        this.state.selectedUser.userStatusId === 1 ?
             this.props.deactivateUser(this.state.selectedUser.id) :
             this.props.activateUser(this.state.selectedUser.id);
 
@@ -146,11 +177,11 @@ class Administration extends Component {
     };
 
     deleteUser = () => {
-        this.props.deleteUser(this.state.selectedUser.id)
+        this.props.deleteUser(this.state.selectedUser.id);
         this.closeDeleteDialog();
     }
 
-    openEditUserDialog = (userId) => (e) => {
+    openUserEditDialog = (userId) => (e) => {
 
         let selectedUser = this.props.users.data.filter( user => {
             return user.id === userId
@@ -162,11 +193,11 @@ class Administration extends Component {
         });
     }
 
-    closeEditUserDialog = () => {
+    closeUserEditDialog = () => {
         this.setState({ isEditUserDialogOpened: false });
     };
 
-    editUser = (e) => {
+    handleUserEdit = (e) => {
         this.setState({
             selectedUser: {
                 ...this.state.selectedUser,
@@ -175,11 +206,33 @@ class Administration extends Component {
         })
     };
 
+    handleUserSelectChange = (e) => {
+        this.setState({
+            selectedUser: {
+                ...this.state.selectedUser,
+                [e.target.name]: e.target.value
+            }
+        })
+    }
+
+    handlePreferencesChange = (e) => {
+        this.setState({ [e.target.name]: e.target.value });
+    };
+
+    updateGlobalPreferences = () => {
+        this.props.updateGlobalPreferences(this.state.timezoneState)
+    };
+
+    updateUser = (e) => {
+        e.preventDefault();
+        this.props.updateUser(this.state.selectedUser)
+        this.closeUserEditDialog();
+    }
+
     render() {
 
-        const { classes, users, userGroups } = this.props;
-        const { tabValue, rowsPerPage, page, usersState, selectedUser, isUserStatusDialogOpened, isDeleteDialogOpened, isEditUserDialogOpened } = this.state;
-
+        const { classes, users, userGroups, timezones } = this.props;
+        const { tabValue, rowsPerPage, page, usersState, selectedUser, isUserStatusDialogOpened, isDeleteDialogOpened, isEditUserDialogOpened, timezoneState} = this.state;
 
         if (users.loading === true) return null;
 
@@ -198,10 +251,12 @@ class Administration extends Component {
                               onChange={this.handleTabChange}>
 
                             <Tab label="Users"/>
-                            <Tab label=" Global Preferences" />
+                            <Tab label="Global Preferences" />
                             <Tab label="Item Three" />
 
                         </Tabs>
+
+
 
                         {tabValue === 0 &&
                         <TabContainer>
@@ -224,15 +279,20 @@ class Administration extends Component {
                                                 <TableCell>{user.firstName + " " + user.lastName}</TableCell>
                                                 <TableCell>{user.username}</TableCell>
                                                 <TableCell>{user.email}</TableCell>
-                                                <TableCell>Administrator</TableCell>
-                                                <TableCell>{user.userStatus.name}</TableCell>
-                                                <TableCell align="right" className={classes.actionCell}>
+                                                <TableCell>
+                                                    {userGroups.data.map( (userGroup) => {
+                                                            return userGroup.id === user.userGroupId ? userGroup.name : null;
+                                                        }
+                                                    )}
+                                                </TableCell>
+                                                <TableCell>{user.userStatusId === 1 ? "Active" : "No active"}</TableCell>
+                                                <TableCell align="right">
                                                     <Button variant="contained" color="primary"
                                                             className={classes.tableButton}
                                                             onClick={this.openUserStatusDialog(user.id)}>
-                                                        {user.userStatus.name === "Active" ? "Deactivate" : "Activate"}
+                                                        {user.userStatusId === 1 ? "Deactivate" : "Activate"}
                                                     </Button>
-                                                    <IconButton onClick={this.openEditUserDialog(user.id)} aria-label="Edit">
+                                                    <IconButton onClick={this.openUserEditDialog(user.id)} aria-label="Edit">
                                                         <EditIcon />
                                                     </IconButton>
                                                     <IconButton onClick={this.openDeleteDialog(user.id)} aria-label="Delete">
@@ -271,14 +331,39 @@ class Administration extends Component {
                         }
 
 
-                        {tabValue === 1 && <TabContainer>Item Two</TabContainer>}
+                        {tabValue === 1 &&
+                        <TabContainer>
+                            <div className={classes.gutter}>
+                                <FormControl>
+                                    <InputLabel htmlFor="timezone">Timezone</InputLabel>
+                                    <Select
+                                        value={timezoneState}
+                                        name="timezoneState"
+                                        autoWidth={true}
+                                        onChange={this.handlePreferencesChange}
+                                    >
+                                        {timezones.data && timezones.data.map( (timezone, index) => (
+                                                <li className={classes.listItem} key={index} value={timezone.id}>{timezone.name}</li>
+                                            )
+                                        )}
+                                    </Select>
+                                </FormControl>
+                                <br/>
+                                <br/>
+                                <Button variant="contained" color="primary" onClick={this.updateGlobalPreferences}>
+                                    Save
+                                </Button>
+
+                            </div>
+                        </TabContainer>
+                        }
                         {tabValue === 2 && <TabContainer>Item Three</TabContainer>}
                     </Paper>
 
 
                     <Dialog
                         open={isEditUserDialogOpened}
-                        onClose={this.closeEditUserDialog}
+                        onClose={this.closeUserEditDialog}
                         aria-labelledby="form-dialog-title"
                         maxWidth="xs"
                     >
@@ -297,7 +382,7 @@ class Administration extends Component {
                                             root: classes.input,
                                         }
                                     }}
-                                    onChange={this.editUser}
+                                    onChange={this.handleUserEdit}
                                 />
                                 <TextField
                                     id="email"
@@ -311,7 +396,7 @@ class Administration extends Component {
                                             root: classes.input,
                                         }
                                     }}
-                                    onChange={this.editUser}
+                                    onChange={this.handleUserEdit}
                                 />
                                 <TextField
                                     id="firstName"
@@ -325,7 +410,7 @@ class Administration extends Component {
                                             root: classes.input,
                                         }
                                     }}
-                                    onChange={this.editUser}
+                                    onChange={this.handleUserEdit}
                                 />
                                 <TextField
                                     id="lastName"
@@ -339,18 +424,14 @@ class Administration extends Component {
                                             root: classes.input,
                                         }
                                     }}
-                                    onChange={this.editUser}
+                                    onChange={this.handleUserEdit}
                                 />
-                                <FormControl className={classes.formControl}>
+                                <FormControl margin="dense" fullWidth={true}>
                                     <InputLabel htmlFor="userGroup">User group</InputLabel>
                                     <Select
-                                        value="Administrators"
-                                        autoWidth={true}
-                                        onChange={this.editUser}
-                                        inputProps={{
-                                            name: 'userGroup',
-                                            id: 'userGroup',
-                                        }}
+                                        value={selectedUser.userGroupId}
+                                        name="userGroupId"
+                                        onChange={this.handleUserSelectChange}
                                     >
                                         {userGroups.data && userGroups.data.map( (userGroup) => (
                                                 <MenuItem key={userGroup.id} value={userGroup.id}>{userGroup.name}</MenuItem>
@@ -362,7 +443,7 @@ class Administration extends Component {
                                     <Button type="submit" variant="contained" color="primary">
                                         Save
                                     </Button>
-                                    <Button onClick={this.closeEditUserDialog} variant="contained" color="primary">
+                                    <Button onClick={this.closeUserEditDialog} variant="contained" color="primary">
                                         Cancel
                                     </Button>
                                 </div>
@@ -379,11 +460,11 @@ class Administration extends Component {
                     >
                         <DialogContent>
                             <DialogContentText>
-                                Are you sure that you want to {selectedUser.userStatus.name === "Active" ? "deactivate" : "activate"} {selectedUser.username}?
+                                Are you sure that you want to {selectedUser.userStatusId === 1 ? "deactivate" : "activate"} {selectedUser.username}?
                             </DialogContentText>
                             <div className={classes.dialogButtons}>
                                 <Button onClick={this.changeUserStatus} variant="contained" color="primary">
-                                    {selectedUser.userStatus.name === "Active" ? "Deactivate" : "Activate"}
+                                    {selectedUser.userStatusId === 1 ? "Deactivate" : "Activate"}
                                 </Button>
                                 <Button onClick={this.closeUserStatusDialog} variant="contained" color="primary">
                                     Cancel
@@ -422,7 +503,9 @@ class Administration extends Component {
 const mapStateToProps = (state) => {
     return {
         users: state.admin.users,
-        userGroups: state.admin.userGroups
+        userGroups: state.admin.userGroups,
+        globalPreferences: state.admin.globalPreferences,
+        timezones: state.helpers.timezones,
     }
 }
 
@@ -433,6 +516,10 @@ const mapDispatchToProps = (dispatch) => {
         activateUser: (userId) => dispatch(adminActions.activateUser(userId)),
         deactivateUser: (userId) => dispatch(adminActions.deactivateUser(userId)),
         deleteUser: (userId) => dispatch(adminActions.deleteUser(userId)),
+        updateUser: (user) => dispatch(adminActions.updateUser(user)),
+        getGlobalPreferences: () => dispatch(adminActions.getGlobalPreferences()),
+        updateGlobalPreferences: (globalPreferences) => dispatch(adminActions.updateGlobalPreferences(globalPreferences)),
+        getTimezones: () => dispatch(helpersActions.getTimezones()),
     }
 }
 

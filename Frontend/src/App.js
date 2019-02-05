@@ -5,7 +5,6 @@ import Authorization from './components/Authorization/Authorization';
 
 import Login from './views/Login/Login';
 import Header from './views/Layout/Header/Header';
-import PrivateRoute from './components/PrivateRoute/PrivateRoute'
 import Sidebar from './views/Layout/Sidebar/Sidebar';
 import Dashboard from './views/Dashboard/Dashboard';
 import Profile from './views/Profile/Profile';

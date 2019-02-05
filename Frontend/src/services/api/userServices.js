@@ -96,3 +96,4 @@ function updateUserPreferences(userPreferences) {
             return Promise.reject(error.message);
         });
 }
+

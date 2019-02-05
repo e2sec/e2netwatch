@@ -6,7 +6,7 @@ import { authActions}  from '../../../store/actions/authActions';
 import { helpers } from './../../../helpers/helpers'
 
 import { withStyles } from '@material-ui/core/styles';
-import {AppBar, Toolbar, Typography, IconButton, Menu, MenuItem, ListItemText, ListItemIcon } from '@material-ui/core';
+import {AppBar, Toolbar, IconButton, Menu, MenuItem, ListItemText, ListItemIcon } from '@material-ui/core';
 
 import MenuIcon from '@material-ui/icons/Menu';
 

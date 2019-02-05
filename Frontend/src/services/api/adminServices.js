@@ -5,7 +5,10 @@ export const adminServices = {
     getUserGroups,
     activateUser,
     deactivateUser,
-    deleteUser
+    deleteUser,
+    updateUser,
+    getGlobalPreferences,
+    updateGlobalPreferences
 };
 
 function getUsers() {
@@ -104,6 +107,60 @@ function deleteUser(userId) {
 
             }
 
+            return Promise.reject(error.message);
+        });
+}
+
+function updateUser(user) {
+
+    return api.admin.updateUser(user)
+        .then(res => {
+            return res.data;
+        }).catch( error => {
+
+            console.log(error)
+            if (error.response) {
+
+            }else if (error.request) {
+
+            } else {
+
+            }
+
+            return Promise.reject(error.message);
+        });
+}
+
+function getGlobalPreferences() {
+
+    return api.admin.getGlobalPreferences()
+        .then((res) => {
+            return res.data
+        }).catch( error => {
+            if (error.response) {
+
+            }else if (error.request) {
+
+            } else {
+
+            }
+            return Promise.reject(error.message);
+        });
+}
+
+function updateGlobalPreferences(preferences) {
+
+    return api.admin.updateGlobalPreferences(preferences)
+        .then((res) => {
+            return res.data
+        }).catch( error => {
+            if (error.response) {
+
+            }else if (error.request) {
+
+            } else {
+
+            }
             return Promise.reject(error.message);
         });
 }

@@ -40,8 +40,8 @@ export default {
         getUserPreferences() {
             return apiActions.get('/um/profilepreferences/current')
         },
-        updateUserPreferences(data) {
-            return apiActions.put('/um/profilepreferences', {id: 1, timezone: data})
+        updateUserPreferences(preferences) {
+            return apiActions.put('/um/profilepreferences', {id: 1, timezone: preferences})
         },
     },
 
@@ -60,6 +60,15 @@ export default {
         },
         deleteUser(userId) {
             return apiActions.delete('/um/users/' + userId)
+        },
+        updateUser(user) {
+            return apiActions.put('/um/users/update', user)
+        },
+        getGlobalPreferences() {
+            return apiActions.get('/um/profilepreferences/global')
+        },
+        updateGlobalPreferences(preferences) {
+            return apiActions.put('/um/profilepreferences/global', {id: 1, timezone: preferences})
         }
     },
 

@@ -14,7 +14,21 @@ import {
 
     DEACTIVATE_USER_BEGIN,
     DEACTIVATE_USER_SUCCESS,
-    DEACTIVATE_USER_FAILURE, DELETE_USER_BEGIN, DELETE_USER_SUCCESS, DELETE_USER_FAILURE,
+    DEACTIVATE_USER_FAILURE,
+
+    DELETE_USER_BEGIN,
+    DELETE_USER_SUCCESS,
+    DELETE_USER_FAILURE,
+
+    ADMIN_UPDATE_USER_BEGIN,
+    ADMIN_UPDATE_USER_SUCCESS,
+    ADMIN_UPDATE_USER_FAILURE,
+    GET_GLOBAL_PREFERENCES_BEGIN,
+    GET_GLOBAL_PREFERENCES_SUCCESS,
+    GET_GLOBAL_PREFERENCES_FAILURE,
+    UPDATE_GLOBAL_PREFERENCES_BEGIN,
+    UPDATE_GLOBAL_PREFERENCES_SUCCESS,
+    UPDATE_GLOBAL_PREFERENCES_FAILURE
 
 } from '../config'
 
@@ -25,17 +39,12 @@ function updateUser(users, userToUpdate){
     return users.map(user => {
 
         if(user.id === userToUpdate.id){
-            user = userToUpdate
+            user = userToUpdate;
+            user.userGroupId = user.userGroup.id;
+            user.userStatusId = user.userStatus.id;
         }
 
         return user;
-    });
-}
-
-function deleteUser(users, userToDelete){
-
-    return users.filter(user => {
-        return user.id !== userToDelete;
     });
 }
 
@@ -51,6 +60,12 @@ const initState = {
         loading: false,
         error: null,
         data: []
+    },
+    globalPreferences: {
+        loading: false,
+        error: null,
+        data: {},
+        updating: false
     }
 }
 
@@ -71,7 +86,11 @@ const adminReducer = (state = initState, action ) => {
                 users: {
                     ...state.users,
                     loading: false,
-                    data: action.users.content,
+                    data: action.users.content.map( user => {
+                        user.userGroupId = user.userGroup.id;
+                        user.userStatusId = user.userStatus.id;
+                        return user;
+                    }),
                 }
             };
         case GET_USERS_FAILURE:
@@ -94,7 +113,6 @@ const adminReducer = (state = initState, action ) => {
                 }
             };
         case GET_USER_GROUPS_SUCCESS:
-            console.log(action.userGroups)
             return {
                 ...state,
                 userGroups: {
@@ -107,6 +125,7 @@ const adminReducer = (state = initState, action ) => {
             return {
                 ...state,
                 userGroups: {
+                    ...state.userGroups,
                     loading: false,
                     error: action.error,
                     data: []
@@ -117,7 +136,7 @@ const adminReducer = (state = initState, action ) => {
         case ACTIVATE_USER_BEGIN:
             return {
                 ...state,
-                userGroups: {
+                users: {
                     ...state.users,
                     updating: true
                 }
@@ -134,7 +153,7 @@ const adminReducer = (state = initState, action ) => {
         case ACTIVATE_USER_FAILURE:
             return {
                 ...state,
-                userGroups: {
+                users: {
                     ...state.users,
                     updating: false,
                     error: action.error,
@@ -146,7 +165,7 @@ const adminReducer = (state = initState, action ) => {
         case DEACTIVATE_USER_BEGIN:
             return {
                 ...state,
-                userGroups: {
+                users: {
                     ...state.users,
                     updating: true
                 }
@@ -163,7 +182,7 @@ const adminReducer = (state = initState, action ) => {
         case DEACTIVATE_USER_FAILURE:
             return {
                 ...state,
-                userGroups: {
+                users: {
                     ...state.users,
                     updating: false,
                     error: action.error,
@@ -175,7 +194,7 @@ const adminReducer = (state = initState, action ) => {
         case DELETE_USER_BEGIN:
             return {
                 ...state,
-                userGroups: {
+                users: {
                     ...state.users,
                     updating: true
                 }
@@ -186,17 +205,105 @@ const adminReducer = (state = initState, action ) => {
                 users: {
                     ...state.users,
                     updating: false,
-                    data : deleteUser(state.users.data,action.userId)
+                    data : state.users.data.filter(user => {
+                        return user.id !== action.userId;
+                    })
                 }
             };
         case DELETE_USER_FAILURE:
             return {
                 ...state,
-                userGroups: {
+                users: {
                     ...state.users,
                     updating: false,
                     error: action.error,
 
+                }
+            };
+
+
+        case ADMIN_UPDATE_USER_BEGIN:
+            return {
+                ...state,
+                users: {
+                    ...state.users,
+                    updating: true
+                }
+            };
+        case ADMIN_UPDATE_USER_SUCCESS:
+            return {
+                ...state,
+                users: {
+                    ...state.users,
+                    updating: false,
+                    data : updateUser(state.users.data,action.user)
+                }
+            };
+        case ADMIN_UPDATE_USER_FAILURE:
+            return {
+                ...state,
+                users: {
+                    ...state.users,
+                    updating: false,
+                    error: action.error,
+                    data: []
+                }
+            };
+
+
+        case GET_GLOBAL_PREFERENCES_BEGIN:
+            return {
+                ...state,
+                globalPreferences: {
+                    ...state.globalPreferences,
+                    loading: true
+                }
+            };
+        case GET_GLOBAL_PREFERENCES_SUCCESS:
+            return {
+                ...state,
+                globalPreferences: {
+                    ...state.globalPreferences,
+                    loading: false,
+                    data: action.globalPreferences
+                }
+            };
+        case GET_GLOBAL_PREFERENCES_FAILURE:
+            return {
+                ...state,
+                globalPreferences: {
+                    ...state.globalPreferences,
+                    loading: false,
+                    error: action.error,
+                    data: []
+                }
+            };
+
+
+        case UPDATE_GLOBAL_PREFERENCES_BEGIN:
+            return {
+                ...state,
+                globalPreferences: {
+                    ...state.globalPreferences,
+                    updating: true
+                }
+            };
+        case UPDATE_GLOBAL_PREFERENCES_SUCCESS:
+            return {
+                ...state,
+                globalPreferences: {
+                    ...state.globalPreferences,
+                    updating: false,
+                    data: action.globalPreferences
+                }
+            };
+        case UPDATE_GLOBAL_PREFERENCES_FAILURE:
+            return {
+                ...state,
+                globalPreferences: {
+                    ...state.globalPreferences,
+                    updating: false,
+                    error: action.error,
                 }
             };
 

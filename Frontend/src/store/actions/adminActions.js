@@ -14,7 +14,19 @@ import {
 
     DEACTIVATE_USER_BEGIN,
     DEACTIVATE_USER_SUCCESS,
-    DEACTIVATE_USER_FAILURE, DELETE_USER_SUCCESS, DELETE_USER_BEGIN, DELETE_USER_FAILURE
+    DEACTIVATE_USER_FAILURE,
+    DELETE_USER_SUCCESS,
+    DELETE_USER_BEGIN,
+    DELETE_USER_FAILURE,
+    ADMIN_UPDATE_USER_BEGIN,
+    ADMIN_UPDATE_USER_SUCCESS,
+    ADMIN_UPDATE_USER_FAILURE,
+    GET_GLOBAL_PREFERENCES_BEGIN,
+    GET_GLOBAL_PREFERENCES_SUCCESS,
+    GET_GLOBAL_PREFERENCES_FAILURE,
+    UPDATE_GLOBAL_PREFERENCES_BEGIN,
+    UPDATE_GLOBAL_PREFERENCES_SUCCESS,
+    UPDATE_GLOBAL_PREFERENCES_FAILURE
 
 } from '../config'
 
@@ -25,7 +37,10 @@ export const adminActions = {
     getUserGroups,
     activateUser,
     deactivateUser,
-    deleteUser
+    deleteUser,
+    updateUser,
+    getGlobalPreferences,
+    updateGlobalPreferences
 };
 
 function getUsers() {
@@ -115,6 +130,60 @@ function deleteUser(userId) {
                 },
                 error => {
                     dispatch({ type: DELETE_USER_FAILURE, error })
+                }
+            )
+
+    }
+}
+
+function updateUser(user) {
+    return (dispatch) => {
+
+        dispatch({ type: ADMIN_UPDATE_USER_BEGIN })
+
+        adminServices.updateUser(user)
+            .then(
+                () => {
+                    dispatch({ type: ADMIN_UPDATE_USER_SUCCESS, user })
+                },
+                error => {
+                    dispatch({ type: ADMIN_UPDATE_USER_FAILURE, error })
+                }
+            )
+
+    }
+}
+
+function getGlobalPreferences() {
+    return (dispatch) => {
+
+        dispatch({ type: GET_GLOBAL_PREFERENCES_BEGIN })
+
+        adminServices.getGlobalPreferences()
+            .then(
+                globalPreferences => {
+                    dispatch({ type: GET_GLOBAL_PREFERENCES_SUCCESS, globalPreferences })
+                },
+                error => {
+                    dispatch({ type: GET_GLOBAL_PREFERENCES_FAILURE, error })
+                }
+            )
+
+    }
+}
+
+function updateGlobalPreferences(globalPreferences) {
+    return (dispatch) => {
+
+        dispatch({ type: UPDATE_GLOBAL_PREFERENCES_BEGIN })
+
+        adminServices.updateGlobalPreferences(globalPreferences)
+            .then(
+                globalPreferences => {
+                    dispatch({ type: UPDATE_GLOBAL_PREFERENCES_SUCCESS, globalPreferences })
+                },
+                error => {
+                    dispatch({ type: UPDATE_GLOBAL_PREFERENCES_FAILURE, error })
                 }
             )
 
