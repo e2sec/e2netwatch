@@ -74,7 +74,7 @@ public class EsperProducerProcessorTest {
 				+ "target_user_name_hash AS target_user_name_hash "
 				+ "FROM "
 				+ "T_50005_0008_01_02(event_id=4720 or event_id=4726)");
-		runnerConsumer.setProperty(CommonPropertyDescriptor.EVENT_SCHEMA, "create schema T_50005_0008_01_02 as ("
+		runnerConsumer.setProperty(CommonPropertyDescriptor.EVENT_SCHEMA, "@Name(TEST_schema) create schema T_50005_0008_01_02 as ("
 				+ "tilde_event_uuid string, "
 				+ "cep_delta long, "
 				+ "host_hash string, "
@@ -110,7 +110,7 @@ public class EsperProducerProcessorTest {
 		
 		runnerConsumer.enqueue(gson.toJson(event2).getBytes());
 		runnerConsumer.run(1);
-		runnerProducer.assertAllFlowFilesTransferred(EsperProducer.SUCCEEDED_REL);		
+		runnerProducer.assertAllFlowFilesTransferred(EsperProducer.SUCCEEDED_REL);	
 	}
 
 }

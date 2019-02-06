@@ -17,6 +17,13 @@ public class TransformerWithAttributes implements EventTransformer {
 		this.ff = ff;
 	}
 
+	/**
+	 * MAPPING FOR CREATING EPL SCHEMA AGAINS EVENT JSON FORMAT:
+	 * JSON ARRAY  => ARRAYLIST (e.g. create map schema EVENT_NAME as (object_name ArrayList))
+	 * JSON STRING => STRING    (e.g. as (object_name string))
+	 * JSON NUMBER => LONG/INT  (e.g. as (object_name long/int)) 
+	 */
+	
 	@Override
 	public Map<String, Object> transform(final String eventAsJson) throws IOException {
 		final Map<String,String> ffAttributesAsMap = ff.getAttributes(); 

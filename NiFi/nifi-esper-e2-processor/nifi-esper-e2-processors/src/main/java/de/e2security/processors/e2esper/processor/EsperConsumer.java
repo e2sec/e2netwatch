@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -31,6 +32,7 @@ import org.apache.nifi.processor.exception.ProcessException;
 import com.espertech.esper.client.EPServiceProvider;
 
 import de.e2security.nifi.controller.esper.EsperService;
+import de.e2security.processors.e2esper.utilities.CommonSchema;
 import de.e2security.processors.e2esper.utilities.EventTransformer;
 import de.e2security.processors.e2esper.utilities.SupportUtility;
 import de.e2security.processors.e2esper.utilities.TransformerWithAttributes;
@@ -38,26 +40,56 @@ import de.e2security.processors.e2esper.utilities.TransformerWithAttributes;
 @Tags({"E2EsperProcessor"})
 @CapabilityDescription("Sending incoming events to esper engine)")
 public class EsperConsumer extends AbstractProcessor {
-	
+
 	private volatile EPServiceProvider esperEngine;
-	
-	final private AtomicReference<String> eventName = new AtomicReference<String>();
-	
-	@OnStopped public void stop(final ProcessContext context) {
-		eventName.set(null); //since schema can be changed by the user.
-	}
-	
-	
+
+	final private AtomicReference<String> eventNameRef = new AtomicReference<>();
+
+	@OnStopped public void stop(final ProcessContext context) {}
+
 	@OnScheduled public void start(final ProcessContext context) {
-		final EsperService esperService = context.getProperty(ESPER_ENGINE).asControllerService(EsperService.class);
-		esperEngine = esperService.execute(); //instantiated on controller's ENABLEMENT. execute() returns the shared instance back; 
-		String modifiedEventSchema = SupportUtility.modifyUserDefinedSchema(context.getProperty(EVENT_SCHEMA).evaluateAttributeExpressions().getValue());
-		esperEngine.getEPAdministrator().createEPL(modifiedEventSchema);
-		getLogger().debug(String.format("initialized schema [%s]", modifiedEventSchema));
-		String modifiedEPStatement = SupportUtility.modifyUserDefinedEPStatement(context.getProperty(EPL_STATEMENT).evaluateAttributeExpressions().getValue());
-		esperEngine.getEPAdministrator().createEPL(modifiedEPStatement);
-		getLogger().debug(String.format("initialized stmt [%s]", modifiedEPStatement));
-		eventName.compareAndSet(null, SupportUtility.retrieveClassNameFromSchemaEPS(context.getProperty(EVENT_SCHEMA).evaluateAttributeExpressions().getValue()));
+		//assign EPServiceProvider from Controller Service 
+		{
+			final EsperService esperService = context.getProperty(ESPER_ENGINE).asControllerService(EsperService.class);
+			esperEngine = esperService.execute(); //instantiated on controller's ENABLEMENT. execute() returns the shared instance back; 
+		}
+		//modify and add user defined schema to esper engine
+		{
+			final String eventSchema = context.getProperty(EVENT_SCHEMA).evaluateAttributeExpressions().getValue();
+			final String modifiedEventSchema = SupportUtility.modifyUserDefinedSchema(eventSchema);
+
+			esperEngine.getEPAdministrator().createEPL(modifiedEventSchema);
+			getLogger().debug(String.format("initialized schema [%s]", modifiedEventSchema));
+
+			//set event name retrieved from event schema
+			{
+				eventNameRef.set(SupportUtility.retrieveClassNameFromSchemaEPS(eventSchema));
+			}
+		}
+		//modify and add user defined stmt to esper engine
+		{
+			final String eplStatement = context.getProperty(EPL_STATEMENT).evaluateAttributeExpressions().getValue();
+			final String modifiedEPStatement = SupportUtility.modifyUserDefinedEPStatement(eplStatement);
+			//set new statement
+			esperEngine.getEPAdministrator().createEPL(modifiedEPStatement);
+			getLogger().debug(String.format("initialized stmt [%s]", modifiedEPStatement));
+		}
+	}
+
+	@Override public void onPropertyModified(PropertyDescriptor descriptor, String oldValue, String newValue) {
+		final AtomicReference<String> stmtNameRef = new AtomicReference<>();
+		Optional.ofNullable(oldValue).ifPresent(old -> { //cause the method to be triggered also during initial property setup
+			if (descriptor.getName().equals(CommonSchema.PropertyDescriptorNames.EplStatement)
+					|| descriptor.getName().equals(CommonSchema.PropertyDescriptorNames.EventSchema)) {
+				stmtNameRef.set(SupportUtility.retrieveStatementName(old));
+				getLogger().info(String.format("[%s] property has been modified. OLD VALUE: [%s] - NEW VALUE [%s], ",
+						descriptor.getDisplayName(), oldValue, newValue));
+				SupportUtility.destroyStmtIfAvailable(Optional.ofNullable(
+						esperEngine.getEPAdministrator().getStatement(stmtNameRef.get())));
+				getLogger().info(String.format("epl statement [%s] has been successfully removed from esper controller service", stmtNameRef.get()));
+			}
+		});
+		super.onPropertyModified(descriptor, oldValue, newValue);
 	}
 
 	@Override public void onTrigger(ProcessContext context, ProcessSession session) throws ProcessException {
@@ -75,32 +107,32 @@ public class EsperConsumer extends AbstractProcessor {
 		final EventTransformer transformer = new TransformerWithAttributes(flowFile);
 		try { 
 			final Map<String,Object> eventAsMap = transformer.transform(input.get());
-			esperEngine.getEPRuntime().sendEvent(eventAsMap, eventName.get());
-			getLogger().debug(String.format("sent event [%s]:[%s]", eventName.get(), SupportUtility.transformEventMapToJson(eventAsMap)));
+			esperEngine.getEPRuntime().sendEvent(eventAsMap, eventNameRef.get());
+			getLogger().debug(String.format("sent event [%s]:[%s]", eventNameRef.get(), SupportUtility.transformEventMapToJson(eventAsMap)));
 		} catch (IOException e) { e.printStackTrace(); }
-		
+
 		session.remove(flowFile);
 	}
-	
+
 	private List<PropertyDescriptor> descriptors;
-	
+
 	private Set<Relationship> relationships;
-	
+
 	@Override
 	protected void init(ProcessorInitializationContext context) {
 		final Set<Relationship> relationships = new HashSet<Relationship>();
 		this.descriptors = Collections.unmodifiableList(getDescriptors());
 		this.relationships = Collections.unmodifiableSet(relationships);
 	}
-	
+
 	@Override
 	public Set<Relationship> getRelationships() {
 		return this.relationships;
 	}
-	
+
 	@Override
 	protected List<PropertyDescriptor> getSupportedPropertyDescriptors() {
 		return this.descriptors;
 	}
-	
+
 }

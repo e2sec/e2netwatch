@@ -8,7 +8,7 @@ import junit.framework.Assert;
 
 public class SupportUtilityTest {
 	@Test public void transformMethodsTest() {
-		String userQuerySchema = "create schema T_50005_0008_01_02 as ("
+		String userQuerySchema = "@Audit @Name(T_50005_0008_01_02_schema) create schema T_50005_0008_01_02 as ("
 				+ "tilde_event_uuid string, "
 				+ "cep_delta long, "
 				+ "host_hash string, "
@@ -16,7 +16,7 @@ public class SupportUtilityTest {
 				+ "target_user_name_hash string, "
 				+ "event_id int, "
 				+ "hostname_domain string)";
-		String expectedQuerySchema = "create schema T_50005_0008_01_02 as( flowFileAttributes Map,"
+		String expectedQuerySchema = "@Audit @Name(T_50005_0008_01_02_schema) create schema T_50005_0008_01_02 as( flowFileAttributes Map,"
 				+ "tilde_event_uuid string, "
 				+ "cep_delta long, "
 				+ "host_hash string, "

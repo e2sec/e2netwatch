@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
@@ -17,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.nifi.logging.ComponentLog;
 
 import com.espertech.esper.client.EPAdministrator;
+import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.metric.EngineMetric;
 import com.espertech.esper.client.metric.MetricEvent;
 import com.espertech.esper.client.metric.StatementMetric;
@@ -24,7 +24,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
-public final class SupportUtility {
+public class SupportUtility {
 
 	private static Gson gson = new Gson();
 
@@ -62,23 +62,25 @@ public final class SupportUtility {
 	}
 
 	public static String retrieveClassNameFromSchemaEPS(String eventSchema) {
-		String eventName = StringUtils.substringBetween(eventSchema, "create schema ", " as").replaceAll("'", "");
-		return eventName;
+		final Optional<String> eventNameOpt = Optional.ofNullable(StringUtils.substringBetween(eventSchema, "create schema ", " as").replaceAll("'", ""));
+		return eventNameOpt.orElseThrow(() -> {
+			return new RuntimeException("no event name provided in schema definition. Please consider the pattern 'create schema <Name> as (...)'");
+		});
 	}
 
 	//Logical test (not test of method) is in nw104/EsperBehaviourTest.java
 	public static String modifyUserDefinedSchema(String userSchema) {
-		Pattern pattern = Pattern.compile("[a\\s]\\W*\\("); 
-		Optional<String> replaced = Optional.ofNullable(
-				userSchema.replaceFirst(pattern.toString(), 
-						String.format("( %s Map,", CommonSchema.EVENT.flowFileAttributes)));
-		//TODO: check by propertyDescriptor validator instead
-		return replaced.orElseThrow(() -> new RuntimeException(""));
+		final Pattern pattern = Pattern.compile("[a\\s]\\W*\\("); 
+		final String extendedThroughAttrMap = userSchema.replaceFirst(pattern.toString(), String.format("( %s Map,", CommonSchema.EVENT.flowFileAttributes));
+//		final String eventName = retrieveClassNameFromSchemaEPS(extendedThroughAttrMap);
+//		final String extendedThroughSchemaNameAndAttrMap = extendedThroughAttrMap.replaceFirst("create", String.format("@Name(%s_schema) create", eventName));
+		//TODO: add validator for schema definition
+		return extendedThroughAttrMap;
 	}
 
 	public static String modifyUserDefinedEPStatement(String userStmt) {
 		//no any modifications are needed, if ' select *' defined by user
-		if (userStmt.contains("SELECT *")) return userStmt;
+		if (userStmt.contains("select *".toUpperCase())) return userStmt;
 		//apply functional interface to stmt and process transform logic
 		final Optional<String> funcStmt = Optional.of(userStmt); 
 		//TODO: validator -> only UPPPERCASE for ESPER KEYWORDS
@@ -106,5 +108,24 @@ public final class SupportUtility {
 	    		.map(stmt -> replaceForPattern.apply(stmt,pattern))
 	    		.orElse(replaceForNotPattern.apply(funcStmt.get(),pattern));
 		return optResult.get();
+	}
+
+	public static String retrieveStatementName(String eplStatement) {
+		Optional<String> nameOpt = Optional.ofNullable(StringUtils.substringBetween(eplStatement,"@Name(",")"));
+		nameOpt.ifPresent(name -> name.replaceAll("'", ""));
+		return nameOpt.orElseThrow(() -> new RuntimeException(
+				"No name provided in EPStatement. Please consider to provide @Name() annotation with statement name"));		
+	}
+
+	/**
+	 * remove old statement if available
+	 * the most appropriate place for this action would be @OnStopped or @OnScheduled annotated methods, 
+	 * however the written tests fail, since TestRunner tries to stop processor during tests
+	 */
+	public static void destroyStmtIfAvailable(Optional<EPStatement> stmtOpt) {
+		stmtOpt.ifPresent( (stmt) -> {
+			stmt.removeAllListeners();
+			stmt.destroy();				
+		});
 	}
 }

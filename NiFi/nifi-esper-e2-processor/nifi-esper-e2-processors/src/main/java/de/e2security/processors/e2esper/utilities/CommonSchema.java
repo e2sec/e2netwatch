@@ -5,4 +5,8 @@ public final class CommonSchema {
 	public enum EVENT {
 		flowFileAttributes
 	}
+	
+	public enum PropertyDescriptorNames {
+		EplStatement, EventSchema
+	}
 }

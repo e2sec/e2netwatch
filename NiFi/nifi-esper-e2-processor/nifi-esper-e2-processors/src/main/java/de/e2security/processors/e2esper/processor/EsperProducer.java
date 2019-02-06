@@ -9,9 +9,10 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.nifi.annotation.documentation.CapabilityDescription;
 import org.apache.nifi.annotation.documentation.Tags;
-import org.apache.nifi.annotation.lifecycle.OnDisabled;
+import org.apache.nifi.annotation.lifecycle.OnConfigurationRestored;
 import org.apache.nifi.annotation.lifecycle.OnScheduled;
 import org.apache.nifi.annotation.lifecycle.OnStopped;
+import org.apache.nifi.annotation.lifecycle.OnUnscheduled;
 import org.apache.nifi.components.PropertyDescriptor;
 import org.apache.nifi.expression.ExpressionLanguageScope;
 import org.apache.nifi.processor.AbstractSessionFactoryProcessor;
@@ -24,13 +25,14 @@ import org.apache.nifi.processor.util.StandardValidators;
 
 import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPStatement;
-import com.espertech.esper.client.UpdateListener;
+import com.espertech.esper.client.annotation.Description;
 
 import de.e2security.nifi.controller.esper.EsperService;
 import de.e2security.processors.e2esper.listener.EsperListener;
 
 @Tags({"E2EsperProcessor"})
 @CapabilityDescription("Producing events from listener based on esper engine rules)")
+@Description("It always recommended to stop EsperProducer first, before EsperConsumer will be stopped")
 public class EsperProducer extends AbstractSessionFactoryProcessor {
 	
 	public static final PropertyDescriptor ESPER_ENGINE = new PropertyDescriptor.Builder().name("EsperEngine")
@@ -64,19 +66,9 @@ public class EsperProducer extends AbstractSessionFactoryProcessor {
 	private volatile EsperListener successListener;
 	private final AtomicReference<EPStatement> stmtRef = new AtomicReference<>();
 	
-	@OnDisabled public void disable(final ProcessContext context) {}
+	@OnUnscheduled public void unschedule(final ProcessContext context) {}
 	
-	@OnStopped public void stop(final ProcessContext context) {
-		final EPStatement stmt = stmtRef.getAndSet(null);
-		final UpdateListener listener = this.successListener;
-		try {
-			stmt.removeListener(listener); //new listener to be produced on next processor start
-		} catch (Exception ex) {
-			getLogger().error(ex.getMessage());
-		}
-	}
-	
-	@OnScheduled public void start(final ProcessContext context) {
+	@OnScheduled public void schedule(final ProcessContext context) {
 		/*
 		 * instantiated on controller's ENABLEMENT. execute() returns the shared instance back;
 		 * no NULL check is required -> the processor cannot be started w/o controller has been enabled
@@ -84,7 +76,6 @@ public class EsperProducer extends AbstractSessionFactoryProcessor {
 		final EsperService esperService = context.getProperty(ESPER_ENGINE).asControllerService(EsperService.class);
 		final String stmtName = context.getProperty(EPSTMT_NAME).evaluateAttributeExpressions().getValue();
 		final EPServiceProvider esperEngine = esperService.execute();
-		
 		/*
 		 * if producer and consumer haven been started simultaneously (as pair in Process Group) or 
 		 * producer has been started before consumer => wait for EPStatement initilization 
@@ -92,11 +83,24 @@ public class EsperProducer extends AbstractSessionFactoryProcessor {
 		while (stmtRef.compareAndSet(null, esperEngine.getEPAdministrator().getStatement(stmtName))) {
 			getLogger().error(String.format("Searching for EPStatement called [%s]", stmtName));
 		}
-		getLogger().info(String.format("[%s] EPStatement has been found", stmtName));
-		successListener = new EsperListener(getLogger(),SUCCEEDED_REL);
-		stmtRef.get().addListener(successListener);
+		
+		getLogger().info(String.format("[%s] EPStatement has been found: [%s]", stmtName, stmtRef.get().getText()));
+		
+		//set new listener only if no any provided
+		if (!stmtRef.get().getUpdateListeners().hasNext()) {
+			successListener = new EsperListener(getLogger(), SUCCEEDED_REL);
+			stmtRef.get().addListener(successListener);
+			getLogger().info(String.format("successfully added update listener [%s]", successListener.getClass().getSimpleName()));
+		}
+	}
+	
+	@Override public void onPropertyModified(PropertyDescriptor descriptor, String oldValue, String newValue) {
+		stmtRef.set(null);
+		super.onPropertyModified(descriptor, oldValue, newValue);
 	}
 
+	@OnStopped public void stop(final ProcessContext context) {}
+	
 	@Override
 	public void onTrigger(ProcessContext context, ProcessSessionFactory sessionFactory) throws ProcessException {
 		successListener.setSession(sessionFactory);

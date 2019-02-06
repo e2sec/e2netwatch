@@ -7,3 +7,23 @@ In order to update version in parent project and submodule ones:
 	# if everything is corret after updating version,- commit the changens:
 	$ mvn versions:commit
 
+USAGE of EsperConsumer-EsperProducer pair:
+
+	REQUIREMENTS: 
+
+	Only instance of esper engine (controller service) may/should be used across multiple processors due to performance reasons.
+
+	Esper can manage a very large quantity of threads internally and it would be very exhaustive for CPU and Memory to create aa new instance for each processor or group of processors;
+
+	It's important to provide mechanism to change SCHEMA or EPStatement of particular EsperConsumer processor on the fly, w/o a need to stop an Esper Controller Service, which can influence all processors, the engine acrossed by.
+
+	PROBLEM: it's difficult to define, whether the schema or statement had been changed, that's why it's the most reliable way to delete both user provided schema and stmt on each start of the processor (implied, that the processor has been stopped to provide some changes) and register them newly (changed or unchanged) by esper engine. However, esper awaits, that all actors, which are to operate with statement (e.g. update listener) should be paused/stopped (i.e. no access of them should be made during destroy process). 
+
+	WORKAROUND: In order to address the problem described above, the sequence of processor stop/start within EsperConsumer(EC)-EsperProducer(EP) processor group should be pursued as follows:
+
+	- EC-EP Pair can be stopped simultaneously (i.e. no actions provided nor on @OnStopped or @OnScheduled)
+	
+	- if changes to be provided within EC, EP should be stopped as well BEFORE EC start (destroy method will be applied to already existed stmt on processor start (@OnScheduled), that's why it should be guaranteed no listeners been active against those statements). Recomendations: in order to prevent lost events during delay by EP start (listener will be activated on provided statement within EC), it's recommended to stop input within processor group and start it only after both processors has been started.
+	
+
+

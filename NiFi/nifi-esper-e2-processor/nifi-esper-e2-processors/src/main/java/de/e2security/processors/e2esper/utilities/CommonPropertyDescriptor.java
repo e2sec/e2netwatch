@@ -19,19 +19,19 @@ public class CommonPropertyDescriptor {
 			.build();
 	
 	public static final PropertyDescriptor EPL_STATEMENT = new PropertyDescriptor.Builder()
-			.name("EplStatement")
-			.displayName("EplStatement")
-			.description("epl statement. @Name('<NAME>') anno should be provided. Events can be retrieved with Esper Producer by provided name")
+			.name(CommonSchema.PropertyDescriptorNames.EplStatement.toString())
+			.displayName(CommonSchema.PropertyDescriptorNames.EplStatement.toString())
+			.description("epl statement. @Name(<NAME>) anno should be provided. Events can be retrieved with Esper Producer by provided name")
 			.required(true)
 			.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
 			.expressionLanguageSupported(ExpressionLanguageScope.VARIABLE_REGISTRY)
 			.build();
 
 	public static final PropertyDescriptor EVENT_SCHEMA = new PropertyDescriptor.Builder()
-			.name("InputEventSchema")
-			.displayName("InputEventSchema")
+			.name(CommonSchema.PropertyDescriptorNames.EventSchema.toString())
+			.displayName(CommonSchema.PropertyDescriptorNames.EventSchema.toString())
 			//TODO: write validator regarding stmt pattern
-			.description("define schema with EPL regarding the following pattern: 'create schema <NAME> as (<property_name> <property_type>,...)'. Please consider do not use ['] sign in the name ")
+			.description("schema for input event defined with EPL regarding the following pattern: '@Name(<_NAME>) create schema <NAME> as (<property_name> <property_type>,...)'. Please consider do not use ['] sign in the name ")
 			.required(true)
 			.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
 			.expressionLanguageSupported(ExpressionLanguageScope.VARIABLE_REGISTRY)

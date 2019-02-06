@@ -17,7 +17,7 @@
 	<parent>
 		<groupId>de.e2security</groupId>
 		<artifactId>nifi-esper-e2-processor</artifactId>
-		<version>1.1.8</version>
+		<version>1.1.9</version>
 	</parent>
 
 	<artifactId>nifi-esper-e2-processors</artifactId>
@@ -28,7 +28,7 @@
 		<dependency>
 			<groupId>de.e2security</groupId>
 			<artifactId>nifi-e2</artifactId>
-			<version>1.1.8</version>
+			<version>1.1.9</version>
 		</dependency>
 		<!-- nifi initial dependencies -->
 		<dependency>
