@@ -1,6 +1,9 @@
 package de.e2security.e2netwatch.usermanagement.dto;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class UserInsertDTO {
 	
@@ -50,6 +53,13 @@ public class UserInsertDTO {
 		return userGroupIds;
 	}
 
+	public void setUserGroupId(Integer userGroupId) {
+		List<Integer> userGroupIds = new ArrayList<Integer>();
+		userGroupIds.add(userGroupId);
+		this.userGroupIds = userGroupIds;
+	}
+
+	@JsonIgnore
 	public void setUserGroupIds(List<Integer> userGroupIds) {
 		this.userGroupIds = userGroupIds;
 	}

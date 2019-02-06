@@ -95,21 +95,21 @@ public class UsersController {
 	/**
 	 * Deactivate user
 	 */
-	@RequestMapping(value = "/deactivate/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@RequestMapping(value = "/deactivate/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
 	@ResponseStatus(value=HttpStatus.OK)
 	@PreAuthorize("hasRole('ADMIN')")
-	public UserDTO deactivateUser(@PathVariable("id") int id) {
-		return manager.deactivateUser(id);
+	public void deactivateUser(@PathVariable("id") int id) {
+		manager.deactivateUser(id);
 	}
 	
 	/**
 	 * Activate user
 	 */
-	@RequestMapping(value = "/activate/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@RequestMapping(value = "/activate/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
 	@ResponseStatus(value=HttpStatus.OK)
 	@PreAuthorize("hasRole('ADMIN')")
-	public UserDTO activateUser(@PathVariable("id") int id) {
-		return manager.activateUser(id);
+	public void activateUser(@PathVariable("id") int id) {
+		manager.activateUser(id);
 	}
 	
 	/**
