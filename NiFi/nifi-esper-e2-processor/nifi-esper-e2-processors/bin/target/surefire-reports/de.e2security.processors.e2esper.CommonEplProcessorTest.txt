@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: de.e2security.processors.e2esper.CommonEplProcessorTest
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.206 s - in de.e2security.processors.e2esper.CommonEplProcessorTest
