@@ -288,7 +288,7 @@ class Profile extends Component {
                                     <Typography variant="subtitle1" className={classes.profileLabel}>Last name</Typography>
                                     <Typography variant="body1" className={classes.profileDetail}>{user.data.lastName}</Typography>
                                     <Typography variant="subtitle1" className={classes.profileLabel}>Status</Typography>
-                                    <Typography variant="body1" className={classes.profileDetail}>{user.data.userStatusId === 1 ? "Active" : "No active"}</Typography>
+                                    <Typography variant="body1" className={classes.profileDetail}>{user.data.userStatusId === 1 ? "Active" : "Not active"}</Typography>
 
                                     <Button color="primary"
                                             size="large"

@@ -33,7 +33,8 @@ const styles = theme => ({
             paddingRight: theme.spacing.unit * 3
         },
         '& td':{
-            paddingRight: theme.spacing.unit * 3
+            paddingRight: theme.spacing.unit * 3,
+            textTransform: "capitalize"
         }
     },
     gutter: {
@@ -45,6 +46,10 @@ const styles = theme => ({
     },
     tableButton: {
         marginRight: theme.spacing.unit * 1.5
+    },
+    lastCell: {
+        borderBottom: "none",
+        paddingTop: theme.spacing.unit * 4
     },
     dialogTitle: {
         borderBottom: `1px solid ${theme.palette.divider}`,
@@ -91,6 +96,7 @@ class Administration extends Component {
         isUserStatusDialogOpened: false,
         isDeleteDialogOpened: false,
         isEditUserDialogOpened: false,
+        isAddUserDialogOpened: false,
         usersState: [],
         selectedUser: {
             username: "",
@@ -215,6 +221,26 @@ class Administration extends Component {
         })
     }
 
+    openAddUserDialog = () => {
+        this.setState({
+            isAddUserDialogOpened: true,
+            selectedUser: {
+                username: "",
+                email: "",
+                firstName: "",
+                lastName:"",
+                userGroupId: 1,
+                userStatusId: 1
+            },
+        });
+    }
+
+    closeAddUserDialog = () => {
+        this.setState({
+            isAddUserDialogOpened: false,
+        });
+    }
+
     handlePreferencesChange = (e) => {
         this.setState({ [e.target.name]: e.target.value });
     };
@@ -229,10 +255,16 @@ class Administration extends Component {
         this.closeUserEditDialog();
     }
 
+    addUser = (e) => {
+        e.preventDefault();
+        this.props.addUser(this.state.selectedUser)
+        this.closeAddUserDialog();
+    }
+
     render() {
 
         const { classes, users, userGroups, timezones } = this.props;
-        const { tabValue, rowsPerPage, page, usersState, selectedUser, isUserStatusDialogOpened, isDeleteDialogOpened, isEditUserDialogOpened, timezoneState} = this.state;
+        const { tabValue, rowsPerPage, page, usersState, selectedUser, isUserStatusDialogOpened, isDeleteDialogOpened, isEditUserDialogOpened, isAddUserDialogOpened, timezoneState} = this.state;
 
         if (users.loading === true) return null;
 
@@ -274,7 +306,7 @@ class Administration extends Component {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {usersState && usersState.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(user => (
+                                        {users.data && users.data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(user => (
                                             <TableRow key={user.id}>
                                                 <TableCell>{user.firstName + " " + user.lastName}</TableCell>
                                                 <TableCell>{user.username}</TableCell>
@@ -285,7 +317,7 @@ class Administration extends Component {
                                                         }
                                                     )}
                                                 </TableCell>
-                                                <TableCell>{user.userStatusId === 1 ? "Active" : "No active"}</TableCell>
+                                                <TableCell>{user.userStatusId === 1 ? "Active" : "Not active"}</TableCell>
                                                 <TableCell align="right">
                                                     <Button variant="contained" color="primary"
                                                             className={classes.tableButton}
@@ -301,9 +333,16 @@ class Administration extends Component {
                                                 </TableCell>
                                             </TableRow>
                                         ))}
+                                        <TableRow>
+                                            <TableCell colSpan={6} className={classes.lastCell}>
+                                                <Button onClick={this.openAddUserDialog} variant="contained" color="primary">
+                                                    Add New User
+                                                </Button>
+                                            </TableCell>
+                                        </TableRow>
                                         {emptyRows > 0 && (
                                             <TableRow style={{ height: 48 * emptyRows }}>
-                                                <TableCell colSpan={5} />
+                                                <TableCell colSpan={6} />
                                             </TableRow>
                                         )}
                                     </TableBody>
@@ -313,7 +352,7 @@ class Administration extends Component {
                                                 rowsPerPageOptions={[5, 10, 25]}
                                                 colSpan={6}
                                                 count={usersState.length}
-                                                rowsPerPage={rowsPerPage}
+                                                rowsPerPage={parseInt(rowsPerPage, 10)}
                                                 page={page}
                                                 SelectProps={{
                                                     native: true,
@@ -367,7 +406,7 @@ class Administration extends Component {
                         aria-labelledby="form-dialog-title"
                         maxWidth="xs"
                     >
-                        <DialogTitle id="form-dialog-title" className={classes.dialogTitle}>Edit user</DialogTitle>
+                        <DialogTitle id="form-dialog-title" className={classes.dialogTitle}>Edit {selectedUser.username}</DialogTitle>
                         <DialogContent>
                             <form onSubmit={this.updateUser}>
                                 <TextField
@@ -427,7 +466,7 @@ class Administration extends Component {
                                     onChange={this.handleUserEdit}
                                 />
                                 <FormControl margin="dense" fullWidth={true}>
-                                    <InputLabel htmlFor="userGroup">User group</InputLabel>
+                                    <InputLabel>User group</InputLabel>
                                     <Select
                                         value={selectedUser.userGroupId}
                                         name="userGroupId"
@@ -439,11 +478,134 @@ class Administration extends Component {
                                         )}
                                     </Select>
                                 </FormControl>
+
+                                <FormControl margin="dense" fullWidth={true}>
+                                    <InputLabel>User status</InputLabel>
+                                    <Select
+                                        value={selectedUser.userStatusId}
+                                        name="userStatusId"
+                                        onChange={this.handleUserSelectChange}
+                                    >
+
+                                        <MenuItem value="1">Active</MenuItem>
+                                        <MenuItem value="2">Not active</MenuItem>
+
+
+                                    </Select>
+                                </FormControl>
+
                                 <div className={classes.dialogButtons}>
                                     <Button type="submit" variant="contained" color="primary">
                                         Save
                                     </Button>
                                     <Button onClick={this.closeUserEditDialog} variant="contained" color="primary">
+                                        Cancel
+                                    </Button>
+                                </div>
+                            </form>
+                        </DialogContent>
+                    </Dialog>
+
+
+                    <Dialog
+                        open={isAddUserDialogOpened}
+                        onClose={this.closeAddUserDialog}
+                        aria-labelledby="form-dialog-title"
+                        maxWidth="xs"
+                    >
+                        <DialogTitle id="form-dialog-title" className={classes.dialogTitle}>Add new user</DialogTitle>
+                        <DialogContent>
+                            <form onSubmit={this.addUser}>
+                                <TextField
+                                    id="username"
+                                    label="Username"
+                                    value={selectedUser.username}
+                                    fullWidth={true}
+                                    required={true}
+                                    margin="dense"
+                                    InputProps={{
+                                        classes: {
+                                            root: classes.input,
+                                        }
+                                    }}
+                                    onChange={this.handleUserEdit}
+                                />
+                                <TextField
+                                    id="email"
+                                    label="Email"
+                                    value={selectedUser.email}
+                                    fullWidth={true}
+                                    required={true}
+                                    margin="dense"
+                                    InputProps={{
+                                        classes: {
+                                            root: classes.input,
+                                        }
+                                    }}
+                                    onChange={this.handleUserEdit}
+                                />
+                                <TextField
+                                    id="firstName"
+                                    label="First Name"
+                                    value={selectedUser.firstName}
+                                    fullWidth={true}
+                                    required={true}
+                                    margin="dense"
+                                    InputProps={{
+                                        classes: {
+                                            root: classes.input,
+                                        }
+                                    }}
+                                    onChange={this.handleUserEdit}
+                                />
+                                <TextField
+                                    id="lastName"
+                                    label="Last Name"
+                                    value={selectedUser.lastName}
+                                    fullWidth={true}
+                                    required={true}
+                                    margin="dense"
+                                    InputProps={{
+                                        classes: {
+                                            root: classes.input,
+                                        }
+                                    }}
+                                    onChange={this.handleUserEdit}
+                                />
+                                <FormControl margin="dense" fullWidth={true}>
+                                    <InputLabel>User group</InputLabel>
+                                    <Select
+                                        value={selectedUser.userGroupId}
+                                        name="userGroupId"
+                                        onChange={this.handleUserSelectChange}
+                                    >
+                                        {userGroups.data && userGroups.data.map( (userGroup) => (
+                                                <MenuItem key={userGroup.id} value={userGroup.id}>{userGroup.name}</MenuItem>
+                                            )
+                                        )}
+                                    </Select>
+                                </FormControl>
+
+                                <FormControl margin="dense" fullWidth={true}>
+                                    <InputLabel>User status</InputLabel>
+                                    <Select
+                                        value={selectedUser.userStatusId}
+                                        name="userStatusId"
+                                        onChange={this.handleUserSelectChange}
+                                    >
+
+                                        <MenuItem value="1">Active</MenuItem>
+                                        <MenuItem value="2">Not active</MenuItem>
+
+
+                                    </Select>
+                                </FormControl>
+
+                                <div className={classes.dialogButtons}>
+                                    <Button type="submit" variant="contained" color="primary">
+                                        Add
+                                    </Button>
+                                    <Button onClick={this.closeAddUserDialog} variant="contained" color="primary">
                                         Cancel
                                     </Button>
                                 </div>
@@ -517,6 +679,7 @@ const mapDispatchToProps = (dispatch) => {
         deactivateUser: (userId) => dispatch(adminActions.deactivateUser(userId)),
         deleteUser: (userId) => dispatch(adminActions.deleteUser(userId)),
         updateUser: (user) => dispatch(adminActions.updateUser(user)),
+        addUser: (user) => dispatch(adminActions.addUser(user)),
         getGlobalPreferences: () => dispatch(adminActions.getGlobalPreferences()),
         updateGlobalPreferences: (globalPreferences) => dispatch(adminActions.updateGlobalPreferences(globalPreferences)),
         getTimezones: () => dispatch(helpersActions.getTimezones()),

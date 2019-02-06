@@ -28,13 +28,25 @@ import {
     GET_GLOBAL_PREFERENCES_FAILURE,
     UPDATE_GLOBAL_PREFERENCES_BEGIN,
     UPDATE_GLOBAL_PREFERENCES_SUCCESS,
-    UPDATE_GLOBAL_PREFERENCES_FAILURE
+    UPDATE_GLOBAL_PREFERENCES_FAILURE, ADD_USER_BEGIN, ADD_USER_SUCCESS, ADD_USER_FAILURE
 
 } from '../config'
 
 
 
-function updateUser(users, userToUpdate){
+function changeUserStatus(users, userId) {
+
+    return users.map(user => {
+
+        if(user.id === userId){
+            user.userStatusId === 1 ? user.userStatusId = 2 : user.userStatusId = 1
+        }
+
+        return user;
+    });
+}
+
+function updateUser (users, userToUpdate) {
 
     return users.map(user => {
 
@@ -47,7 +59,6 @@ function updateUser(users, userToUpdate){
         return user;
     });
 }
-
 
 const initState = {
     users: {
@@ -147,7 +158,7 @@ const adminReducer = (state = initState, action ) => {
                 users: {
                     ...state.users,
                     updating: false,
-                    data : updateUser(state.users.data,action.user)
+                    data : changeUserStatus(state.users.data,action.userId)
                 }
             };
         case ACTIVATE_USER_FAILURE:
@@ -176,7 +187,7 @@ const adminReducer = (state = initState, action ) => {
                 users: {
                     ...state.users,
                     updating: false,
-                    data : updateUser(state.users.data,action.user)
+                    data : changeUserStatus(state.users.data,action.userId)
                 }
             };
         case DEACTIVATE_USER_FAILURE:
@@ -218,6 +229,41 @@ const adminReducer = (state = initState, action ) => {
                     updating: false,
                     error: action.error,
 
+                }
+            };
+
+
+        case ADD_USER_BEGIN:
+            return {
+                ...state,
+                users: {
+                    ...state.users,
+                    updating: true
+                }
+            };
+        case ADD_USER_SUCCESS:
+            return {
+                ...state,
+                users: {
+                    ...state.users,
+                    updating: false,
+                    data: [
+                        ...state.users.data,
+                        {
+                            ...action.user,
+                            userGroupId: action.user.userGroup.id,
+                            userStatusId: action.user.userStatus.id,
+                        }
+                    ]
+                }
+            };
+        case ADD_USER_FAILURE:
+            return {
+                ...state,
+                users: {
+                    ...state.users,
+                    updating: false,
+                    error: action.error,
                 }
             };
 

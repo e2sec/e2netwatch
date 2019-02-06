@@ -26,7 +26,7 @@ import {
     GET_GLOBAL_PREFERENCES_FAILURE,
     UPDATE_GLOBAL_PREFERENCES_BEGIN,
     UPDATE_GLOBAL_PREFERENCES_SUCCESS,
-    UPDATE_GLOBAL_PREFERENCES_FAILURE
+    UPDATE_GLOBAL_PREFERENCES_FAILURE, ADD_USER_BEGIN, ADD_USER_SUCCESS, ADD_USER_FAILURE
 
 } from '../config'
 
@@ -39,6 +39,7 @@ export const adminActions = {
     deactivateUser,
     deleteUser,
     updateUser,
+    addUser,
     getGlobalPreferences,
     updateGlobalPreferences
 };
@@ -87,8 +88,8 @@ function activateUser(userId) {
 
         adminServices.activateUser(userId)
             .then(
-                user => {
-                    dispatch({ type: ACTIVATE_USER_SUCCESS, user })
+                () => {
+                    dispatch({ type: ACTIVATE_USER_SUCCESS, userId })
                 },
                 error => {
                     dispatch({ type: ACTIVATE_USER_FAILURE, error })
@@ -106,8 +107,8 @@ function deactivateUser(userId) {
 
         adminServices.deactivateUser(userId)
             .then(
-                user => {
-                    dispatch({ type: DEACTIVATE_USER_SUCCESS, user })
+                () => {
+                    dispatch({ type: DEACTIVATE_USER_SUCCESS, userId })
                 },
                 error => {
                     dispatch({ type: DEACTIVATE_USER_FAILURE, error })
@@ -143,7 +144,7 @@ function updateUser(user) {
 
         adminServices.updateUser(user)
             .then(
-                () => {
+                user => {
                     dispatch({ type: ADMIN_UPDATE_USER_SUCCESS, user })
                 },
                 error => {
@@ -153,6 +154,26 @@ function updateUser(user) {
 
     }
 }
+
+
+function addUser(user) {
+    return (dispatch) => {
+
+        dispatch({ type: ADD_USER_BEGIN })
+
+        adminServices.addUser(user)
+            .then(
+                user => {
+                    dispatch({ type: ADD_USER_SUCCESS, user })
+                },
+                error => {
+                    dispatch({ type: ADD_USER_FAILURE, error })
+                }
+            )
+
+    }
+}
+
 
 function getGlobalPreferences() {
     return (dispatch) => {

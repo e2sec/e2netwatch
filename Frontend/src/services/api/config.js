@@ -53,16 +53,19 @@ export default {
             return apiActions.get('/um/usergroups')
         },
         activateUser(userId) {
-            return apiActions.get('/um/users/activate/' + userId)
+            return apiActions.put('/um/users/activate/' + userId)
         },
         deactivateUser(userId) {
-            return apiActions.get('/um/users/deactivate/' + userId)
+            return apiActions.put('/um/users/deactivate/' + userId)
         },
         deleteUser(userId) {
             return apiActions.delete('/um/users/' + userId)
         },
         updateUser(user) {
             return apiActions.put('/um/users/update', user)
+        },
+        addUser(user) {
+            return apiActions.post('/um/users', user)
         },
         getGlobalPreferences() {
             return apiActions.get('/um/profilepreferences/global')

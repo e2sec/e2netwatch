@@ -7,6 +7,7 @@ export const adminServices = {
     deactivateUser,
     deleteUser,
     updateUser,
+    addUser,
     getGlobalPreferences,
     updateGlobalPreferences
 };
@@ -18,7 +19,6 @@ function getUsers() {
             return res.data;
         }).catch( error => {
 
-            console.log(error)
             if (error.response) {
 
             }else if (error.request) {
@@ -38,7 +38,6 @@ function getUserGroups() {
             return res.data;
         }).catch( error => {
 
-            console.log(error)
             if (error.response) {
 
             }else if (error.request) {
@@ -58,7 +57,6 @@ function activateUser(userId) {
             return res.data;
         }).catch( error => {
 
-            console.log(error)
             if (error.response) {
 
             }else if (error.request) {
@@ -78,7 +76,6 @@ function deactivateUser(userId) {
             return res.data;
         }).catch( error => {
 
-            console.log(error)
             if (error.response) {
 
             }else if (error.request) {
@@ -98,7 +95,6 @@ function deleteUser(userId) {
             return res.data;
         }).catch( error => {
 
-            console.log(error)
             if (error.response) {
 
             }else if (error.request) {
@@ -118,7 +114,25 @@ function updateUser(user) {
             return res.data;
         }).catch( error => {
 
-            console.log(error)
+            if (error.response) {
+
+            }else if (error.request) {
+
+            } else {
+
+            }
+
+            return Promise.reject(error.message);
+        });
+}
+
+function addUser(user) {
+
+    return api.admin.addUser(user)
+        .then(res => {
+            return res.data;
+        }).catch( error => {
+
             if (error.response) {
 
             }else if (error.request) {
