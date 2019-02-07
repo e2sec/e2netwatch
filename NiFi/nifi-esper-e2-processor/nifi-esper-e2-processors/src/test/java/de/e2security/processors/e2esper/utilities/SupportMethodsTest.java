@@ -11,7 +11,7 @@ import junit.framework.Assert;
 public class SupportMethodsTest {
 	
 	@Test public void retriveClassNameTest() {
-		String eventName = SupportUtility.retrieveClassNameFromSchemaEPS("create schema T_50005_0008_01_02 as (\"\n" + 
+		String eventName = SupportUtility.retrieveClassNameFromSchemaEPS("CREATE SCHEMA T_50005_0008_01_02 AS (\"\n" + 
 				"				+ \"tilde_event_uuid string, \"\n" + 
 				"				+ \"cep_delta long, \"\n" + 
 				"				+ \"host_hash string, \"\n" + 

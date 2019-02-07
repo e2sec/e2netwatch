@@ -62,9 +62,9 @@ public class SupportUtility {
 	}
 
 	public static String retrieveClassNameFromSchemaEPS(String eventSchema) {
-		final Optional<String> eventNameOpt = Optional.ofNullable(StringUtils.substringBetween(eventSchema, "create schema ", " as").replaceAll("'", ""));
+		final Optional<String> eventNameOpt = Optional.ofNullable(StringUtils.substringBetween(eventSchema, "CREATE SCHEMA ", " AS").replaceAll("'", ""));
 		return eventNameOpt.orElseThrow(() -> {
-			return new RuntimeException("no event name provided in schema definition. Please consider the pattern 'create schema <Name> as (...)'");
+			return new RuntimeException("no event name provided in schema definition. Please consider the pattern 'CREATE SCHEMA <Name> AS (...)'");
 		});
 	}
 
@@ -72,9 +72,6 @@ public class SupportUtility {
 	public static String modifyUserDefinedSchema(String userSchema) {
 		final Pattern pattern = Pattern.compile("[a\\s]\\W*\\("); 
 		final String extendedThroughAttrMap = userSchema.replaceFirst(pattern.toString(), String.format("( %s Map,", CommonSchema.EVENT.flowFileAttributes));
-//		final String eventName = retrieveClassNameFromSchemaEPS(extendedThroughAttrMap);
-//		final String extendedThroughSchemaNameAndAttrMap = extendedThroughAttrMap.replaceFirst("create", String.format("@Name(%s_schema) create", eventName));
-		//TODO: add validator for schema definition
 		return extendedThroughAttrMap;
 	}
 
@@ -83,7 +80,6 @@ public class SupportUtility {
 		if (userStmt.contains("select *".toUpperCase())) return userStmt;
 		//apply functional interface to stmt and process transform logic
 		final Optional<String> funcStmt = Optional.of(userStmt); 
-		//TODO: validator -> only UPPPERCASE for ESPER KEYWORDS
 		final List<String> patterns = new ArrayList<>();
 		patterns.add("select rstream".toUpperCase());
 		patterns.add("select irstream".toUpperCase());
@@ -111,6 +107,7 @@ public class SupportUtility {
 	}
 
 	public static String retrieveStatementName(String eplStatement) {
+		//TODO: ofNullable check and RuntimeException are not needed, since to be checked by PropertyDescriptor validator
 		Optional<String> nameOpt = Optional.ofNullable(StringUtils.substringBetween(eplStatement,"@Name(",")"));
 		nameOpt.ifPresent(name -> name.replaceAll("'", ""));
 		return nameOpt.orElseThrow(() -> new RuntimeException(
