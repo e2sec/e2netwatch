@@ -124,4 +124,34 @@ public final class TcpEplExpressions {
 		return "[every a=NetflowEventOrdered(protocol=6 and (tcp_flags&4)=4) ->"
 				+ " b=NetflowEventOrdered(protocol=6 and (tcp_flags&2)=2 and (tcp_flags&16)=0 and host=a.host ";
 	}
+
+	/**
+	 * Using time observer instead of time_order in order to sort by both parameters (first_switched in case of last_switched equality)
+	 * In case of that the window takes ALL events coming independently of its timestamp and sort them within 60 seconds for tcp or 120 seconds for udp
+	 * As time do not evaluate event's timestamp, the additional check to be implemented within patterns such as 
+	 * 	and last_switched.toMillisec() - a.last_switched.toMillisec() <= 60000 for tcp
+	 *  and last_switched.toMillisec() - a.last_switched.toMillisec() <= 120000 for udp
+	 * even though such long delay is hardly to await in reality 
+	 */
+	
+	public static String tcpSortByLastSwitched() {
+		
+		return "insert rstream into NetflowEventOrdered"
+				+ " select rstream receivedTimeStamp"
+				+ ",host"
+				+ ",ipv4_src_addr"
+				+ ",ipv4_dst_addr"
+				+ ",l4_src_port"
+				+ ",l4_dst_port"
+				+ ",tcp_flags"
+				+ ",protocol"
+				+ ",version"
+				+ ",flow_seq_num"
+				+ ",flow_records"
+				+ ",in_bytes"
+				+ ",in_pkts"
+				+ ",first_switched"
+				+ ",last_switched"
+				+ " from NetflowEvent#time(60 sec) where protocol=6 order by last_switched, first_switched"; 
+	}
 }

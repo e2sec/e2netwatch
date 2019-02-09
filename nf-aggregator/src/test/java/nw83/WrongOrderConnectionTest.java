@@ -18,7 +18,6 @@ import com.espertech.esper.client.UpdateListener;
 import com.espertech.esper.client.scopetest.SupportUpdateListener;
 import com.espertech.esper.client.time.CurrentTimeEvent;
 
-import de.e2security.netflow_flowaggregation.esper.epl.CommonEplExpressions;
 import de.e2security.netflow_flowaggregation.esper.epl.TcpEplExpressions;
 import de.e2security.netflow_flowaggregation.esper.utils.EsperTestSupporter;
 import de.e2security.netflow_flowaggregation.exceptions.NetflowEventException;
@@ -51,7 +50,7 @@ public class WrongOrderConnectionTest extends EsperTestSupporter {
 		testEvent2.setL4_dst_port(56114);
 		testEvent2.setTcp_flags(1);
 		testEvent2.setHost("host");
-		admin.createEPL(CommonEplExpressions.tcpSortByLastSwitched());
+		admin.createEPL(TcpEplExpressions.tcpSortByLastSwitched());
 		EPStatement stmt = admin.createEPL("select * from NetflowEventOrdered");
 		final AtomicReference<NetflowEventOrdered> firstRemovedFromWindow = new AtomicReference<>();
 		final AtomicReference<NetflowEventOrdered> secondRemovedFromWindow = new AtomicReference<>();
@@ -205,7 +204,7 @@ public class WrongOrderConnectionTest extends EsperTestSupporter {
 		testEvent2.setLast_switched("2018-12-22T00:00:20.999Z");
 		testEvent2.setFirst_switched("2018-12-21T23:59:10.999Z");
 		testEvent2.setProtocol(6);
-		EPStatement stmt = admin.createEPL(CommonEplExpressions.tcpSortByLastSwitched());
+		EPStatement stmt = admin.createEPL(TcpEplExpressions.tcpSortByLastSwitched());
 		AtomicReference<NetflowEventOrdered> neoReference = new AtomicReference<>();
 		stmt.addListener((newEvents, oldEvents) ->  {
 			NetflowEventOrdered neo = (NetflowEventOrdered) newEvents[0].getUnderlying();
@@ -239,7 +238,7 @@ public class WrongOrderConnectionTest extends EsperTestSupporter {
 		testEvent2.setIpv4_src_addr("hostB");
 		testEvent2.setL4_src_port(5353);
 		testEvent2.setL4_dst_port(9191);
-		EPStatement ordered = admin.createEPL(CommonEplExpressions.tcpSortByLastSwitched());
+		EPStatement ordered = admin.createEPL(TcpEplExpressions.tcpSortByLastSwitched());
 		EPStatement finished = admin.createEPL(TcpEplExpressions.eplFinishedFlows());
 		SupportUpdateListener supportListener = new SupportUpdateListener();
 		finished.addListener(supportListener);

@@ -20,7 +20,6 @@ import com.espertech.esper.client.scopetest.SupportUpdateListener;
 import com.espertech.esper.client.time.CurrentTimeEvent;
 import com.espertech.esper.client.time.CurrentTimeSpanEvent;
 
-import de.e2security.netflow_flowaggregation.esper.epl.CommonEplExpressions;
 import de.e2security.netflow_flowaggregation.esper.epl.TcpEplExpressions;
 import de.e2security.netflow_flowaggregation.esper.utils.EplExpressionTestSupporter;
 import de.e2security.netflow_flowaggregation.esper.utils.EsperTestSupporter;
@@ -60,7 +59,7 @@ public class TestTcpEplExpressionsWithinEngineEventsFlow extends EsperTestSuppor
 		 * setting listener on the second statement;
 		 * however, through adding rstream into the first statement after keyword 'select' the same result can be achieved w/o the second one;
 		 */
-		EPStatement statement1 = admin.createEPL(CommonEplExpressions.tcpSortByLastSwitched());
+		EPStatement statement1 = admin.createEPL(TcpEplExpressions.tcpSortByLastSwitched());
 		EPStatement statement2 = admin.createEPL(EplExpressionTestSupporter.selectNetStreamOrdered());
 		statement2.addListener(listener);
 		engine.getEPRuntime().sendEvent(new CurrentTimeEvent(timer.getKey())); // set initial start window for the historical data (external timer)
