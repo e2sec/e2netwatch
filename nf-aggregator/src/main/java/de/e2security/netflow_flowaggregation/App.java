@@ -88,9 +88,10 @@ public class App {
 
 		//register EP events
 		EPServiceProvider epService = EsperUtil.registerEvents(NetflowEvent.class, NetflowEventOrdered.class, ProtocolRegister.class, CurrentTimeEvent.class);
-
+		
 		//register TCP EPLs @see description in TcpEplExpressions
-		epService.getEPAdministrator().createEPL(CommonEplExpressions.eplSortByLastSwitched());
+		epService.getEPAdministrator().createEPL(CommonEplExpressions.tcpSortByLastSwitched());
+		epService.getEPAdministrator().createEPL(CommonEplExpressions.udpSortByLastSwitched());
 		epService.getEPAdministrator().createEPL(TcpEplExpressions.eplFinishedFlows());
 		epService.getEPAdministrator().createEPL(TcpEplExpressions.eplRejectedFlows(TcpEplExpressions.eplRejectedPatternSyn2Ack16()));
 		epService.getEPAdministrator().createEPL(TcpEplExpressions.eplRejectedFlows(TcpEplExpressions.eplRejectedPatternRst4()));

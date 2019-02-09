@@ -3,6 +3,7 @@ package nw83;
 import static org.junit.Assert.assertTrue;
 
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -10,6 +11,13 @@ import org.junit.Test;
 import de.e2security.netflow_flowaggregation.model.protocols.NetflowEvent;
 
 public class ZonedDateTimeTest {
+	
+	@Test public void zdtToString() {
+		NetflowEvent event1 = new NetflowEvent();
+		event1.setLast_switched("2018-12-22T11:18:56.664Z");
+		
+		Assert.assertEquals("2018-12-22T11:18:56.664Z", DateTimeFormatter.ISO_INSTANT.format(event1.getLast_switched()));
+	}
 
 	@Test public void zdtTransformationTest() {
 		NetflowEvent testEvent1 = new NetflowEvent();

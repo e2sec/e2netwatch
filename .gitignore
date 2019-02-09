@@ -20,7 +20,7 @@ build/
 # Ignore JUnit test files
 **/junit.xml
 
-# Also ignoring IDE / editor metafiles
+# Also ignoring IDE / editor metafiles / complilation files
 .vscode
 *.sublime-*
 *.metadata
@@ -28,3 +28,4 @@ build/
 *.recommenders
 *.classpath
 *.settings
+*bin

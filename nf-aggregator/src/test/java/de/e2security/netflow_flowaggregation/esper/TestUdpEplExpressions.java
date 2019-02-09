@@ -62,7 +62,7 @@ public class TestUdpEplExpressions extends EsperTestSupporter {
 		List<NetflowEvent> events = getHistoricalEvents(TestUtil.readSampleDataFile("nf_gen.udp.sample"), numberOfTestEvents);
 		SupportUpdateListener supportListener = new SupportUpdateListener();
 		EPStatement stmt0 = admin.createEPL(EplExpressionTestSupporter.selectNetStreamOrdered());
-		EPStatement stmt1 = admin.createEPL(CommonEplExpressions.eplSortByLastSwitched());
+		EPStatement stmt1 = admin.createEPL(CommonEplExpressions.udpSortByLastSwitched());
 		stmt0.addListener(listener);
 		Pair<Long,Long> timer = getTimeFrameForCurrentTimer(events);
 		engine.getEPRuntime().sendEvent(new CurrentTimeEvent(timer.getLeft()));

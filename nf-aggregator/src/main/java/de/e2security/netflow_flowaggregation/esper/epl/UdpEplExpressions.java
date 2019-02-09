@@ -41,6 +41,11 @@ public final class UdpEplExpressions {
 				+ " from pattern [" 
 				+ 			"every a=NetflowEventOrdered(protocol=17) ->"
 				+ 			" b=NetflowEventOrdered(protocol=17 and host=a.host"
+							// time window check 
+				+ 			" and last_switched.toMillisec() - a.last_switched.toMillisec() <= 120000"
+							//right order check
+				+ 			" and a.first_switched.before(first_switched)"
+							//x-check
 				+ 			" and ipv4_src_addr = a.ipv4_dst_addr"
 				+ 			" and l4_src_port   = a.l4_dst_port"
 				+ 			" and ipv4_dst_addr = a.ipv4_src_addr"

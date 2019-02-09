@@ -2,7 +2,16 @@ package de.e2security.netflow_flowaggregation.esper.epl;
 
 public final class CommonEplExpressions {
 	
-	public static String eplSortByLastSwitched() {
+	public static String tcpSortByLastSwitched() {
+		/**
+		 * Using time observer instead of time_order in order to sort by both parameters (first_switched in case of last_switched equality)
+		 * In case of that the window takes ALL events coming independently of its timestamp and sort them within 60 seconds for tcp or 120 seconds for udp
+		 * As time do not evaluate event's timestamp, the additional check to be implemented within patterns such as 
+		 * 	and last_switched.toMillisec() - a.last_switched.toMillisec() <= 60000 for tcp
+		 *  and last_switched.toMillisec() - a.last_switched.toMillisec() <= 120000 for udp
+		 * even though such long delay is hardly to await in reality 
+		 */
+		
 		return "insert rstream into NetflowEventOrdered"
 				+ " select rstream receivedTimeStamp"
 				+ ",host"
@@ -19,7 +28,27 @@ public final class CommonEplExpressions {
 				+ ",in_pkts"
 				+ ",first_switched"
 				+ ",last_switched"
-				+ " from NetflowEvent#time(60 sec) order by last_switched, first_switched";
+				+ " from NetflowEvent#time(60 sec) where protocol=6 order by last_switched, first_switched"; 
+	}
+	
+	public static String udpSortByLastSwitched() {
+		return "insert rstream into NetflowEventOrdered"
+				+ " select rstream receivedTimeStamp"
+				+ ",host"
+				+ ",ipv4_src_addr"
+				+ ",ipv4_dst_addr"
+				+ ",l4_src_port"
+				+ ",l4_dst_port"
+				+ ",tcp_flags"
+				+ ",protocol"
+				+ ",version"
+				+ ",flow_seq_num"
+				+ ",flow_records"
+				+ ",in_bytes"
+				+ ",in_pkts"
+				+ ",first_switched"
+				+ ",last_switched"
+				+ " from NetflowEvent#time(120 sec) where protocol=17 order by last_switched, first_switched";
 	}
 	
 	@Deprecated

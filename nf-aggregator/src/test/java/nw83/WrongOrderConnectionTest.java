@@ -51,7 +51,7 @@ public class WrongOrderConnectionTest extends EsperTestSupporter {
 		testEvent2.setL4_dst_port(56114);
 		testEvent2.setTcp_flags(1);
 		testEvent2.setHost("host");
-		admin.createEPL(CommonEplExpressions.eplSortByLastSwitched());
+		admin.createEPL(CommonEplExpressions.tcpSortByLastSwitched());
 		EPStatement stmt = admin.createEPL("select * from NetflowEventOrdered");
 		final AtomicReference<NetflowEventOrdered> firstRemovedFromWindow = new AtomicReference<>();
 		final AtomicReference<NetflowEventOrdered> secondRemovedFromWindow = new AtomicReference<>();
@@ -200,19 +200,21 @@ public class WrongOrderConnectionTest extends EsperTestSupporter {
 		NetflowEvent testEvent1 = new NetflowEvent();
 		testEvent1.setLast_switched("2018-12-22T00:00:00.999Z");
 		testEvent1.setFirst_switched("2018-12-21T23:59:00.999Z");
+		testEvent1.setProtocol(6);
 		NetflowEvent testEvent2 = new NetflowEvent();
 		testEvent2.setLast_switched("2018-12-22T00:00:20.999Z");
 		testEvent2.setFirst_switched("2018-12-21T23:59:10.999Z");
-		EPStatement stmt = admin.createEPL(CommonEplExpressions.eplSortByLastSwitched());
+		testEvent2.setProtocol(6);
+		EPStatement stmt = admin.createEPL(CommonEplExpressions.tcpSortByLastSwitched());
 		AtomicReference<NetflowEventOrdered> neoReference = new AtomicReference<>();
 		stmt.addListener((newEvents, oldEvents) ->  {
 			NetflowEventOrdered neo = (NetflowEventOrdered) newEvents[0].getUnderlying();
 			neoReference.compareAndSet(null, neo);
 		});
-		runtime.sendEvent(new CurrentTimeEvent(TestUtil.getCurrentTimeEvent("2018-12-22T00:00:00.999Z"))); //+ 60 seconds to lastSwitched
+		runtime.sendEvent(new CurrentTimeEvent(TestUtil.getCurrentTimeEvent("2018-12-22T00:00:00.999Z"))); 
 		runtime.sendEvent(testEvent2);
 		runtime.sendEvent(testEvent1);
-		runtime.sendEvent(new CurrentTimeEvent(TestUtil.getCurrentTimeEvent("2018-12-22T00:01:20.999Z")));
+		runtime.sendEvent(new CurrentTimeEvent(TestUtil.getCurrentTimeEvent("2018-12-22T00:01:00.999Z"))); //+ 60 seconds to lastSwitched
 		Assert.assertEquals(testEvent1.convertToOrderedType().toString(), neoReference.get().toString());
 	}
 	
@@ -237,7 +239,7 @@ public class WrongOrderConnectionTest extends EsperTestSupporter {
 		testEvent2.setIpv4_src_addr("hostB");
 		testEvent2.setL4_src_port(5353);
 		testEvent2.setL4_dst_port(9191);
-		EPStatement ordered = admin.createEPL(CommonEplExpressions.eplSortByLastSwitched());
+		EPStatement ordered = admin.createEPL(CommonEplExpressions.tcpSortByLastSwitched());
 		EPStatement finished = admin.createEPL(TcpEplExpressions.eplFinishedFlows());
 		SupportUpdateListener supportListener = new SupportUpdateListener();
 		finished.addListener(supportListener);
