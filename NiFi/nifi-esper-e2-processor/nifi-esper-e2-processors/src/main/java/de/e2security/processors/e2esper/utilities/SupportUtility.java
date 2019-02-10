@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.nifi.logging.ComponentLog;
+import org.apache.nifi.processor.exception.ProcessException;
 
 import com.espertech.esper.client.EPAdministrator;
 import com.espertech.esper.client.EPStatement;
@@ -27,6 +28,7 @@ import com.google.gson.Gson;
 public class SupportUtility {
 
 	private static Gson gson = new Gson();
+	public static ComponentLog logger;
 
 	@Deprecated
 	public static Map<String,Object> transformEventToMap(String eventAsJson) throws IOException {
@@ -64,7 +66,7 @@ public class SupportUtility {
 	public static String retrieveClassNameFromSchemaEPS(String eventSchema) {
 		final Optional<String> eventNameOpt = Optional.ofNullable(StringUtils.substringBetween(eventSchema, "CREATE SCHEMA ", " AS").replaceAll("'", ""));
 		return eventNameOpt.orElseThrow(() -> {
-			return new RuntimeException("no event name provided in schema definition. Please consider the pattern 'CREATE SCHEMA <Name> AS (...)'");
+			return new ProcessException("no event name provided in schema definition. Please consider the pattern 'CREATE SCHEMA <Name> AS (...)'");
 		});
 	}
 
@@ -96,21 +98,21 @@ public class SupportUtility {
 					String.format("%s %s,", pattern, CommonSchema.EVENT.flowFileAttributes)));
 		};
 		String pattern =
-			    patterns.stream()
-			   .filter(p -> userStmt.contains(p))
-			   .findFirst()
-			   .orElse("select".toUpperCase());
-	    Optional<String> optResult = funcStmt.filter(isPatternStmt)
-	    		.map(stmt -> replaceForPattern.apply(stmt,pattern))
-	    		.orElse(replaceForNotPattern.apply(funcStmt.get(),pattern));
+				patterns.stream()
+				.filter(p -> userStmt.contains(p))
+				.findFirst()
+				.orElse("select".toUpperCase());
+		Optional<String> optResult = funcStmt.filter(isPatternStmt)
+				.map(stmt -> replaceForPattern.apply(stmt,pattern))
+				.orElse(replaceForNotPattern.apply(funcStmt.get(),pattern));
 		return optResult.get();
 	}
 
 	public static String retrieveStatementName(String eplStatement) {
-		//TODO: ofNullable check and RuntimeException are not needed, since to be checked by PropertyDescriptor validator
+		//checker is needed since the check against variables is not provided by nifi processor 
 		Optional<String> nameOpt = Optional.ofNullable(StringUtils.substringBetween(eplStatement,"@Name(",")"));
 		nameOpt.ifPresent(name -> name.replaceAll("'", ""));
-		return nameOpt.orElseThrow(() -> new RuntimeException(
+		return nameOpt.orElseThrow(() -> new ProcessException(
 				"No name provided in EPStatement. Please consider to provide @Name() annotation with statement name"));		
 	}
 
@@ -121,8 +123,12 @@ public class SupportUtility {
 	 */
 	public static void destroyStmtIfAvailable(Optional<EPStatement> stmtOpt) {
 		stmtOpt.ifPresent( (stmt) -> {
-			stmt.removeAllListeners();
-			stmt.destroy();				
+			while (!stmt.isDestroyed()) {
+				logger.info(String.format("trying to destroy [%s] statement", stmt.getName()));
+				stmt.removeAllListeners();
+				stmt.destroy();				
+			}
+			logger.info(String.format("[%s] statement has been successfully destroyed", stmt.getName()));
 		});
 	}
 }

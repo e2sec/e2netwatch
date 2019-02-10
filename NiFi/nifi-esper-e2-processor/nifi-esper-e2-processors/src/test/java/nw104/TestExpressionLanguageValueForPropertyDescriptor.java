@@ -7,6 +7,7 @@ import org.apache.nifi.controller.ControllerService;
 import org.apache.nifi.registry.VariableDescriptor;
 import org.apache.nifi.registry.VariableRegistry;
 import org.apache.nifi.reporting.InitializationException;
+import org.apache.nifi.util.MockVariableRegistry;
 import org.apache.nifi.util.TestRunner;
 import org.apache.nifi.util.TestRunners;
 import org.junit.After;
@@ -70,6 +71,8 @@ public class TestExpressionLanguageValueForPropertyDescriptor {
 		}
 	};
 	
+	MockVariableRegistry mvr = new MockVariableRegistry();
+	
 	@Test public void testEsperProcessorWithExpressionLanguageEnabledButNotProvidedCanBeInitializedProperly() throws CloneNotSupportedException {
 		runner.setProperty(CommonPropertyDescriptor.EVENT_SCHEMA, event_schema);
 		runner.setProperty(CommonPropertyDescriptor.EPL_STATEMENT, stmt);
@@ -82,11 +85,12 @@ public class TestExpressionLanguageValueForPropertyDescriptor {
 	
 	@Test public void testEsperProcessorWithExpressionLanguageProvidedCanBeInitializedProperly() throws CloneNotSupportedException {
 		
-		runner.setVariable("test.schema", vr.getVariableValue("test.schema"));
-		runner.setVariable("test.stmt", vr.getVariableValue("test.stmt"));
+		vr.getVariableMap().forEach( (key,value) -> {
+			mvr.setVariable(key, value);
+		});
 		
-		runner.setProperty(CommonPropertyDescriptor.EVENT_SCHEMA, "${test.schema}");
-		runner.setProperty(CommonPropertyDescriptor.EPL_STATEMENT, "${test.stmt}");
+		runner.setProperty(CommonPropertyDescriptor.EVENT_SCHEMA, mvr.getVariableValue("test.schema"));
+		runner.setProperty(CommonPropertyDescriptor.EPL_STATEMENT, mvr.getVariableValue("test.stmt"));
 		runner.setProperty(CommonPropertyDescriptor.ESPER_ENGINE, "EsperEngineService");
 		TestEvent event0 = new TestEvent().createDefaultTestEvent();
 		runner.enqueue(new Gson().toJson(event0).getBytes());

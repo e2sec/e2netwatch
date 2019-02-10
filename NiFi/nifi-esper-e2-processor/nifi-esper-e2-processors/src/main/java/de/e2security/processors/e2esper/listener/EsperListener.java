@@ -47,7 +47,6 @@ public class EsperListener implements UpdateListener {
 		if (event instanceof MapEventBean) {
 			final Map<?,?> eventAsMap = (Map<?,?>) event.getUnderlying();
 			//apply flow file attributes sent by EsperConsumer to session/current FF 
-			logger.debug("event as map has been detected by update listener");
 			{
 				Optional<Map<String,String>> attrEvent = Optional.ofNullable((Map<String,String>) eventAsMap.get(CommonSchema.EVENT.flowFileAttributes.toString()));
 				flowFileAttributes.compareAndSet(null, attrEvent.get()); //initial setup

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -22,7 +23,6 @@ import org.apache.nifi.processor.Relationship;
 import org.apache.nifi.processor.exception.ProcessException;
 import org.apache.nifi.processor.util.StandardValidators;
 
-import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.annotation.Description;
 
@@ -74,27 +74,37 @@ public class EsperProducer extends AbstractSessionFactoryProcessor {
 		 */
 		final EsperService esperService = context.getProperty(ESPER_ENGINE).asControllerService(EsperService.class);
 		final String stmtName = context.getProperty(EPSTMT_NAME).evaluateAttributeExpressions().getValue();
-		final EPServiceProvider esperEngine = esperService.execute();
+		
 		/*
 		 * if producer and consumer haven been started simultaneously (as pair in Process Group) or 
 		 * producer has been started before consumer => wait for EPStatement initilization 
 		 */
-		while (stmtRef.compareAndSet(null, esperEngine.getEPAdministrator().getStatement(stmtName))) {
+		while (stmtRef.compareAndSet(null, esperService.execute().getEPAdministrator().getStatement(stmtName))) {
 			getLogger().error(String.format("Searching for EPStatement called [%s]", stmtName));
 		}
-		
+
 		getLogger().info(String.format("[%s] EPStatement has been found: [%s]", stmtName, stmtRef.get().getText()));
 		
-		//set new listener only if no any provided
+		//TODO: to adjust logic in case of multiple listener types
 		if (!stmtRef.get().getUpdateListeners().hasNext()) {
 			successListener = new EsperListener(getLogger(), SUCCEEDED_REL);
 			stmtRef.get().addListener(successListener);
 			getLogger().info(String.format("successfully added update listener [%s]", successListener.getClass().getSimpleName()));
+		} else {
+			successListener = (EsperListener) stmtRef.get().getUpdateListeners().next();
+			getLogger().info(String.format("retrieved available update listener [%s]", successListener.getClass().getSimpleName()));
 		}
 	}
 	
 	@Override public void onPropertyModified(PropertyDescriptor descriptor, String oldValue, String newValue) {
-		stmtRef.set(null);
+		Optional<EPStatement> epsOpt = Optional.ofNullable(stmtRef.getAndSet(null));
+		epsOpt.ifPresent(eps -> {
+			while (eps.getUpdateListeners().hasNext()) {
+				getLogger().info(String.format("trying to remove listeners from the stmt [%s]", oldValue));
+				eps.removeAllListeners();
+			}
+			getLogger().info(String.format("successfully removed listeners from the stmt [%s]", oldValue));
+		});
 		super.onPropertyModified(descriptor, oldValue, newValue);
 	}
 
