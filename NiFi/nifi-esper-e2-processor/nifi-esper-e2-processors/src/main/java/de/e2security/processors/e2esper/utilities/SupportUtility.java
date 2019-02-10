@@ -28,7 +28,6 @@ import com.google.gson.Gson;
 public class SupportUtility {
 
 	private static Gson gson = new Gson();
-	public static ComponentLog logger;
 
 	@Deprecated
 	public static Map<String,Object> transformEventToMap(String eventAsJson) throws IOException {
@@ -121,7 +120,7 @@ public class SupportUtility {
 	 * the most appropriate place for this action would be @OnStopped or @OnScheduled annotated methods, 
 	 * however the written tests fail, since TestRunner tries to stop processor during tests
 	 */
-	public static void destroyStmtIfAvailable(Optional<EPStatement> stmtOpt) {
+	public static void destroyStmtIfAvailable(Optional<EPStatement> stmtOpt, ComponentLog logger) {
 		stmtOpt.ifPresent( (stmt) -> {
 			while (!stmt.isDestroyed()) {
 				logger.info(String.format("trying to destroy [%s] statement", stmt.getName()));

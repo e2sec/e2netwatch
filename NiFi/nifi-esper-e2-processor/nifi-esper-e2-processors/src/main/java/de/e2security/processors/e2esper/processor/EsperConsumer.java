@@ -52,7 +52,6 @@ public class EsperConsumer extends AbstractProcessor {
 	@OnUnscheduled public void unschedule(final ProcessContext context) { }
 
 	@OnScheduled public void start(final ProcessContext context) {
-		SupportUtility.logger = getLogger();
 		//assign EPServiceProvider from Controller Service 
 		{
 			final EsperService esperService = context.getProperty(ESPER_ENGINE).asControllerService(EsperService.class);
@@ -88,7 +87,7 @@ public class EsperConsumer extends AbstractProcessor {
 				getLogger().info(String.format("[%s] property has been modified. OLD VALUE: [%s] - NEW VALUE [%s], ",
 						descriptor.getDisplayName(), oldValue, newValue));
 				SupportUtility.destroyStmtIfAvailable(Optional.ofNullable(
-						esperEngine.getEPAdministrator().getStatement(stmtNameRef.get())));
+						esperEngine.getEPAdministrator().getStatement(stmtNameRef.get())), getLogger());
 				getLogger().info(String.format("epl statement [%s] has been successfully removed from esper controller service", stmtNameRef.get()));
 			}
 		});
