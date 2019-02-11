@@ -163,9 +163,9 @@ services:
     build:
       context: ./NiFi
       args:
-        NIFI_VERSION: '1.7.1'
-        NIFI_BINARY: 'http://apache.miloslavbrada.cz/nifi/1.7.1/nifi-1.7.1-bin.zip'
-        NIFI_TOOLKIT_BINARY: 'http://apache.miloslavbrada.cz/nifi/1.7.1/nifi-toolkit-1.7.1-bin.zip'
+        NIFI_VERSION: '1.8.0'
+        NIFI_BINARY: 'http://apache.miloslavbrada.cz/nifi/1.8.0/nifi-1.8.0-bin.zip'
+        NIFI_TOOLKIT_BINARY: 'http://apache.miloslavbrada.cz/nifi/1.8.0/nifi-toolkit-1.8.0-bin.zip'
     expose:
       - 8090 # Unsecured HTTP Web Port
     ports:
