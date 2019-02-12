@@ -1,26 +1,7 @@
 package de.e2security.netflow_flowaggregation.esper.epl;
 
+@Deprecated
 public final class CommonEplExpressions {
-	
-	public static String eplSortByLastSwitched() {
-		return "insert rstream into NetflowEventOrdered"
-				+ " select rstream receivedTimeStamp"
-				+ ",host"
-				+ ",ipv4_src_addr"
-				+ ",ipv4_dst_addr"
-				+ ",l4_src_port"
-				+ ",l4_dst_port"
-				+ ",tcp_flags"
-				+ ",protocol"
-				+ ",version"
-				+ ",flow_seq_num"
-				+ ",flow_records"
-				+ ",in_bytes"
-				+ ",in_pkts"
-				+ ",first_switched"
-				+ ",last_switched"
-				+ " from NetflowEvent#time(60 sec) order by last_switched, first_switched";
-	}
 	
 	@Deprecated
 	public static abstract class NetflowEventEplSupporter {

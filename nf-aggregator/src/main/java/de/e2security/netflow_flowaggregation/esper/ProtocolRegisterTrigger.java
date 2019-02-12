@@ -21,6 +21,7 @@ import static de.e2security.netflow_flowaggregation.utils.Ecs.Schema.Netflow.PRO
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -101,8 +102,9 @@ public class ProtocolRegisterTrigger implements UpdateListener {
 		ZonedDateTime in_first_switched = prtcl.getIn_first_switched();
 		ZonedDateTime out_first_switched = prtcl.getOut_first_switched();
 
-		LOG.info(String.format("%s Connection %s:%d -> %s:%d (%d/%d Bytes)", 
-				description, srcaddr, srcport, dstaddr, dstport, in_bytes, out_bytes));
+		LOG.info(String.format("%s Connection %s:%d lastswitched: %s -> %s:%d lastswitched: %s (%d/%d Bytes)", 
+				description, srcaddr, srcport, DateTimeFormatter.ISO_INSTANT.format(in_last_switched),
+				dstaddr, dstport, DateTimeFormatter.ISO_INSTANT.format(out_last_switched), in_bytes, out_bytes));
 		//KEY names are compatible to ECS SCHEMA. ecs.version 0.1.0
 		jsonObject.put("description", description);
 		jsonObject.put(HOST.asEcs(), host);

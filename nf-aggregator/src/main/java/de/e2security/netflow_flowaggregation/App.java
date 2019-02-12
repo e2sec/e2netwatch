@@ -19,7 +19,6 @@ import com.espertech.esper.client.time.CurrentTimeEvent;
 
 import de.e2security.netflow_flowaggregation.esper.ProtocolRegisterListener;
 import de.e2security.netflow_flowaggregation.esper.ProtocolRegisterTrigger;
-import de.e2security.netflow_flowaggregation.esper.epl.CommonEplExpressions;
 import de.e2security.netflow_flowaggregation.esper.epl.TcpEplExpressions;
 import de.e2security.netflow_flowaggregation.esper.epl.UdpEplExpressions;
 import de.e2security.netflow_flowaggregation.kafka.CustomKafkaProducer;
@@ -88,9 +87,10 @@ public class App {
 
 		//register EP events
 		EPServiceProvider epService = EsperUtil.registerEvents(NetflowEvent.class, NetflowEventOrdered.class, ProtocolRegister.class, CurrentTimeEvent.class);
-
+		
 		//register TCP EPLs @see description in TcpEplExpressions
-		epService.getEPAdministrator().createEPL(CommonEplExpressions.eplSortByLastSwitched());
+		epService.getEPAdministrator().createEPL(TcpEplExpressions.tcpSortByLastSwitched());
+		epService.getEPAdministrator().createEPL(UdpEplExpressions.udpSortByLastSwitched());
 		epService.getEPAdministrator().createEPL(TcpEplExpressions.eplFinishedFlows());
 		epService.getEPAdministrator().createEPL(TcpEplExpressions.eplRejectedFlows(TcpEplExpressions.eplRejectedPatternSyn2Ack16()));
 		epService.getEPAdministrator().createEPL(TcpEplExpressions.eplRejectedFlows(TcpEplExpressions.eplRejectedPatternRst4()));
