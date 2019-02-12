@@ -5,9 +5,11 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.nifi.annotation.documentation.CapabilityDescription;
 import org.apache.nifi.annotation.documentation.Tags;
+import org.apache.nifi.annotation.lifecycle.OnDisabled;
 import org.apache.nifi.annotation.lifecycle.OnScheduled;
 import org.apache.nifi.annotation.lifecycle.OnStopped;
 import org.apache.nifi.components.PropertyDescriptor;
@@ -22,6 +24,7 @@ import org.apache.nifi.processor.util.StandardValidators;
 
 import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPStatement;
+import com.espertech.esper.client.UpdateListener;
 
 import de.e2security.nifi.controller.esper.EsperService;
 import de.e2security.processors.e2esper.listener.EsperListener;
@@ -59,8 +62,19 @@ public class EsperProducer extends AbstractSessionFactoryProcessor {
 			.build();
 	
 	private volatile EsperListener successListener;
+	private final AtomicReference<EPStatement> stmtRef = new AtomicReference<>();
 	
-	@OnStopped public void stop(final ProcessContext context) {}
+	@OnDisabled public void disable(final ProcessContext context) {}
+	
+	@OnStopped public void stop(final ProcessContext context) {
+		final EPStatement stmt = stmtRef.getAndSet(null);
+		final UpdateListener listener = this.successListener;
+		try {
+			stmt.removeListener(listener); //new listener to be produced on next processor start
+		} catch (Exception ex) {
+			getLogger().error(ex.getMessage());
+		}
+	}
 	
 	@OnScheduled public void start(final ProcessContext context) {
 		/*
@@ -68,21 +82,19 @@ public class EsperProducer extends AbstractSessionFactoryProcessor {
 		 * no NULL check is required -> the processor cannot be started w/o controller has been enabled
 		 */
 		final EsperService esperService = context.getProperty(ESPER_ENGINE).asControllerService(EsperService.class);
+		final String stmtName = context.getProperty(EPSTMT_NAME).evaluateAttributeExpressions().getValue();
 		final EPServiceProvider esperEngine = esperService.execute();
-		final String stmtName = context.getProperty(EPSTMT_NAME).getValue();
 		
 		/*
 		 * if producer and consumer haven been started simultaneously (as pair in Process Group) or 
 		 * producer has been started before consumer => wait for EPStatement initilization 
 		 */
-		EPStatement stmt = null;
-		while (stmt == null) {
-			stmt = esperEngine.getEPAdministrator().getStatement(stmtName);
+		while (stmtRef.compareAndSet(null, esperEngine.getEPAdministrator().getStatement(stmtName))) {
 			getLogger().error(String.format("Searching for EPStatement called [%s]", stmtName));
 		}
 		getLogger().info(String.format("[%s] EPStatement has been found", stmtName));
 		successListener = new EsperListener(getLogger(),SUCCEEDED_REL);
-		stmt.addListener(successListener);
+		stmtRef.get().addListener(successListener);
 	}
 
 	@Override

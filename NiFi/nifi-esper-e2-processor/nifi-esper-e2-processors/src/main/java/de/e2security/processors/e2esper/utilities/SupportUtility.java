@@ -77,7 +77,10 @@ public final class SupportUtility {
 	}
 
 	public static String modifyUserDefinedEPStatement(String userStmt) {
-		final Optional<String> funcStmt = Optional.of(userStmt); //apply functional interface
+		//no any modifications are needed, if ' select *' defined by user
+		if (userStmt.contains("SELECT *")) return userStmt;
+		//apply functional interface to stmt and process transform logic
+		final Optional<String> funcStmt = Optional.of(userStmt); 
 		//TODO: validator -> only UPPPERCASE for ESPER KEYWORDS
 		final List<String> patterns = new ArrayList<>();
 		patterns.add("select rstream".toUpperCase());
@@ -94,7 +97,7 @@ public final class SupportUtility {
 			return Optional.of(stm.replace(pattern, 
 					String.format("%s %s,", pattern, CommonSchema.EVENT.flowFileAttributes)));
 		};
-	    String pattern =
+		String pattern =
 			    patterns.stream()
 			   .filter(p -> userStmt.contains(p))
 			   .findFirst()

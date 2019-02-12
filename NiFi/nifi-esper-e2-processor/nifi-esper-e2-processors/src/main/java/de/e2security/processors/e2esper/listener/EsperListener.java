@@ -47,8 +47,9 @@ public class EsperListener implements UpdateListener {
 		if (event instanceof MapEventBean) {
 			final Map<?,?> eventAsMap = (Map<?,?>) event.getUnderlying();
 			//apply flow file attributes sent by EsperConsumer to session/current FF 
+			logger.debug("event as map has been detected by update listener");
 			{
-				Optional<Map<String,String>> attrEvent = Optional.of((Map<String,String>) eventAsMap.get(CommonSchema.EVENT.flowFileAttributes.toString()));
+				Optional<Map<String,String>> attrEvent = Optional.ofNullable((Map<String,String>) eventAsMap.get(CommonSchema.EVENT.flowFileAttributes.toString()));
 				flowFileAttributes.compareAndSet(null, attrEvent.get()); //initial setup
 				attrEvent.filter( map -> map.size() >= flowFileAttributes.get().size()) //the follow file cannot contain less attributes as initially. However, in pattern it should be checked, in order the followed event doesn't overwrite the the FF attributes of a(=first) event
 						 .ifPresent( map -> {
@@ -81,5 +82,5 @@ public class EsperListener implements UpdateListener {
 	public void setSession(ProcessSessionFactory sessionFactory) {
 		this.sessionFactory.compareAndSet(null, sessionFactory);
 	}
-
+	
 }
