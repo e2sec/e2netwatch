@@ -1,0 +1,38 @@
+#!/bin/bash
+
+while getopts a:h option
+do
+	case "${option}"
+	in
+	a) NIFIADDRESS=${OPTARG};;
+	h) echo -d custom directory, standard is \"templates\" folder in the script\'s Directory; echo -a Nifi-address and port. Current Standard localhost:8090; exit ;;
+	esac
+done
+
+#sets NiFi Address and Port to default, if No Argument set
+: ${NIFIADDRESS:=http://localhost:8090}
+
+#gets all Templates and saves to RESPONSE
+	RESPONSE=$(curl -s -X GET \
+	$NIFIADDRESS/nifi-api/flow/templates/)
+
+#saves template IDs in an array
+	TEMPLATEARRAY=($(echo $RESPONSE | jq -r .templates[].id))
+
+
+#initializes all templates into root processor-group
+#currently very ugly, just places processgroups in a line next to each other
+ORIGINX=0
+for i in ${TEMPLATEARRAY[@]}
+		do
+			echo initializing template $i
+			curl -s -X POST \
+				$NIFIADDRESS/nifi-api/process-groups/root/template-instance \
+				-H 'Content-Type: application/json' \
+				-d "{\"templateId\": \"$i\",
+					\"originX\":$ORIGINX.0,
+					\"originY\":0.0}"
+			((ORIGINX+=500))
+			echo
+		done 
+
