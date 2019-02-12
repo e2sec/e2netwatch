@@ -1,0 +1,113 @@
+#!/bin/bash
+DELETETEMPLATES=0
+
+while getopts aoth option
+do
+	case "${option}"
+	in
+	#Address
+	a) NIFIADDRESS=${OPTARG};;
+	#Templates
+	t) echo preparing to delete currently uploaded Templates; DELETETEMPLATES=1;;
+	#Help
+	h) echo This script deletes all NiFi Objects.
+	echo this script references NiFi_Root
+	echo -a Nifi-address and port. Current Standard: localhost:8090
+	#echo -o delete all content in NiFi
+	echo -t also deletes Templates
+	echo -h this help; exit ;;
+	esac
+done
+
+#sets default value for NiFi Address
+: ${NIFIADDRESS:=http://localhost:8090}
+
+##creates an Array of all Process-Groups
+# this is necessary to be able to properly address objects in non-root process-groups
+GROUPARRAY=("root" )
+
+		i=1
+		while [ $i -le ${#GROUPARRAY[@]} ]
+		do
+			RESPONSE=$(curl -s -XGET \
+				$NIFIADDRESS/nifi-api/flow/process-groups/${GROUPARRAY[$i-1]} )
+			GROUPARRAY+=($(echo $RESPONSE | jq -r .processGroupFlow.flow.processGroups[].id))
+			let i=$i+1	
+		done 
+
+##stops all NiFi processes
+echo stopping running NiFi processes
+./NiFi_Root -s STOPPED
+
+##Creates List of Connections
+#Empty Array for Connections
+	CONNECTIONARRAY=()
+	for i in ${GROUPARRAY[@]}
+	do
+		RESPONSE=$(curl -s -X GET \
+			$NIFIADDRESS/nifi-api/process-groups/$i/connections)
+		CONNECTIONARRAY+=($(echo $RESPONSE | jq -r .connections[].id))
+	done
+
+#drops all content in Connections
+	echo dropping Connection-content
+	for i in ${CONNECTIONARRAY[@]}
+	do
+		curl -s -X POST \
+		$NIFIADDRESS/nifi-api/flowfile-queues/$i/drop-requests > /dev/null
+	done
+
+##creates a new, smaller array for process-groups only containing the direct contents of the root group
+	RESPONSE=$(curl -s -XGET \
+				$NIFIADDRESS/nifi-api/flow/process-groups/root/ )	
+	GROUPARRAY=($(echo $RESPONSE | jq -r .processGroupFlow.flow.processGroups[].id))
+
+# deletes all ProcessGroups including their content
+	echo deleting ProcessGroups
+	for i in ${GROUPARRAY[@]}
+	do
+		RAW=$(curl -s -X GET \
+				$NIFIADDRESS/nifi-api/process-groups/$i)
+		VERSION=$(echo $RAW | jq .revision.version)
+		curl -s -X DELETE \
+		$NIFIADDRESS/nifi-api/process-groups/$i?version=$VERSION > /dev/null
+	done
+
+
+##TODO delete leftover content, like labels, extra processors etc. most of this doesn't exist in the current NiFi Build (Branch develop 2019 Feb 12)
+
+	# delete leftover labels
+	
+	LABELARRAY=()
+	echo deleting leftover labels
+		RESPONSE=$(curl -s -X GET \
+			$NIFIADDRESS/nifi-api/flow/process-groups/root)
+		LABELARRAY+=($(echo $RESPONSE | jq -r .processGroupFlow.flow.labels[].id))
+		for i in ${LABELARRAY[@]}
+		do
+			## gets the complete Element of the Array
+			RAW=$(curl -s -X GET \
+					$NIFIADDRESS/nifi-api/labels/$i)
+			VERSION=$(echo $RAW | jq .revision.version)
+			curl -s -X DELETE \
+				$NIFIADDRESS/nifi-api/labels/$i?version=$VERSION > /dev/null
+		done
+	
+##if specified, also deletes the uploaded Templates
+#first creates an Array containing the Ids
+if [ $DELETETEMPLATES -eq 1 ] ;then
+	echo deleting Templates
+	TEMPLATEARRAY=()
+	RESPONSE=$(curl -s -X GET \
+			$NIFIADDRESS/nifi-api/flow/templates)
+	TEMPLATEARRAY+=($(echo $RESPONSE | jq -r .templates[].id))
+
+
+#Then deletes them
+
+	for i in ${TEMPLATEARRAY[@]}
+	do
+		curl -s -X DELETE \
+			$NIFIADDRESS/nifi-api/templates/$i > /dev/null
+	done
+fi
