@@ -1,0 +1,29 @@
+#!/bin/bash
+
+#Can be used to start/stop ALL components in the root group
+#Much shorter than the other scripts...
+
+#use arguments
+while getopts s:a:h option
+do
+	case "${option}"
+	in
+	a) NIFIADDRESS=${OPTARG};;
+	s) STATE=${OPTARG};;	
+	h) echo -s STATE default : STOPPED;echo available states: RUNNING STOPPED DISABLED ENABLED;
+	   echo -a ADDRESS default : localhost:8090;exit;;
+	esac
+done
+
+
+#sets NiFi Address and Port to default, if not set
+: ${NIFIADDRESS:=http://localhost:8090}
+
+#STATE=$1  # If State not set or null, use STOPPED.
+: ${STATE:=STOPPED}
+
+curl -X PUT \
+  $NIFIADDRESS/nifi-api/flow/process-groups/root \
+  -H "content-type: application/json" \
+  -d "{\"id\":\"root\",\"state\":\"$STATE\"}"
+echo
