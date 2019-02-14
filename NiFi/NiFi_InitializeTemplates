@@ -5,7 +5,10 @@ do
 	case "${option}"
 	in
 	a) NIFIADDRESS=${OPTARG};;
-	h) echo -a Nifi-address and port. Current Standard localhost:8090; exit ;;
+	h) echo this script Initializes all currently uploaded Templates. 
+		echo upon failure of a request this script will output http-code and content into a ResponseLog
+		echo -a [ADDRESS] Nifi-address and port. default: localhost:8090
+		echo this help;exit ;;
 	esac
 done
 
@@ -26,13 +29,22 @@ ORIGINX=0
 for i in ${TEMPLATEARRAY[@]}
 		do
 			echo initializing template $i
-			curl -s -X POST \
+			RESPONSE=$(curl -s -X POST \
 				$NIFIADDRESS/nifi-api/process-groups/root/template-instance \
+				--write-out %{http_code} \
+				--output temp \
 				-H 'Content-Type: application/json' \
 				-d "{\"templateId\": \"$i\",
 					\"originX\":$ORIGINX.0,
-					\"originY\":0.0}"
+					\"originY\":0.0}"\
+				)
+			case "$RESPONSE"
+			in
+			201) echo successfuly initialized;;
+			*)	echo Code $RESPONSE; cat temp; 
+				cat temp >> ResponseLog; echo >> ResponseLog;;
+			esac
+			rm temp
 			((ORIGINX+=500))
-			echo
 		done 
 

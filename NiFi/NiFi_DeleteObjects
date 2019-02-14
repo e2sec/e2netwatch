@@ -1,7 +1,18 @@
 #!/bin/bash
 DELETETEMPLATES=0
 
-while getopts aoth option
+#adds a function to evaluate curl responses and write temp file to Log
+function checkResponse {
+	case "$1"
+	in
+	2*) echo $2;;
+	*)echo Code $1; cat temp; 
+		cat temp >> ResponseLog; echo >> ResponseLog;;
+	esac
+	rm temp
+}
+
+while getopts ath option
 do
 	case "${option}"
 	in
@@ -11,11 +22,11 @@ do
 	t) echo preparing to delete currently uploaded Templates; DELETETEMPLATES=1;;
 	#Help
 	h) echo This script deletes all NiFi Objects.
-	echo this script references NiFi_Root
-	echo -a Nifi-address and port. Current Standard: localhost:8090
-	#echo -o delete all content in NiFi
-	echo -t also deletes Templates
-	echo -h this help; exit ;;
+		echo this script references NiFi_Root
+		echo upon failure of a delete or drop request this script will output http-code and content into a ResponseLog
+		echo -a [ADDRESS] Nifi-address and port. default: localhost:8090
+		echo -t also deletes Templates
+		echo -h this help; exit ;;
 	esac
 done
 
@@ -50,11 +61,15 @@ echo stopping running NiFi processes
 	done
 
 #drops all content in Connections
-	echo dropping Connection-content
+	echo "dropping Connection-content"
 	for i in ${CONNECTIONARRAY[@]}
 	do
-		curl -s -X POST \
-		$NIFIADDRESS/nifi-api/flowfile-queues/$i/drop-requests > /dev/null
+		RESPONSE=$(curl -s -X POST \
+		$NIFIADDRESS/nifi-api/flowfile-queues/$i/drop-requests\
+		--write-out %{http_code} \
+		--output temp \
+		)
+		checkResponse "$RESPONSE" ">dropped Connection $i"
 	done
 
 ##creates a new, smaller array for process-groups only containing the direct contents of the root group
@@ -69,8 +84,12 @@ echo stopping running NiFi processes
 		RAW=$(curl -s -X GET \
 				$NIFIADDRESS/nifi-api/process-groups/$i)
 		VERSION=$(echo $RAW | jq .revision.version)
-		curl -s -X DELETE \
-		$NIFIADDRESS/nifi-api/process-groups/$i?version=$VERSION > /dev/null
+		RESPONSE=$(curl -s -X DELETE \
+		$NIFIADDRESS/nifi-api/process-groups/$i?version=$VERSION\
+		--write-out %{http_code} \
+		--output temp \
+		)
+		checkResponse "$RESPONSE" ">deleted Group $i"
 	done
 
 
@@ -89,8 +108,12 @@ echo stopping running NiFi processes
 			RAW=$(curl -s -X GET \
 					$NIFIADDRESS/nifi-api/labels/$i)
 			VERSION=$(echo $RAW | jq .revision.version)
-			curl -s -X DELETE \
-				$NIFIADDRESS/nifi-api/labels/$i?version=$VERSION > /dev/null
+			RESPONSE=$(curl -s -X DELETE \
+				$NIFIADDRESS/nifi-api/labels/$i?version=$VERSION \
+				--write-out %{http_code} \
+				--output temp \
+				)
+		checkResponse "$RESPONSE" ">deleted Label $i"
 		done
 	
 ##if specified, also deletes the uploaded Templates
@@ -107,7 +130,11 @@ if [ $DELETETEMPLATES -eq 1 ] ;then
 
 	for i in ${TEMPLATEARRAY[@]}
 	do
-		curl -s -X DELETE \
-			$NIFIADDRESS/nifi-api/templates/$i > /dev/null
+		RESPONSE=$(curl -s -X DELETE \
+			$NIFIADDRESS/nifi-api/templates/$i \
+		--write-out %{http_code} \
+		--output temp \
+		)
+		checkResponse "$RESPONSE" ">deleted Template $i"
 	done
 fi

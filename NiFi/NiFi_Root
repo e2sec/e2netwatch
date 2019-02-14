@@ -10,8 +10,10 @@ do
 	in
 	a) NIFIADDRESS=${OPTARG};;
 	s) STATE=${OPTARG};;	
-	h) echo -s STATE default : STOPPED;echo available states: RUNNING STOPPED DISABLED ENABLED;
-	   echo -a ADDRESS default : localhost:8090;exit;;
+	h) echo This script is used to change the state of the NiFi root processor-group. This subsequently changes the state of all NiFi-Objects
+		echo -s [STATE] default : STOPPED;echo available states: RUNNING STOPPED DISABLED ENABLED;
+		echo -a [ADDRESS] Nifi-address and port. default: localhost:8090
+		echo -h this help;exit;;
 	esac
 done
 

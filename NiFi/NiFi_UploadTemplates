@@ -1,14 +1,17 @@
 #!/bin/bash
 
 #custom folder can be given by parameters
-while getopts d:a:h option
+while getopts a:d:h option
 do
 	case "${option}"
 	in
-	d) TEMPLATEFOLDER=${OPTARG};;
 	a) NIFIADDRESS=${OPTARG};;
-	h) echo -d custom directory, standard is \"templates\" folder in the script\'s Directory; 
-		echo -a Nifi-address and port. Current Standard localhost:8090; exit ;;
+	d) TEMPLATEFOLDER=${OPTARG};;
+	h) echo This script will upload all .xml files in  given folder
+		echo upon failure of a request this script will output http-code and content into a ResponseLog
+		echo -d [FOLDER] custom directory, standard is \"templates\" folder in the script\'s Directory; 
+		echo -a [ADDRESS] Nifi-address and port. default: localhost:8090
+		echo -h this help;exit ;;
 	esac
 done
 
@@ -26,11 +29,21 @@ echo uploading via NiFiPort $NIFIADDRESS
 
 #uploads Templates from $TEMPLATEFOLDER
 for File in $TEMPLATEFOLDER/*.xml; do
-		echo uploading $File
-		curl -s -X POST \
+		echo ">> uploading $File"
+		RESPONSE=$(curl -s -X POST \
 		 $NIFIADDRESS/nifi-api/process-groups/root/templates/upload \
 		 -H 'cache-control: no-cache' \
 		 -H 'content-type: multipart/form-data' \
-		 -F template=@$File
-		 echo 
+		 -F template=@$File \
+		 --write-out %{http_code} \
+		 --output temp\
+		 )
+		 
+		case "$RESPONSE"
+		in
+		201) echo successfully uploaded;;
+		*)echo Code $RESPONSE; cat temp; echo;
+		  cat temp >> ResponseLog; echo >> ResponseLog;;
+		esac
+		rm temp
 	done 
