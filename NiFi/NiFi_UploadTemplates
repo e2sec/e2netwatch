@@ -7,7 +7,8 @@ do
 	in
 	d) TEMPLATEFOLDER=${OPTARG};;
 	a) NIFIADDRESS=${OPTARG};;
-	h) echo -d custom directory, standard is \"templates\" folder in the script\'s Directory; echo -a Nifi-address and port. Current Standard localhost:8090; exit ;;
+	h) echo -d custom directory, standard is \"templates\" folder in the script\'s Directory; 
+		echo -a Nifi-address and port. Current Standard localhost:8090; exit ;;
 	esac
 done
 
@@ -26,7 +27,7 @@ echo uploading via NiFiPort $NIFIADDRESS
 #uploads Templates from $TEMPLATEFOLDER
 for File in $TEMPLATEFOLDER/*.xml; do
 		echo uploading $File
-		curl -X POST \
+		curl -s -X POST \
 		 $NIFIADDRESS/nifi-api/process-groups/root/templates/upload \
 		 -H 'cache-control: no-cache' \
 		 -H 'content-type: multipart/form-data' \

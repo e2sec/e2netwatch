@@ -5,7 +5,7 @@ do
 	case "${option}"
 	in
 	a) NIFIADDRESS=${OPTARG};;
-	h) echo -d custom directory, standard is \"templates\" folder in the script\'s Directory; echo -a Nifi-address and port. Current Standard localhost:8090; exit ;;
+	h) echo -a Nifi-address and port. Current Standard localhost:8090; exit ;;
 	esac
 done
 
