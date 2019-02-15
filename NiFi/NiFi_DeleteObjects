@@ -17,16 +17,23 @@ do
 	case "${option}"
 	in
 	#Address
-	a) NIFIADDRESS=${OPTARG};;
+	a) NIFIADDRESS=${OPTARG}
+	;;
 	#Templates
-	t) echo preparing to delete currently uploaded Templates; DELETETEMPLATES=1;;
+	t) echo preparing to delete currently uploaded Templates; DELETETEMPLATES=1
+	;;
 	#Help
-	h) echo This script deletes all NiFi Objects.
-		echo this script references NiFi_Root
-		echo upon failure of a delete or drop request this script will output http-code and content into a ResponseLog
-		echo -a [ADDRESS] Nifi-address and port. default: localhost:8090
-		echo -t also deletes Templates
-		echo -h this help; exit ;;
+	h) 
+		echo
+		echo -e "\tThis script deletes all NiFi Objects."
+		echo -e "\tthis script references NiFi_Root"
+		echo -e "\tupon failure of a delete or drop request this script will output http-code and content into a ResponseLog"
+		echo
+		echo -e "\t-a [ADDRESS] Nifi-address and port. default: localhost:8090"
+		echo -e "\t-t also deletes Templates"
+		echo -e "\t-h this help"
+		exit 
+		;;
 	esac
 done
 
