@@ -13,6 +13,8 @@ import java.util.stream.IntStream;
 
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.PartitionInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.espertech.esper.client.EPServiceProvider;
 
@@ -23,11 +25,15 @@ import com.espertech.esper.client.EPServiceProvider;
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class KafkaConsumerMaster {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(KafkaConsumerMaster.class);
 
 	private List<String> topics;
 	private EPServiceProvider engine;
 	private Properties config;
 	private Map<String,ExecutorService> groupId_executor;
+	
+	private static final int TOPIC_WAIT_TIMEOUT = 30;
 	
 	/**
 	 * @param engine ONE Esper Engine for each groupID 
@@ -76,6 +82,33 @@ public class KafkaConsumerMaster {
 				KafkaConsumerCallable consumer = new KafkaConsumerCallable<>(config, topic, engine);
 				exec.submit(consumer);
 			});
+		});
+		return this;
+	}
+	
+	public KafkaConsumerMaster waitTopics() {
+		topics.forEach(topic -> {
+			KafkaConsumer kChecker = new KafkaConsumer<>(config);
+			int waiting = TOPIC_WAIT_TIMEOUT;
+			while (true) {
+				if (waiting==0) {
+					throw new RuntimeException(String.format("%ds timeout exceeded: Topic %s is not available in Kafka. Process has been terminated", TOPIC_WAIT_TIMEOUT, topic));
+				}
+				if(kChecker.listTopics().containsKey(topic)) {
+					LOG.info("Topic {} is created", topic);
+					break;
+				}
+				
+				LOG.info("Waiting for topic {} to be created! {}s remaining...", topic, waiting);
+				try {
+					Thread.sleep(1000);
+					waiting--;
+				} catch (InterruptedException e) {
+					kChecker.close();
+				}
+				
+			}
+			kChecker.close();
 		});
 		return this;
 	}
