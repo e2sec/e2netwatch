@@ -1,0 +1,58 @@
+#!/bin/bash
+
+while getopts a:h option
+do
+	case "${option}"
+	in
+	a) NIFIADDRESS=${OPTARG}
+		;;
+	h)  echo
+		echo -e "\tThis script Initializes all currently uploaded Templates."
+		echo -e "\tUpon failure of a request this script will output http-code and content into a ResponseLog."
+		echo
+		echo -e "\t-a [ADDRESS] Nifi-address and port. default: localhost:8090"
+		echo -e "\t-h this help"
+		exit 
+		;;
+	esac
+done
+
+#sets NiFi Address and Port to default, if No Argument set
+: ${NIFIADDRESS:=http://localhost:8090}
+
+#gets all Templates and saves to RESPONSE
+	RESPONSE=$(curl -s -X GET \
+	$NIFIADDRESS/nifi-api/flow/templates/)
+
+#saves template IDs in an array
+	TEMPLATEARRAY=($(echo $RESPONSE | jq -r .templates[].id))
+
+
+#initializes all templates into root processor-group
+#currently very ugly, just places processgroups in a line next to each other
+ORIGINX=0
+for i in ${TEMPLATEARRAY[@]}
+do
+	echo initializing template $i
+	RESPONSE=$(curl -s -X POST \
+		$NIFIADDRESS/nifi-api/process-groups/root/template-instance \
+		--write-out %{http_code} \
+		--output temp \
+		-H 'Content-Type: application/json' \
+		-d "{\"templateId\": \"$i\",
+			\"originX\":$ORIGINX.0,
+			\"originY\":0.0}"\
+		)
+	case "$RESPONSE"
+	in
+	201) echo successfuly initialized
+	;;
+	*)	echo Code $RESPONSE; 
+		cat temp; 
+		cat temp >> ResponseLog; 
+		echo >> ResponseLog
+	;;
+	esac
+	rm temp
+	((ORIGINX+=500))
+done 
