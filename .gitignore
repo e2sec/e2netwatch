@@ -29,3 +29,5 @@ build/
 *.classpath
 *.settings
 *bin
+
+NiFi/ResponseLog
