@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<template encoding-version="1.2">
+    <description></description>
+    <groupId>ae96bd58-0165-1000-7a20-0033738a86e5</groupId>
+    <name>Read Esper Event</name>
+    <snippet>
+        <controllerServices>
+            <id>e4a56f91-8693-39d6-0000-000000000000</id>
+            <parentGroupId>6a008bcc-3c0a-30bb-0000-000000000000</parentGroupId>
+            <bundle>
+                <artifact>nifi-esper-e2-nar</artifact>
+                <group>de.e2security</group>
+                <version>1.1.8</version>
+            </bundle>
+            <comments></comments>
+            <descriptors>
+                <entry>
+                    <key>EnableEngineDebug</key>
+                    <value>
+                        <name>EnableEngineDebug</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>EnableEngineMetric</key>
+                    <value>
+                        <name>EnableEngineMetric</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>EnableJmxMetrics</key>
+                    <value>
+                        <name>EnableJmxMetrics</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>EnableStmtMetric</key>
+                    <value>
+                        <name>EnableStmtMetric</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>SetEngineInterval</key>
+                    <value>
+                        <name>SetEngineInterval</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>SetStmtInterval</key>
+                    <value>
+                        <name>SetStmtInterval</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>EnableInternalTiming</key>
+                    <value>
+                        <name>EnableInternalTiming</name>
+                    </value>
+                </entry>
+            </descriptors>
+            <name>EsperEngineService</name>
+            <persistsState>false</persistsState>
+            <properties>
+                <entry>
+                    <key>EnableEngineDebug</key>
+                    <value>true</value>
+                </entry>
+                <entry>
+                    <key>EnableEngineMetric</key>
+                    <value>false</value>
+                </entry>
+                <entry>
+                    <key>EnableJmxMetrics</key>
+                    <value>false</value>
+                </entry>
+                <entry>
+                    <key>EnableStmtMetric</key>
+                    <value>false</value>
+                </entry>
+                <entry>
+                    <key>SetEngineInterval</key>
+                    <value>1000</value>
+                </entry>
+                <entry>
+                    <key>SetStmtInterval</key>
+                    <value>1000</value>
+                </entry>
+                <entry>
+                    <key>EnableInternalTiming</key>
+                    <value>true</value>
+                </entry>
+            </properties>
+            <state>DISABLED</state>
+            <type>de.e2security.nifi.controller.esper.EsperEngineService</type>
+        </controllerServices>
+        <processGroups>
+            <id>8890c952-92e7-3242-0000-000000000000</id>
+            <parentGroupId>6a008bcc-3c0a-30bb-0000-000000000000</parentGroupId>
+            <position>
+                <x>0.0</x>
+                <y>0.0</y>
+            </position>
+            <comments>Read from EPL schema and process the event</comments>
+            <contents>
+                <connections>
+                    <id>37fc940a-33e5-3fef-0000-000000000000</id>
+                    <parentGroupId>8890c952-92e7-3242-0000-000000000000</parentGroupId>
+                    <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
+                    <backPressureObjectThreshold>10000</backPressureObjectThreshold>
+                    <destination>
+                        <groupId>57c78aed-154d-3eae-0000-000000000000</groupId>
+                        <id>6ec8c421-be79-3807-0000-000000000000</id>
+                        <type>INPUT_PORT</type>
+                    </destination>
+                    <flowFileExpiration>0 sec</flowFileExpiration>
+                    <labelIndex>1</labelIndex>
+                    <loadBalanceCompression>DO_NOT_COMPRESS</loadBalanceCompression>
+                    <loadBalancePartitionAttribute></loadBalancePartitionAttribute>
+                    <loadBalanceStatus>LOAD_BALANCE_NOT_CONFIGURED</loadBalanceStatus>
+                    <loadBalanceStrategy>DO_NOT_LOAD_BALANCE</loadBalanceStrategy>
+                    <name></name>
+                    <selectedRelationships>succeeded event</selectedRelationships>
+                    <source>
+                        <groupId>8890c952-92e7-3242-0000-000000000000</groupId>
+                        <id>ada7fcbc-a49b-34f5-0000-000000000000</id>
+                        <type>PROCESSOR</type>
+                    </source>
+                    <zIndex>0</zIndex>
+                </connections>
+                <processGroups>
+                    <id>57c78aed-154d-3eae-0000-000000000000</id>
+                    <parentGroupId>8890c952-92e7-3242-0000-000000000000</parentGroupId>
+                    <position>
+                        <x>-137.11303935259377</x>
+                        <y>169.609955990696</y>
+                    </position>
+                    <comments></comments>
+                    <contents>
+                        <connections>
+                            <id>d985aa2c-0aa9-3338-0000-000000000000</id>
+                            <parentGroupId>57c78aed-154d-3eae-0000-000000000000</parentGroupId>
+                            <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
+                            <backPressureObjectThreshold>10000</backPressureObjectThreshold>
+                            <destination>
+<groupId>57c78aed-154d-3eae-0000-000000000000</groupId>
+<id>356a9aa2-8f07-3cf7-0000-000000000000</id>
+<type>PROCESSOR</type>
+                            </destination>
+                            <flowFileExpiration>0 sec</flowFileExpiration>
+                            <labelIndex>1</labelIndex>
+                            <loadBalanceCompression>DO_NOT_COMPRESS</loadBalanceCompression>
+                            <loadBalancePartitionAttribute></loadBalancePartitionAttribute>
+                            <loadBalanceStatus>LOAD_BALANCE_NOT_CONFIGURED</loadBalanceStatus>
+                            <loadBalanceStrategy>DO_NOT_LOAD_BALANCE</loadBalanceStrategy>
+                            <name></name>
+                            <source>
+<groupId>57c78aed-154d-3eae-0000-000000000000</groupId>
+<id>6ec8c421-be79-3807-0000-000000000000</id>
+<type>INPUT_PORT</type>
+                            </source>
+                            <zIndex>0</zIndex>
+                        </connections>
+                        <inputPorts>
+                            <id>6ec8c421-be79-3807-0000-000000000000</id>
+                            <parentGroupId>57c78aed-154d-3eae-0000-000000000000</parentGroupId>
+                            <position>
+<x>390.00000012762126</x>
+<y>42.03677837416433</y>
+                            </position>
+                            <comments></comments>
+                            <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
+                            <name>JSON Document Input</name>
+                            <state>STOPPED</state>
+                            <type>INPUT_PORT</type>
+                        </inputPorts>
+                        <labels>
+                            <id>81fb06db-38ee-3304-0000-000000000000</id>
+                            <parentGroupId>57c78aed-154d-3eae-0000-000000000000</parentGroupId>
+                            <position>
+<x>229.85368177456303</x>
+<y>-104.78421370718564</y>
+                            </position>
+                            <height>584.0565643310547</height>
+                            <label>= = = elasticsearch storage processor = = =
+Store data given as JSON document  into elasticsearch of e2netwatch
+  parameters:
+  - elasticsearch.index</label>
+                            <style>
+<entry>
+    <key>font-size</key>
+    <value>16px</value>
+</entry>
+                            </style>
+                            <width>608.9879913330078</width>
+                        </labels>
+                        <processors>
+                            <id>356a9aa2-8f07-3cf7-0000-000000000000</id>
+                            <parentGroupId>57c78aed-154d-3eae-0000-000000000000</parentGroupId>
+                            <position>
+<x>334.7011896959509</x>
+<y>269.724803283008</y>
+                            </position>
+                            <bundle>
+<artifact>nifi-elasticsearch-nar</artifact>
+<group>org.apache.nifi</group>
+<version>1.8.0</version>
+                            </bundle>
+                            <config>
+<bulletinLevel>WARN</bulletinLevel>
+<comments></comments>
+<concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
+<descriptors>
+    <entry>
+        <key>elasticsearch-http-url</key>
+        <value>
+            <name>elasticsearch-http-url</name>
+        </value>
+    </entry>
+    <entry>
+        <key>SSL Context Service</key>
+        <value>
+            <identifiesControllerService>org.apache.nifi.ssl.SSLContextService</identifiesControllerService>
+            <name>SSL Context Service</name>
+        </value>
+    </entry>
+    <entry>
+        <key>Username</key>
+        <value>
+            <name>Username</name>
+        </value>
+    </entry>
+    <entry>
+        <key>Password</key>
+        <value>
+            <name>Password</name>
+        </value>
+    </entry>
+    <entry>
+        <key>elasticsearch-http-connect-timeout</key>
+        <value>
+            <name>elasticsearch-http-connect-timeout</name>
+        </value>
+    </entry>
+    <entry>
+        <key>elasticsearch-http-response-timeout</key>
+        <value>
+            <name>elasticsearch-http-response-timeout</name>
+        </value>
+    </entry>
+    <entry>
+        <key>proxy-configuration-service</key>
+        <value>
+            <identifiesControllerService>org.apache.nifi.proxy.ProxyConfigurationService</identifiesControllerService>
+            <name>proxy-configuration-service</name>
+        </value>
+    </entry>
+    <entry>
+        <key>elasticsearch-http-proxy-host</key>
+        <value>
+            <name>elasticsearch-http-proxy-host</name>
+        </value>
+    </entry>
+    <entry>
+        <key>elasticsearch-http-proxy-port</key>
+        <value>
+            <name>elasticsearch-http-proxy-port</name>
+        </value>
+    </entry>
+    <entry>
+        <key>proxy-username</key>
+        <value>
+            <name>proxy-username</name>
+        </value>
+    </entry>
+    <entry>
+        <key>proxy-password</key>
+        <value>
+            <name>proxy-password</name>
+        </value>
+    </entry>
+    <entry>
+        <key>put-es-id-attr</key>
+        <value>
+            <name>put-es-id-attr</name>
+        </value>
+    </entry>
+    <entry>
+        <key>put-es-index</key>
+        <value>
+            <name>put-es-index</name>
+        </value>
+    </entry>
+    <entry>
+        <key>put-es-type</key>
+        <value>
+            <name>put-es-type</name>
+        </value>
+    </entry>
+    <entry>
+        <key>Character Set</key>
+        <value>
+            <name>Character Set</name>
+        </value>
+    </entry>
+    <entry>
+        <key>put-es-batch-size</key>
+        <value>
+            <name>put-es-batch-size</name>
+        </value>
+    </entry>
+    <entry>
+        <key>put-es-index-op</key>
+        <value>
+            <name>put-es-index-op</name>
+        </value>
+    </entry>
+</descriptors>
+<executionNode>ALL</executionNode>
+<lossTolerant>false</lossTolerant>
+<penaltyDuration>30 sec</penaltyDuration>
+<properties>
+    <entry>
+        <key>elasticsearch-http-url</key>
+        <value>http://elasticsearch:9200</value>
+    </entry>
+    <entry>
+        <key>SSL Context Service</key>
+    </entry>
+    <entry>
+        <key>Username</key>
+    </entry>
+    <entry>
+        <key>Password</key>
+    </entry>
+    <entry>
+        <key>elasticsearch-http-connect-timeout</key>
+        <value>5 secs</value>
+    </entry>
+    <entry>
+        <key>elasticsearch-http-response-timeout</key>
+        <value>15 secs</value>
+    </entry>
+    <entry>
+        <key>proxy-configuration-service</key>
+    </entry>
+    <entry>
+        <key>elasticsearch-http-proxy-host</key>
+    </entry>
+    <entry>
+        <key>elasticsearch-http-proxy-port</key>
+    </entry>
+    <entry>
+        <key>proxy-username</key>
+    </entry>
+    <entry>
+        <key>proxy-password</key>
+    </entry>
+    <entry>
+        <key>put-es-id-attr</key>
+    </entry>
+    <entry>
+        <key>put-es-index</key>
+        <value>${elasticsearch.index}</value>
+    </entry>
+    <entry>
+        <key>put-es-type</key>
+        <value>doc</value>
+    </entry>
+    <entry>
+        <key>Character Set</key>
+        <value>UTF-8</value>
+    </entry>
+    <entry>
+        <key>put-es-batch-size</key>
+        <value>100</value>
+    </entry>
+    <entry>
+        <key>put-es-index-op</key>
+        <value>index</value>
+    </entry>
+</properties>
+<runDurationMillis>0</runDurationMillis>
+<schedulingPeriod>0 sec</schedulingPeriod>
+<schedulingStrategy>TIMER_DRIVEN</schedulingStrategy>
+<yieldDuration>1 sec</yieldDuration>
+                            </config>
+                            <executionNodeRestricted>false</executionNodeRestricted>
+                            <name>PutElasticsearchHttp</name>
+                            <relationships>
+<autoTerminate>true</autoTerminate>
+<name>failure</name>
+                            </relationships>
+                            <relationships>
+<autoTerminate>true</autoTerminate>
+<name>retry</name>
+                            </relationships>
+                            <relationships>
+<autoTerminate>true</autoTerminate>
+<name>success</name>
+                            </relationships>
+                            <state>STOPPED</state>
+                            <style/>
+                            <type>org.apache.nifi.processors.elasticsearch.PutElasticsearchHttp</type>
+                        </processors>
+                    </contents>
+                    <name>Elasticsearch Injector</name>
+                    <variables>
+                        <entry>
+                            <key>elasticsearch.index</key>
+                            <value>esper</value>
+                        </entry>
+                    </variables>
+                </processGroups>
+                <processors>
+                    <id>ada7fcbc-a49b-34f5-0000-000000000000</id>
+                    <parentGroupId>8890c952-92e7-3242-0000-000000000000</parentGroupId>
+                    <position>
+                        <x>-909.853419211626</x>
+                        <y>187.90599825605773</y>
+                    </position>
+                    <bundle>
+                        <artifact>nifi-esper-e2-nar</artifact>
+                        <group>de.e2security</group>
+                        <version>1.1.8</version>
+                    </bundle>
+                    <config>
+                        <bulletinLevel>WARN</bulletinLevel>
+                        <comments></comments>
+                        <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
+                        <descriptors>
+                            <entry>
+<key>EsperEngine</key>
+<value>
+    <identifiesControllerService>de.e2security.nifi.controller.esper.EsperService</identifiesControllerService>
+    <name>EsperEngine</name>
+</value>
+                            </entry>
+                            <entry>
+<key>EPStatementName</key>
+<value>
+    <name>EPStatementName</name>
+</value>
+                            </entry>
+                        </descriptors>
+                        <executionNode>ALL</executionNode>
+                        <lossTolerant>false</lossTolerant>
+                        <penaltyDuration>30 sec</penaltyDuration>
+                        <properties>
+                            <entry>
+<key>EsperEngine</key>
+<value>e4a56f91-8693-39d6-0000-000000000000</value>
+                            </entry>
+                            <entry>
+<key>EPStatementName</key>
+<value>EplTest</value>
+                            </entry>
+                        </properties>
+                        <runDurationMillis>0</runDurationMillis>
+                        <schedulingPeriod>0 sec</schedulingPeriod>
+                        <schedulingStrategy>TIMER_DRIVEN</schedulingStrategy>
+                        <yieldDuration>1 sec</yieldDuration>
+                    </config>
+                    <executionNodeRestricted>false</executionNodeRestricted>
+                    <name>EsperProducer</name>
+                    <relationships>
+                        <autoTerminate>false</autoTerminate>
+                        <name>succeeded event</name>
+                    </relationships>
+                    <state>STOPPED</state>
+                    <style/>
+                    <type>de.e2security.processors.e2esper.processor.EsperProducer</type>
+                </processors>
+            </contents>
+            <name>Process Events</name>
+            <variables/>
+        </processGroups>
+    </snippet>
+    <timestamp>02/11/2019 13:46:26 UTC</timestamp>
+</template>

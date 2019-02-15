@@ -177,9 +177,14 @@ services:
       - NIFI_ZK_CONNECT_STRING=zookeeper:2181
       - NIFI_ELECTION_MAX_WAIT=1 min
     volumes:
-      - ./NiFi/conf:/opt/nifi/nifi-current/conf/:rw
-      - /etc/localtime:/etc/localtime:ro
       - ./NiFi/nifi-esper-e2-processor/nifi-esper-e2-nar/target/nifi-esper-e2-nar-1.1.8.nar:/opt/nifi/nifi-current/lib/nifi-esper-e2-1.1.8.nar
+      - NifiLogs:/opt/nifi/nifi-current/logs
+      - NifiConf:/opt/nifi/nifi-current/conf
+      - NifiState:/opt/nifi/nifi-current/state
+      - NifiDatabaseRepo:/opt/nifi/nifi-current/database_repository
+      - NifiFlowfileRepo:/opt/nifi/nifi-current/flowfile_repository
+      - NifiContentRepo:/opt/nifi/nifi-current/content_repository
+      - NifiProvenanceRepo:/opt/nifi/nifi-current/provenance_repository
     networks:
       - e2netwatch-net
 
@@ -212,6 +217,13 @@ volumes:
   ElasticData:
   MysqlData:
   Norikra:
+  NifiLogs:
+  NifiConf:
+  NifiState:
+  NifiDatabaseRepo:
+  NifiFlowfileRepo:
+  NifiContentRepo:
+  NifiProvenanceRepo:
 
 networks:
   e2netwatch-net:
