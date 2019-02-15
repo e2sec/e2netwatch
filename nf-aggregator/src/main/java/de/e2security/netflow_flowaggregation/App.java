@@ -109,7 +109,7 @@ public class App {
 		statementTcpConnectionTrigger.addListener(new ProtocolRegisterTrigger(producer));
 		
 		//start KafkaConsumer with prepared EPService after checking topics' availability within consumerMaster 
-		KafkaConsumerMaster consumerMaster = new KafkaConsumerMaster(epService, configs).startWorkers();
+		KafkaConsumerMaster consumerMaster = new KafkaConsumerMaster(epService, configs).waitTopics().startWorkers();
 		
 		//give overview about started threads
 		ThreadUtil.printThreads();
