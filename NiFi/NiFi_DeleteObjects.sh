@@ -26,7 +26,7 @@ do
 	h) 
 		echo
 		echo -e "\tThis script deletes all NiFi Objects."
-		echo -e "\tthis script references NiFi_Root"
+		echo -e "\tthis script references NiFi_Root.sh"
 		echo -e "\tupon failure of a delete or drop request this script will output http-code and content into a ResponseLog"
 		echo
 		echo -e "\t-a [ADDRESS] Nifi-address and port. default: localhost:8090"
@@ -55,7 +55,7 @@ GROUPARRAY=("root" )
 
 ##stops all NiFi processes
 echo stopping running NiFi processes
-./NiFi_Root -s STOPPED
+./NiFi_Root.sh -s STOPPED
 
 ##Creates List of Connections
 #Empty Array for Connections

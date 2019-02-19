@@ -5,13 +5,20 @@ while getopts a:d:h option
 do
 	case "${option}"
 	in
-	a) NIFIADDRESS=${OPTARG};;
-	d) TEMPLATEFOLDER=${OPTARG};;
-	h) echo This script will upload all .xml files in  given folder
-		echo upon failure of a request this script will output http-code and content into a ResponseLog
-		echo -d [FOLDER] custom directory, standard is \"templates\" folder in the script\'s Directory; 
-		echo -a [ADDRESS] Nifi-address and port. default: localhost:8090
-		echo -h this help;exit ;;
+	a) NIFIADDRESS=${OPTARG}
+	;;
+	d) TEMPLATEFOLDER=${OPTARG}
+	;;
+	h)  
+		echo
+		echo -e "\tThis script will upload all .xml files in  given folder"
+		echo -e "\tupon failure of a request this script will output http-code and content into a ResponseLog"
+		echo 
+		echo -e "\t-d [FOLDER] custom directory, standard is \"templates\" folder in the script's Directory"
+		echo -e "\t-a [ADDRESS] Nifi-address and port. default: localhost:8090"
+		echo -e "\t-h this help"
+		exit 
+	;;
 	esac
 done
 

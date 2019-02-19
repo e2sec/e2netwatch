@@ -30,7 +30,7 @@ done
 
 #initializes all templates into root processor-group
 #currently very ugly, just places processgroups in a line next to each other
-ORIGINX=0
+ORIGINY=0
 for i in ${TEMPLATEARRAY[@]}
 do
 	echo initializing template $i
@@ -40,8 +40,8 @@ do
 		--output temp \
 		-H 'Content-Type: application/json' \
 		-d "{\"templateId\": \"$i\",
-			\"originX\":$ORIGINX.0,
-			\"originY\":0.0}"\
+			\"originX\":0.0,
+			\"originY\":$ORIGINY.0}"\
 		)
 	case "$RESPONSE"
 	in
@@ -54,5 +54,5 @@ do
 	;;
 	esac
 	rm temp
-	((ORIGINX+=500))
+	((ORIGINY+=250))
 done 
