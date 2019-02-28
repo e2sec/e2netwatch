@@ -22,6 +22,12 @@
         "host": {
           "type": "ip"
         },
+        "protocol_name" : {
+          "type" : "keyword"
+        },
+        "service_name" : {
+          "type" : "keyword"
+        },
         "netflow": {
           "properties": {
             "dst_as": {
